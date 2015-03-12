@@ -1,0 +1,2 @@
+v0: 利用cumulative distribution function, 轉換dot density為dot position.
+v0.1: 加入利用tetgen meshing approach, 轉換dot density為dot position.

@@ -1,0 +1,65 @@
+void gnuplot_2d(plot_2d *plt2d)
+{
+	FILE *script, *data;
+	long int i;
+	// save data
+	data = fopen("data2d.txt","w");
+	for(i=0;i<plt2d->npnt;i++)
+	{
+		fprintf(data,"%16.7f\t%16.7f\n",plt2d->x[i],plt2d->y[i]);
+	}
+	fclose(data);
+	// save script for gnupolt
+	script = fopen("script","w");
+	fprintf(script,"plot \"data2d.txt\" with points pointtype 7 pointsize 0.2 \n");
+	fprintf(script,"pause -1 \"press RETURN to continue\"\n");
+	fclose(script);
+	// plot
+	system("gnuplot \"script\"");
+	return;
+}
+void gnuplot_3d(plot_3d *plt3d)
+{
+	FILE *script, *data;
+	long int i;
+	// save data
+	data = fopen("data3d.txt","w");
+	for(i=0;i<plt3d->npnt;i++)
+	{
+		fprintf(data,"%16.7f\t%16.7f\t%16.7f\n",plt3d->x[i],plt3d->y[i],plt3d->z[i]);
+	}
+	fclose(data);
+	// save script for gnupolt
+	script = fopen("script","w");
+	fprintf(script,"splot \"data3d.txt\" with points pointtype 7 pointsize 0.2 \n");
+	fprintf(script,"pause -1 \"press RETURN to continue\"\n");
+	fclose(script);
+	// plot
+	system("gnuplot \"script\"");
+	return;
+}
+void gnuplot_3d_matrix(plot_3d_matrix *plt3dm)
+{
+	FILE *script, *data;
+	long int i, j, nx, ny;
+	// save data
+	data = fopen("data3dm.txt","w");
+	nx = plt3dm->nx;
+	ny = plt3dm->ny;
+	for(j=0;j<ny;j++)
+	{
+		for(i=0;i<nx;i++){	fprintf(data,"%16.7f\t",plt3dm->v[i*ny+j]);	}
+		fprintf(data,"\n");
+	}
+	fclose(data);
+	// save script for gnupolt
+	script = fopen("script","w");
+	fprintf(script,"set pm3d \n");
+	fprintf(script,"unset surface \n");
+	fprintf(script,"splot \"data3dm.txt\" matrix \n");
+	fprintf(script,"pause -1 \"press RETURN to continue\"\n");
+	fclose(script);
+	// plot
+	system("gnuplot \"script\"");
+	return;
+}

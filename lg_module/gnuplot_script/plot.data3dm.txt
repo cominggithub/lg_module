@@ -1,0 +1,5 @@
+set terminal svg
+set output "output3d_matrix.svg"
+set pm3d
+unset surface
+splot "data3dm.txt" matrix
