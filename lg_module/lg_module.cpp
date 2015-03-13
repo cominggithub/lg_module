@@ -1,15 +1,25 @@
 
+
 // for visual-studio header
+#ifdef _MSC_VER
 #include "stdafx.h"
 
 // for regular C header
 #include "stdio.h"
 #include "stdlib.h"
-#include "conio.h"
 #include "math.h"
 #include "malloc.h"
 #include "time.h"
 #include "tchar.h"
+
+#else
+#include "math.h"
+#include "time.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#endif
+
 
 // for private header
 #include "var_def.h"			// define parameters and structe variables
@@ -53,7 +63,11 @@ void gnuplot_3d_matrix(plot_3d_matrix *plt3dm);
 void debug_den_to_pos(dot_density *dden, dot_position *dpos);
 
 // main program
+#ifdef _MSC_VER
 int _tmain(int argc, _TCHAR* argv[])
+#else
+int main(void)
+#endif
 {
 	// define variables
 	opt_mat opm;					// for optic materials
