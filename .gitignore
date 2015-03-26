@@ -231,3 +231,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.mtr
+*.smesh
+lg_module/data3dm.txt
