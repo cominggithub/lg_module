@@ -1,8 +1,6 @@
-
-
 // for visual-studio header
 #ifdef _MSC_VER
-#include "stdafx.h"
+//#include "stdafx.h"
 
 // for regular C header
 #include "stdio.h"
@@ -11,6 +9,7 @@
 #include "malloc.h"
 #include "time.h"
 #include "tchar.h"
+
 
 #else
 #include "math.h"
@@ -21,12 +20,14 @@
 #endif
 
 
+
 // for private header
 #include "var_def.h"			// define parameters and structe variables
 #include "mem_func.h"			// allocate/deallocate memory 
 #include "plt_figure.h"			// call gnuplot for ploting figure
 #include "den_to_pos.h"			// module for transferring dot_density to dot_position 
 #include "debug_fun.h"			// just for debugging individual module.
+#include "conf_util.h"
 
 // function for memory arrangement
 void allocmem_opm(opt_mat *opm);
@@ -62,6 +63,8 @@ void gnuplot_3d_matrix(plot_3d_matrix *plt3dm);
 // function for debug
 void debug_den_to_pos(dot_density *dden, dot_position *dpos);
 
+
+
 // main program
 #ifdef _MSC_VER
 int _tmain(int argc, _TCHAR* argv[])
@@ -69,6 +72,11 @@ int _tmain(int argc, _TCHAR* argv[])
 int main(void)
 #endif
 {
+	conf_load("conf/conf.txt");
+	printf("%d\n", conf_getVarInt("var1"));
+	printf("%s\n", conf_getVarStr("var2"));
+	printf("%f\n", conf_getVarFloat("var3"));
+	
 	// define variables
 	opt_mat opm;					// for optic materials
 	opt_source ops;					// for optic source

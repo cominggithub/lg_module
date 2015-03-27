@@ -19,6 +19,12 @@
     <Filter Include="windows_bat">
       <UniqueIdentifier>{ad887c2c-729f-4070-acc0-5f125d9fe6be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="conf">
+      <UniqueIdentifier>{6b547e68-a9df-46d4-8482-cc1c4f494c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="minini">
+      <UniqueIdentifier>{09e4d20d-cbfd-47b5-8591-b91101dad60f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -30,6 +36,9 @@
     </None>
     <None Include="gnuplot_script\plot.data3dm.txt">
       <Filter>gnuplot_script</Filter>
+    </None>
+    <None Include="conf\conf.txt">
+      <Filter>conf</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -54,12 +63,45 @@
     <ClInclude Include="debug_fun.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="minini_12b\minGlue.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minGlue-ccs.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minGlue-efsl.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minGlue-FatFs.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minGlue-ffs.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minGlue-mdd.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minGlue-stdio.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="minini_12b\minIni.h">
+      <Filter>minini</Filter>
+    </ClInclude>
+    <ClInclude Include="conf_util.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
     <ClCompile Include="lg_module.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="minini_12b\minIni.c">
+      <Filter>minini</Filter>
+    </ClCompile>
+    <ClCompile Include="conf_util.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
   </ItemGroup>

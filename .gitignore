@@ -234,3 +234,7 @@ $RECYCLE.BIN/
 *.mtr
 *.smesh
 lg_module/data3dm.txt
+*.edge
+*.ele
+*.face
+*.node
