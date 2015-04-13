@@ -98,8 +98,6 @@ void allocmem_dot_position(dot_position *dpos)
 {
 	// allocate memory for global dot position
 	dpos->ndot = n_dots;
-	dpos->xline = n_xline;
-	dpos->yline = n_yline;
 	dpos->xd = new double[dpos->ndot];
 	if( dpos->xd == nullptr ) { printf("allocmem_dot_position: dot potision error\n"); exit(0); }
 	dpos->yd = new double[dpos->ndot];

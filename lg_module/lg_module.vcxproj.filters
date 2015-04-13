@@ -13,41 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="gnuplot_script">
-      <UniqueIdentifier>{b148a58e-a4b3-4eed-a523-58af9ab9619a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="windows_bat">
-      <UniqueIdentifier>{ad887c2c-729f-4070-acc0-5f125d9fe6be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="conf">
-      <UniqueIdentifier>{6b547e68-a9df-46d4-8482-cc1c4f494c61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="minini">
-      <UniqueIdentifier>{09e4d20d-cbfd-47b5-8591-b91101dad60f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
-    <None Include="windows_bat\run.bat">
-      <Filter>windows_bat</Filter>
-    </None>
-    <None Include="gnuplot_script\plot.data2d.txt">
-      <Filter>gnuplot_script</Filter>
-    </None>
-    <None Include="gnuplot_script\plot.data3dm.txt">
-      <Filter>gnuplot_script</Filter>
-    </None>
-    <None Include="conf\conf.txt">
-      <Filter>conf</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="var_def.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -63,45 +33,60 @@
     <ClInclude Include="debug_fun.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="minini_12b\minGlue.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minGlue-ccs.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minGlue-efsl.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minGlue-FatFs.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minGlue-ffs.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minGlue-mdd.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minGlue-stdio.h">
-      <Filter>minini</Filter>
-    </ClInclude>
-    <ClInclude Include="minini_12b\minIni.h">
-      <Filter>minini</Filter>
-    </ClInclude>
     <ClInclude Include="conf_util.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ini_var.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="gen_source_ray.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="microstr.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="globalstr.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="var_type.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>原始程式檔</Filter>
-    </ClCompile>
     <ClCompile Include="lg_module.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
-    <ClCompile Include="minini_12b\minIni.c">
-      <Filter>minini</Filter>
+    <ClCompile Include="Module_IV.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="mem_func.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="var_def.cpp">
+      <Filter>原始程式檔</Filter>
     </ClCompile>
     <ClCompile Include="conf_util.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="globalstr.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="microstr.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="debug_fun.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="gen_source_ray.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="ini_var.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="plt_figure.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="den_to_pos.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
   </ItemGroup>

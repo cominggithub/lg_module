@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lg_module", "lg_module\lg_module.vcxproj", "{D4176201-2A70-4762-9F30-D37E2CCB4C52}"
 EndProject
 Global
@@ -13,11 +13,12 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Debug|Win32.Build.0 = Debug|Win32
-		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Debug|x64.ActiveCfg = Debug|Win32
+		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Debug|x64.ActiveCfg = Debug|x64
+		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Debug|x64.Build.0 = Debug|x64
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|Win32.ActiveCfg = Release|Win32
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|Win32.Build.0 = Release|Win32
-		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|x64.ActiveCfg = Release|Win32
-		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|x64.Build.0 = Release|Win32
+		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|x64.ActiveCfg = Release|x64
+		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

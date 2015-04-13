@@ -3,10 +3,10 @@
 double pi = 3.141592653589793;
 
 // optical material
-long int n_wl=1;											// n_wl: number of wavelength; <default value>
+long int n_wl=1;										// n_wl: number of wavelength; <default value>
 long int n_mat=3;										// n_material: number of optical materials; <default value>
 long int air_indx = 0, guide_indx = 1, refl_indx = 2;	// material indexes = 0 ~ (n_material-1) corresponding to n_material;
-struct opt_mat										// for refractive index of materials
+struct opt_mat											// for refractive index of materials
 {
 	long int wln;
 	long int matn;
@@ -14,8 +14,8 @@ struct opt_mat										// for refractive index of materials
 };
 
 // light source
-long int n_x = 1, n_y = 100, n_z = 1;						// grid number along x, y, and z axes; <default value>
-long int n_tha = 10, n_phi = 30;								// grid number along theta and phi; <default value>
+long int n_x = 1, n_y = 100, n_z = 1;					// grid number along x, y, and z axes; <default value>
+long int n_tha = 10, n_phi = 30;						// grid number along theta and phi; <default value>
 double xl_or = 10.0, yl_or = 0.0, zl_or = 0.0;			// origin of the coordinate
 double xl_rng = 10.0, yl_rng = 10.0, zl_rng = 10.0;		// dimensions along x, y, and z directions
 struct opt_source
@@ -27,8 +27,8 @@ struct opt_source
 };
 
 // ray tracing
-long int n_ray = 1;								// number of sampling rays
-long int n_gaus = 1;								// number of gaussin-scattering rays;
+long int n_ray = 1;							// number of sampling rays
+long int n_gaus = 1;						// number of gaussin-scattering rays;
 struct ray_traces							// for the initial ray-samplings
 {
 	long int nray;
@@ -41,8 +41,8 @@ struct ray_trace1							// for individual tracing ray
 };
 
 // lguide performance (measurement)
-long int nx_rcd = 100, ny_rcd = 100;									// grid number along x, y, and z axes for records; <default value>
-long int ntha_rcd = 10, nphi_rcd = 20;								// grid number along theta and phi for records; <default value>
+long int nx_rcd = 100, ny_rcd = 100;							// grid number along x, y, and z axes for records; <default value>
+long int ntha_rcd = 10, nphi_rcd = 20;							// grid number along theta and phi for records; <default value>
 double xrcd_or = 0.0, yrcd_or = 0.0, zrcd_or = 0.0;				// origin of the coordinate
 double xrcd_rng = 10.0, yrcd_rng = 10.0, zrcd_rng = 10.0;		// dimensions along x, y, and z directions
 struct opt_record
@@ -53,7 +53,7 @@ struct opt_record
 };
 
 // local structure
-long int nx_str = 10, ny_str = 10;					// number of grids along x and y
+long int nx_str = 10, ny_str = 10;				// number of grids along x and y
 double center_x = 0.0, center_y = 0.0;			// center of the microstructure
 double xstr_rng = 1.0, ystr_rng = 1.0;			// dimensions along x and y
 struct local_str
@@ -64,7 +64,7 @@ struct local_str
 };
 
 // global dot density
-long int nx_den = 50, ny_den = 50;									// grid number along x and y axes for records;
+long int nx_den = 50, ny_den = 50;								// grid number along x and y axes for records;
 double xden_or = 0.0, yden_or = 0.0;							// origin of the coordinate
 double xden_rng = 10.0, yden_rng = 10.0;						// dimensions along x, y, and z directions
 struct dot_density
@@ -76,11 +76,11 @@ struct dot_density
 
 // global dot spatial pattern
 long int n_dots=50000;												// total dots
-long int n_xline = 30;												// number of grid-line on x
-long int n_yline = 100;												// number of grid-line on y
+bool hex_bl = true;												// define whether fit to hexagon 
+double hex_lng = 0.05;												// define the lattice constant of hexagon
 struct dot_position
 {
-	long int xline, yline, ndot;
+	long int ndot;
 	double *xd, *yd;											// positions of dots
 };
 

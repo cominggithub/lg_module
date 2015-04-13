@@ -1,6 +1,9 @@
-void den2pos(dot_density *dden, dot_position *dpos)
+// local function
+void hex_fit(dot_position *dpos, double hexlng);				// put dots onto hexagon lattice
+
+void den2pos(dot_density *dden, dot_position *dpos, bool hexbl, double hexlng)
 {
-	long int i, j, k, n, nx, ny, ndot, xline, yline;
+	long int i, j, k, n, nx, ny, ndot;
 	long int ibuf1, ibuf2;
 	long int begi, midi, endi;
 	double dx, dy, x0, y0, xrng, yrng, den_tot, xsol, ysol, ratio;
@@ -15,8 +18,6 @@ void den2pos(dot_density *dden, dot_position *dpos)
 	dx = xrng/nx;	dy = yrng/ny;					// coordinates for grid-face
 	// read parameters from dot_position	setup
 	ndot = dpos->ndot; 
-	xline = dpos->xline;
-	yline = dpos->yline;
 
 	// initiate memroy
 	nden = new double[nx*ny];
@@ -91,6 +92,8 @@ void den2pos(dot_density *dden, dot_position *dpos)
 	}
 	printf("\n");
 	
+	if (hexbl) hex_fit(dpos, hexlng);		// put dots onto hexagon lattice
+
 	// free memory
 	delete [] nden;
 	delete [] accdenx;
@@ -99,12 +102,12 @@ void den2pos(dot_density *dden, dot_position *dpos)
 }
 
 
-void den2pos_tetgen(dot_density *dden, dot_position *dpos)
+void den2pos_tetgen(dot_density *dden, dot_position *dpos, bool hexbl, double hexlng)
 {
-	long int i, nx, ny, ndot, xline, yline, xi, yi;
+	long int i, nx, ny, ndot, xi, yi;
 	long int n1, n2, n3, n4;
 	double c1, c2, c3;
-	double dx, dy, x0, y0, xrng, yrng, den_tot, scl_factor;
+	double dx, dy, x0, y0, xrng, yrng, den_tot, scl_factor, zbuf;
 	double *nden;
 	FILE *smesh, *mtr, *node;
 
@@ -115,8 +118,6 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos)
 	dx = xrng/(nx-1);	dy = yrng/(ny-1);			// coordinates for vertes; not for grid-face now
 	// read parameters from dot_position	setup
 	ndot = dpos->ndot; 
-	xline = dpos->xline;
-	yline = dpos->yline;
 
 	// initiate memroy
 	nden = new double[nx*ny];
@@ -131,6 +132,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos)
 	scl_factor = 1000000.0;
 	smesh = fopen("P.smesh","w");
 	mtr = fopen("P.mtr","w");
+	zbuf = nden[0];								// !!! better to refer to the average density around edge, instead of that of a original point.
 	fprintf(smesh,"%ld\t%d\t%d\t%d\n", 2*nx*ny, 3, 0, 0);
 	fprintf(mtr,"%ld\t%d\n", 2*nx*ny, 1);
 	for(i = 0; i<nx*ny; i++)					// for vertex on lower plane
@@ -142,7 +144,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos)
 	for(i = 0; i<nx*ny; i++)					// for vertex on upper plane
 	{
 		yi = i%ny;	xi = int((i-yi)/ny);
-		fprintf(smesh,"%ld\t%12.7f\t%12.7f\t%12.7f\n", i+nx*ny+1, dx*xi, dy*yi, 1.0/sqrt(scl_factor*nden[0]+pow(10.0,-7)));
+		fprintf(smesh,"%ld\t%12.7f\t%12.7f\t%12.7f\n", i+nx*ny+1, dx*xi, dy*yi, 1.0/sqrt(scl_factor*zbuf+pow(10.0,-7)));
 		fprintf(mtr,"%12.7f\n", 1.0/sqrt(scl_factor*nden[i]+pow(10.0,-7)) );
 	}
 	fprintf(smesh,"%ld\t%d\n", 2*(nx-1)*(ny-1)+2*(nx-1)+2*(ny-1), 0);
@@ -186,24 +188,43 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos)
 	fclose(node);
 	
 	// update dpos
-	delete [] dpos->xd;
-	delete [] dpos->yd;
-	dpos->ndot = ndot;
-	dpos->xd = new double[ndot];
-	if(dpos->xd == nullptr) {printf("den2pos_tetgen: xd initiation error!"); exit(0);}
-	dpos->yd = new double[ndot];
-	if(dpos->yd == nullptr) {printf("den2pos_tetgen: yd initiation error!"); exit(0);}
+	deallocmem_dot_position(dpos);				// !!! need to check whether dpos is allocated or not
+	n_dots = ndot;
+	allocmem_dot_position(dpos);
 	ndot = 0;
 	node = fopen("P.1.node","r");
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{
 		fscanf(node,"%ld %lf %lf %lf\n", &n2, &c1, &c2, &c3);
-		if( c3 ==0.0 ){ dpos->xd[ndot] = c1; dpos->yd[ndot] = c2; ndot = ndot+1;}
+		if( c3 == 0.0 ){ dpos->xd[ndot] = c1; dpos->yd[ndot] = c2; ndot = ndot+1;}
 	}
 	fclose(node);
 
+	if (hexbl) hex_fit(dpos, hexlng);	// put dots onto hexagon lattice
+
 	// free memory
 	delete [] nden;
+	return;
+}
+
+void hex_fit(dot_position *dpos, double hexlng)
+{
+	long int i, ibuf, jbuf, rndi, rndj;
+	double dbuf1, dbuf2;
+	double a1[2]={1.0*hexlng, 0.0*hexlng}, a2[2]={-cos(pi/3.0)*hexlng, sin(pi/3.0)*hexlng};
+	
+	// basis for hexagon lattice
+	for(i=0; i<dpos->ndot; i++)
+	{
+		dbuf1 = dpos->yd[i]/a2[1];
+		jbuf = (long int)( dbuf1 );
+		dbuf2 = (dpos->xd[i]-dbuf1*a2[0])/a1[0];
+		ibuf = (long int)( dbuf2 );
+		dpos->xd[i] = ibuf*a1[0] + jbuf*a2[0];
+		dpos->yd[i] = ibuf*a1[1] + jbuf*a2[1];
+	}
+	printf("%ld\t%ld\n",(int)1.9, (int)-1.9);
+	// !!! remove repeated points
 	return;
 }

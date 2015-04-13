@@ -5,7 +5,6 @@
 // for regular C header
 #include "stdio.h"
 #include "stdlib.h"
-#include "conio.h"
 #include "math.h"
 #include "malloc.h"
 #include "time.h"
@@ -41,8 +40,8 @@ void deallocmem_gnuplot_3d(plot_3d *plt3d);
 void deallocmem_gnuplot_3d_matrix(plot_3d_matrix *plt3dm);
 
 // function for moudles
-void den2pos(dot_density *dden, dot_position *dpos);			// transfer dot_density to dot_position
-void den2pos_tetgen(dot_density *dden, dot_position *dpos);		// transfer dot_density to dot_position by tetgen software
+void den2pos(dot_density *dden, dot_position *dpos, bool hex_bl, double hex_lng);				// transfer dot_density to dot_position
+void den2pos_tetgen(dot_density *dden, dot_position *dpos, bool hex_bl, double hex_lng);		// transfer dot_density to dot_position by tetgen software
 
 // functino for figure
 void gnuplot_2d(plot_2d *plt2d);

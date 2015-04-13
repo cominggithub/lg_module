@@ -76,25 +76,19 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>/Iminini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>md "$(OutDir)gnuplot_script\"
-Copy "$(ProjectDir)gnuplot_script\*" "$(OutDir)gnuplot_script\"
-Copy "$(ProjectDir)windows_bat\run.bat" "$(OutDir)run.bat"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -107,12 +101,11 @@ Copy "$(ProjectDir)windows_bat\run.bat" "$(OutDir)run.bat"</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\Dropbox\backlight\lg_module_v0.1.ms.20150309\lg_module\minini_12b;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,18 +113,11 @@ Copy "$(ProjectDir)windows_bat\run.bat" "$(OutDir)run.bat"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <PostBuildEvent>
-      <Command>md "$(OutDir)gnuplot_script\"
-md "$(OutDir)conf\"
-Copy "$(ProjectDir)gnuplot_script\*" "$(OutDir)gnuplot_script\"
-Copy "$(ProjectDir)conf\*" "$(OutDir)conf\"
-Copy "$(ProjectDir)windows_bat\run.bat" "$(OutDir)run.bat"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -146,40 +132,34 @@ Copy "$(ProjectDir)windows_bat\run.bat" "$(OutDir)run.bat"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="conf\conf.txt" />
-    <None Include="gnuplot_script\plot.data2d.txt" />
-    <None Include="gnuplot_script\plot.data3dm.txt" />
     <None Include="ReadMe.txt" />
-    <None Include="windows_bat\run.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="conf_util.h" />
     <ClInclude Include="debug_fun.h" />
     <ClInclude Include="den_to_pos.h" />
+    <ClInclude Include="gen_source_ray.h" />
+    <ClInclude Include="globalstr.h" />
+    <ClInclude Include="ini_var.h" />
     <ClInclude Include="mem_func.h" />
-    <ClInclude Include="minini_12b\minGlue-ccs.h" />
-    <ClInclude Include="minini_12b\minGlue-efsl.h" />
-    <ClInclude Include="minini_12b\minGlue-FatFs.h" />
-    <ClInclude Include="minini_12b\minGlue-ffs.h" />
-    <ClInclude Include="minini_12b\minGlue-mdd.h" />
-    <ClInclude Include="minini_12b\minGlue-stdio.h" />
-    <ClInclude Include="minini_12b\minGlue.h" />
-    <ClInclude Include="minini_12b\minIni.h" />
+    <ClInclude Include="microstr.h" />
     <ClInclude Include="plt_figure.h" />
-    <ClInclude Include="conf_util.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="var_def.h" />
+    <ClInclude Include="var_type.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lg_module.cpp" />
-    <ClCompile Include="minini_12b\minIni.c" />
     <ClCompile Include="conf_util.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="debug_fun.cpp" />
+    <ClCompile Include="den_to_pos.cpp" />
+    <ClCompile Include="gen_source_ray.cpp" />
+    <ClCompile Include="globalstr.cpp" />
+    <ClCompile Include="ini_var.cpp" />
+    <ClCompile Include="lg_module.cpp" />
+    <ClCompile Include="mem_func.cpp" />
+    <ClCompile Include="microstr.cpp" />
+    <ClCompile Include="Module_IV.cpp" />
+    <ClCompile Include="plt_figure.cpp" />
+    <ClCompile Include="var_def.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

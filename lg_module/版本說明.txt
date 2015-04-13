@@ -1,2 +1,5 @@
-v0: �Q��cumulative distribution function, �ഫdot density��dot position.
-v0.1: �[�J�Q��tetgen meshing approach, �ഫdot density��dot position.
+﻿v0: 利用cumulative distribution function, 轉換dot density為dot position.
+v0.1: 加入利用tetgen meshing approach, 轉換dot density為dot position. (module 5/ half)
+v0.2: 參數由外部檔案讀入; 建立光源ray profile (module 1)
+v0.3: 建立微結構與直線交點求解模組:把等效的微結構box轉成真正的微結構, 求解 (module 3)
+v0.4: 建立光追跡數值方法: 計算導光板內部光的折射/反射,此時微結構暫時等效為一個box (module 2)
