@@ -238,3 +238,6 @@ lg_module/data3dm.txt
 *.ele
 *.face
 *.node
+lg_module/data3dv.txt
+lg_module/output
+lg_module/lg_module.exe
