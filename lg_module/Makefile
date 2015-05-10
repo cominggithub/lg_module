@@ -1,6 +1,6 @@
 
 
-CPPFLAGS= -I. -I/usr/include/malloc -std=c++0x
+CPPFLAGS= -I. -I/usr/include/malloc -std=c++0x -ggdb
 LDFLAGS= -lstdc++
 OUTPUT_DATA = \
 	data2d.txt \
@@ -25,7 +25,7 @@ OBJ_DIR = obj
 CPP_FILES := $(wildcard *.cpp)
 OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(CPP_FILES:.cpp=.o)))
 
-all: prepare lg_module
+all: prepare lg_module dbg_main
 
 
 prepare:
@@ -38,6 +38,9 @@ prepare:
 lg_module: $(OBJ_FILES)
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
 
+dbg_main: $(OBJ_FILES)
+	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
+	
 ${OBJ_DIR}/%.o: %.cpp
 	g++ $(CPPFLAGS) -c -o $@ $<
 

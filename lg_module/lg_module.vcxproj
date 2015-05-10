@@ -132,10 +132,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="parameters.txt" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="conf_util.h" />
+    <ClInclude Include="dbg_log.h" />
     <ClInclude Include="debug_fun.h" />
     <ClInclude Include="den_to_pos.h" />
     <ClInclude Include="gen_source_ray.h" />
@@ -144,11 +146,14 @@
     <ClInclude Include="mem_func.h" />
     <ClInclude Include="microstr.h" />
     <ClInclude Include="plt_figure.h" />
+    <ClInclude Include="time_util.h" />
     <ClInclude Include="var_def.h" />
     <ClInclude Include="var_type.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="conf_util.cpp" />
+    <ClCompile Include="dbg_log.cpp" />
+    <ClCompile Include="dbg_main.cpp" />
     <ClCompile Include="debug_fun.cpp" />
     <ClCompile Include="den_to_pos.cpp" />
     <ClCompile Include="gen_source_ray.cpp" />
@@ -159,6 +164,7 @@
     <ClCompile Include="microstr.cpp" />
     <ClCompile Include="Module_IV.cpp" />
     <ClCompile Include="plt_figure.cpp" />
+    <ClCompile Include="time_util.cpp" />
     <ClCompile Include="var_def.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

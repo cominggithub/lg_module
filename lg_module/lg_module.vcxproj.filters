@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="parameters.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="var_def.h">
@@ -49,6 +50,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="var_type.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="dbg_log.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="time_util.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
@@ -87,6 +94,15 @@
       <Filter>原始程式檔</Filter>
     </ClCompile>
     <ClCompile Include="den_to_pos.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="time_util.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="dbg_log.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="dbg_main.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,6 +4,8 @@
 #include "ini_var.h"
 #include "conf_util.h"
 #include "var_def.h"
+#include <string.h>
+#include "dbg_log.h"
 
 
 void read_setup(char *fpname)
@@ -63,8 +65,8 @@ void read_setup(char *fpname)
 	center_y = conf_getVarDouble("center_y");
 	xstr_rng = conf_getVarDouble("xstr_rng");
 	ystr_rng = conf_getVarDouble("ystr_rng");
-	str_file = conf_getVarStr("str_file");
-
+	strcpy(str_file, conf_getVarStr("str_file"));
+	
 	// for global dot density
 	nx_den = conf_getVarInt("nx_den");
 	ny_den = conf_getVarInt("nx_den");

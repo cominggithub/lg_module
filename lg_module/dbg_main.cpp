@@ -52,12 +52,9 @@
 // main program
 
 
-extern int dbg_start();
-int main(int argc, char** argv)
+int dbg_start()
 {
-
-	dbg_start();
-	return 0;
+	int i;
 	// define variables
 	opt_mat opm;					// for optic materials
 	opt_source ops;					// for optic source
@@ -68,6 +65,8 @@ int main(int argc, char** argv)
 	dot_density dden;				// for global dot density
 	dot_position dpos;				// for global dot potision
 	char fpname[256];					// for reading parameters
+	struct ray_trace1 source_ray[2];
+
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -111,46 +110,47 @@ int main(int argc, char** argv)
 	set_end_time("part_dots");
 
 
-
-	set_start_time("find_str_hit_global");
-	// input: ray1, dpos, opr
-	// output: ray1, opr
-	find_str_hit_global(&ray1, &dpos, &opr);
-	set_end_time("find_str_hit_global");
-
-	// moduel 3...
-	// debug test
-
-	ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
-	ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
-	ray1.thar = 100; ray1.phir =0.0;
-
-
-	printf("\n incident pos in microstructure box: %lf\t%lf\t%lf\n",ray1.xr, ray1.yr, ray1.zr);
 	
-	set_start_time("find_str_hit_local");
-	find_str_hit_local(&ray1, &lstr);	
-	set_end_time("find_str_hit_local");
-	printf(" hit pos in microstructure box: %lf\t%lf\t%lf\n",ray1.xr, ray1.yr, ray1.zr);
 
-	// moduel 4...
-	// debug test
+	set_start_time("ray tracing");
 
-	int i;
-	// struct ray_trace1 incident_ray[100];    // incident ray source
-	// struct ray_trace1 source_ray[200];      // output ray sources includes Reflective and Transmittance ray
-
-
-	struct ray_trace1 source_ray[2];
-
-	set_start_time("Module_IV");
 	for(i=0; i<n_ray; i++)
+	// for(i=0; i<1; i++)
 	{
+
+		ray1.ngaus 	= 1; 
+		ray1.inty 	= 1.0; 
+		ray1.n1 	= 1.0; 
+		ray1.n2 	= 1.0;
+		ray1.xr 	= rays.xr[i]; 
+		
+		ray1.yr 	= 0.0; 
+		// ray1.yr 	= rays.yr[i]; 
+		
+		ray1.zr 	= rays.zr[i]; 
+		
+		ray1.thar 	= 100; 
+		// ray1.thar 	= rays.thar[i]; 
+		
+		ray1.phir 	= 0;
+		// ray1.phir 	= rays.phir[i];
+
+		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
+		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
+		// ray1.thar = 100; ray1.phir =0.0;
+
+		find_str_hit_global(&ray1, &dpos, &opr);
+		if (!find_str_hit_local(&ray1, &lstr))
+		{
+			pI(i);
+			dumpRay1(&ray1);
+			continue;	
+		}
 		CalcMainReflectiveRay(&ray1, &source_ray[0]);
 		CalcMainTransmittanceRay(&ray1, &source_ray[1]);
 		call_CalcGaussScatteredRay(&source_ray[0]);
 	}
-	set_end_time("Module_IV");
+	set_end_time("ray tracing");
 
 	// for(i=0; i<1; i++)
 	// {

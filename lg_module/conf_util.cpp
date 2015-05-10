@@ -127,6 +127,13 @@ int load_var(FILE* fp)
 			buf[strlen(buf)-1]='\0';
 		}
 		
+		if (buf[strlen(buf)-1] == '\r')
+		{
+			buf[strlen(buf)-1]='\0';
+		}
+
+
+		
 		if (getVarName(buf, varName[varCount]) != 0 && 
 			getValue(buf, varValue[varCount]) != 0)
 		{

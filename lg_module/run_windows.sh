@@ -1,19 +1,10 @@
 #!/bin/bash
 
-echo $OSTYPE
-if [ "$OSTYPE" == "msys" ]; then
-	echo "run on windows"
-	./run_windows.sh
-else
-	echo "run on mac"
-	./run_mac.sh
-fi
+cd output
+START=$(date +%s)
 
-# cd output
-# START=$(date +%s)
-
-# ./lg_module
-# END=$(date +%s)
+./lg_module
+END=$(date +%s)
 
 # gnuplot gnuplot_script/plot.data2d.txt
 # gnuplot gnuplot_script/plot.data3dm.txt
@@ -22,5 +13,5 @@ fi
 # DIFF=$(echo "$END - $START" | bc)
 # echo "execute time ${DIFF} seconds"
 
-# cd ..
-# exit 0
+cd ..
+exit 0

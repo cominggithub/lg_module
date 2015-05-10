@@ -33,7 +33,7 @@ double xrcd_rng, yrcd_rng;								// dimensions along x, y, and z directions
 long int nx_str, ny_str;						// number of grids along x and y
 double center_x, center_y;						// center of the microstructure
 double xstr_rng, ystr_rng;						// dimensions along x and y
-char *str_file;
+char str_file[256];
 
 // global dot density
 long int nx_den, ny_den;								// grid number along x and y axes for records;
@@ -47,8 +47,15 @@ long int partn_x, partn_y;
 char hex_bl;													// define whether fit to hexagon 
 double hex_lng = 0.02;											// define the lattice constant of hexagon
 
-double gThetaOne = 0; // The gobal variable for saving ThetaOne temporarily.
-double gThetaTwo = 0; // The gobal variable for saving ThetaTwo temporarily.
+double theta_st = 0.1;             // The angale between main ray and scattered ray
+double ThetaOne = 0;               // The gobal variable for saving ThetaOne temporarily.
+double ThetaTwo = 0;               // The gobal variable for saving ThetaTwo temporarily.
 
-double gReflectiveRayIntensity = 0; // The global variable for saving the intensity of ReflectiveRay temporarily.
-                                       // It will be used between CalcMainReflectiveRay() and CalcMainTransmittanceRay()
+double ReflectiveRayIntensity = 0; // The global variable for saving the intensity of ReflectiveRay temporarily.
+                                   // It will be used between CalcMainReflectiveRay() and CalcMainTransmittanceRay()
+double IntensityThreshold = 0.001;   // The threshold for determine the intensity of ray
+
+
+// debug config
+bool enable_gnu_plot = false;
+unsigned long gaussScatteredRaycount = 0;

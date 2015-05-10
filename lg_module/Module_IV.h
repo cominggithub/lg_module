@@ -3,11 +3,8 @@
 
 #include "var_type.h"
 
-double CalcThetaOne(double thetar, double phir, double nx, double ny, double nz);
-double CalcThetaTwo(double ThetaOne, double n1, double n2);
-RayProfile CalcMainReflectiveRay (struct ray_struct IncidentRay);
-RayProfile CalcMainTransmittanceRay (struct ray_struct IncidentRay);
-RayProfile CalcGaussScatteredRay (struct ray_struct MainRay);
-
-
+void CalcMainReflectiveRay (struct ray_trace1 *IncidentRay, struct ray_trace1 *MainReflectiveRay);
+void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1 *MainTransmittanceRay);
+void CalcGaussScatteredRay (struct ray_trace1 *MainRay, struct ray_trace1 *GaussScatteredRay[5]);
+void call_CalcGaussScatteredRay(struct ray_trace1 *src_ray);
 #endif

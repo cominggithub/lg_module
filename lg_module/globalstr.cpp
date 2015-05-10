@@ -5,6 +5,9 @@
 #include "globalstr.h"
 #include "var_def.h"
 
+
+// input: ray1, dpos, opr
+// output: ray1, opr
 void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr)  // change coordinate origin into the center of the top plane of the box containg a microstrcuture
 {
 	long int i, j, xi, yi, indx, begi, endi;

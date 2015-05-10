@@ -2,9 +2,12 @@
 #include <stdlib.h>
 
 #include "plt_figure.h"
+#include "var_def.h"
 
 void gnuplot_2d(plot_2d *plt2d)
 {
+	if (!enable_gnu_plot)
+		return;
 	FILE *script, *data;
 	long int i;
 	// save data
@@ -25,6 +28,8 @@ void gnuplot_2d(plot_2d *plt2d)
 }
 void gnuplot_3d(plot_3d *plt3d)
 {
+	if (!enable_gnu_plot)
+		return;
 	FILE *script, *data;
 	long int i;
 	// save data
@@ -45,6 +50,8 @@ void gnuplot_3d(plot_3d *plt3d)
 }
 void gnuplot_3d_matrix(plot_3d_matrix *plt3dm)
 {
+	if (!enable_gnu_plot)
+		return;
 	FILE *script, *data;
 	long int i, j, nx, ny;
 	// save data
@@ -70,6 +77,8 @@ void gnuplot_3d_matrix(plot_3d_matrix *plt3dm)
 }
 void gnuplot_3d_vector(plot_3d_vector *plt3dv)
 {
+	if (!enable_gnu_plot)
+		return;
 	FILE *script, *data;
 	long int j, npnt;
 	// save data

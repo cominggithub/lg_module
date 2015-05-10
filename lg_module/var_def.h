@@ -35,7 +35,7 @@ extern double xrcd_rng, yrcd_rng;								// dimensions along x, y, and z directi
 extern long int nx_str, ny_str;						// number of grids along x and y
 extern double center_x, center_y;						// center of the microstructure
 extern double xstr_rng, ystr_rng;						// dimensions along x and y
-extern char *str_file;
+extern char str_file[];
 
 // global dot density
 extern long int nx_den, ny_den;								// grid number along x and y axes for records;
@@ -47,6 +47,18 @@ extern double xden_rng, yden_rng;								// dimensions along x, y, and z directi
 extern long int n_dots;											// total dots
 extern long int partn_x, partn_y;
 extern char hex_bl;													// define whether fit to hexagon 
-extern double hex_lng;											// define the lattice constant of hexagon
+extern double hex_lng;		
 
+// local variables for Module IV
+extern double ThetaOne;               // The variable for saving ThetaOne.
+extern double ThetaTwo;               // The variable for saving ThetaTwo.
+extern double theta_st;               // The angale between main ray and scattered ray
+extern double ReflectiveRayIntensity; // The variable for saving the intensity of ReflectiveRay.
+                                      // It will be used between CalcMainReflectiveRay() and CalcMainTransmittanceRay()
+extern double IntensityThreshold;     // The threshold for determine the intensity of ray
+									// define the lattice constant of hexagon
+
+// debug variable
+extern bool enable_gnu_plot;
+extern unsigned long gaussScatteredRaycount;
 #endif

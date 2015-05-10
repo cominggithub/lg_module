@@ -254,7 +254,7 @@ void hex_fit(dot_position *dpos, double hexlng)
 	}
 	for(i=0; i<dpos->ndot; i++)		// remove points being exactly on borders
 	{
-		if( dpos->xd[i]<xstr_rng || dpos->xd[i]>(xdim-xstr_rng) || dpos->yd[i]<ystr_rng || dpos->yd[i]>(ydim-ystr_rng) ) chkrep[j] = 0;
+		if( dpos->xd[i]<xstr_rng || dpos->xd[i]>(xdim-xstr_rng) || dpos->yd[i]<ystr_rng || dpos->yd[i]>(ydim-ystr_rng) ) chkrep[i] = 0;
 	}
 	ntot = 0;
 	for(i=0; i<dpos->ndot; i++)

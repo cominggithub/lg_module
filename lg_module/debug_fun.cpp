@@ -8,6 +8,7 @@
 #include "mem_func.h"
 #include "plt_figure.h"
 #include "den_to_pos.h"
+#include "dbg_log.h"
 
 void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 {
@@ -32,21 +33,27 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	}
 	
 	// plot dot_density
+	
 	allocmem_gnuplot_3d_matrix(nx, ny, &plt3m);
 	for (i=0; i<nx*ny; i++){ plt3m.v[i] = dden->den[i]; }
 	gnuplot_3d_matrix(&plt3m);									// plot 
+	
 	deallocmem_gnuplot_3d_matrix(&plt3m);						// clear memory
 
 	// call den2pos function to generate dot_position
 	// den2pos(dden, dpos, hex_bl, hex_lng);
+	
 	den2pos_tetgen(dden, dpos, hex_bl, hex_lng);
 	ndot = dpos->ndot;
-
+	
 	// plot dot_position
+	
 	allocmem_gnuplot_2d(ndot, &plt2);
 	for (i=0; i<ndot; i++){ plt2.x[i] = dpos->xd[i]; plt2.y[i] = dpos->yd[i]; }
 	gnuplot_2d(&plt2);											// plot
+	
 	deallocmem_gnuplot_2d(&plt2);
+	
 
 	return;
 }

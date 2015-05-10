@@ -32,7 +32,13 @@ void read_microstr(char *fname, local_str *lstr)
 	zdim_out = zdim_in-zdim_out+pow(10.0,-6.0);			// set 1nm separation between microstructure and reflective plate.
 }
 
-void find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate origin into the center of the top plane of the box containg a microstrcuture
+
+// input: ray1, lstr
+
+// output: ray1
+// ray1->xr = x; ray1->yr = y; ray1->zr = z;
+// ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+bool find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate origin into the center of the top plane of the box containg a microstrcuture
 {
 	long int indx;
 	long int begi, midi;
@@ -127,7 +133,7 @@ void find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate
 
 	// check whether the incident position and emit position are on the same materials
 	if(solved) { xf = x; yf = y; zf = z; }
-	else {printf("find_str_intersection: error on find solution on box surface!"); exit(0); }
+	else {printf("find_str_intersection: error on find solution on box surface!\n"); return false; }
 	indx = int((x0-xmin)/dx)*(lstr->ny)+int((y0-ymin)/dy); sign0 = (lstr->thz[indx])-delta-(z0);
 	indx = int((xf-xmin)/dx)*(lstr->ny)+int((yf-ymin)/dy); signf = (lstr->thz[indx])-delta-(zf);
 	if(sign0>0){sign0 = 1.0;}
@@ -155,7 +161,7 @@ void find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate
 			if(signf>0){signf = 1.0;}	else{signf = -1.0;}
 			if ( sign0*signf>0 ){ begr = midr; endr = endr; midr = 0.5*(endr+begr); }
 			else if( sign0*signf<0 ) { begr = begr; endr = midr; midr = 0.5*(endr+begr); }
-			else {printf("find_str_intersection: error on find solution on microstructure surface!"); exit(0);}
+			else {printf("find_str_intersection: error on find solution on microstructure surface!\n"); return false;}
 			// check wheterh the solution is found
 			if( begi==midi ){ nonfound = false; }
 		}
@@ -179,4 +185,6 @@ void find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate
 		z = -xf*y0 + x0*yf;
 		ray1->nx = x; ray1->ny = y;	ray1->nz = z;
 	}
+
+	return true;
 }

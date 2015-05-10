@@ -1,0 +1,31 @@
+20150510 Ming-Sian Lin
+
+[Bug Fix/Modification]
+1. den_to_pos.cpp
+  change 
+      if( dpos->xd[i]<xstr_rng || dpos->xd[i]>(xdim-xstr_rng) || dpos->yd[i]<ystr_rng || dpos->yd[i]>(ydim-ystr_rng) ) 
+      	chkrep[j] = 0;
+  to 
+  	if( dpos->xd[i]<xstr_rng || dpos->xd[i]>(xdim-xstr_rng) || dpos->yd[i]<ystr_rng || dpos->yd[i]>(ydim-ystr_rng) ) 
+      	chkrep[i] = 0;
+
+2. revise Module IV
+	a. change function prototype
+	    void CalcGaussScatteredRay (struct ray_trace1 *MainRay, struct ray_trace1 *GaussScatteredRay)
+	b. revise call_CalcGaussScatteredRay
+
+[Features]
+1. add time utility
+	time_util.h, time_util.cpp
+   usage:
+      	call set_start_time to start execution time measurement
+      	call set_end_time to stop measurement
+		call print_execution_time to print out the executioon time
+		call print_execution_time to print out the executioon time
+		call print_all_execution_time to print out all measured execution time
+
+2. add enable_gnu_plot in var_def.h/var_def.cpp
+	enable_gnu_plot = true (enable gnuplot)
+	enable_gnu_plot = false (disable gnuplot)
+
+3. add dbg_main.cpp to separate the execution procedure of lg_module
