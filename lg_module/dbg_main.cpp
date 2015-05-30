@@ -51,7 +51,56 @@
 
 // main program
 
+#define MAX_OUTPUT_RAY 5
 
+static unsigned long hit_local_error_count = 0;
+static unsigned long iteration_count = 0;
+
+void hanldOneRay(ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
+{
+	int i, j;
+	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
+	struct ray_trace1 src_ray[2];
+
+	ray->ngaus 	= 1; 
+	// ray->inty 	= 1.0; 
+	ray->n1		= 1.0; 
+	ray->n2 	= 1.0;
+	ray->xr 	= 0.0; 
+	ray->yr 	= 0.0; 
+	ray->zr 	= 0; 
+	ray->thar 	= 100; 
+	ray->phir 	= 0.0;
+
+	iteration_count++;
+	find_str_hit_global(ray, dpos, opr);
+	if (!find_str_hit_local(ray, lstr))
+	{
+		hit_local_error_count++;
+		return;
+	}
+	CalcMainReflectiveRay(ray, &src_ray[0]);
+	CalcMainTransmittanceRay(ray, &src_ray[1]);
+
+	for(i=0; i<2; i++)
+	{
+		output_ray[i][0].phir = 1;
+		output_ray[i][1].phir = 2;
+		output_ray[i][2].phir = 3;
+		output_ray[i][3].phir = 4;
+		output_ray[i][4].phir = 5;
+		CalcGaussScatteredRay(&src_ray[i], (ray_trace1 *)&output_ray[i]);
+
+		for(j=0; j<MAX_OUTPUT_RAY; j++)
+		{
+			if(output_ray[i][j].inty > IntensityThreshold)
+			{
+				hanldOneRay(&output_ray[i][j], dpos, opr, lstr);
+			}
+		}
+	}
+	// call_CalcGaussScatteredRay(&source_ray[0]);
+}
 int dbg_start()
 {
 	int i;
@@ -139,16 +188,17 @@ int dbg_start()
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
 
-		find_str_hit_global(&ray1, &dpos, &opr);
-		if (!find_str_hit_local(&ray1, &lstr))
-		{
-			pI(i);
-			dumpRay1(&ray1);
-			continue;	
-		}
-		CalcMainReflectiveRay(&ray1, &source_ray[0]);
-		CalcMainTransmittanceRay(&ray1, &source_ray[1]);
-		call_CalcGaussScatteredRay(&source_ray[0]);
+		hanldOneRay(&ray1, &dpos, &opr, &lstr);
+
+		// find_str_hit_global(&ray1, &dpos, &opr);
+		// if (!find_str_hit_local(&ray1, &lstr))
+		// {
+		// 	dumpRay1(&ray1);
+		// 	continue;	
+		// }
+		// CalcMainReflectiveRay(&ray1, &source_ray[0]);
+		// CalcMainTransmittanceRay(&ray1, &source_ray[1]);
+		// call_CalcGaussScatteredRay(&source_ray[0]);
 	}
 	set_end_time("ray tracing");
 
@@ -166,7 +216,8 @@ int dbg_start()
 	// 	call_CalcGaussScatteredRay(&source_ray[i]);
 	// }
 
-	pLU(gaussScatteredRaycount);
+	pLU(hit_local_error_count);
+	pLU(iteration_count);
 
 	// module 5...	
 

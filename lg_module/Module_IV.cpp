@@ -152,7 +152,10 @@ void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1
 // Input  : The point to the main ray which needs to be gasussian scaterred. (No matter reflective or refractive one)
 // Output : The point to the structure of Gaussian scattered ray array
 //
+
 void CalcGaussScatteredRay (struct ray_trace1 *MainRay, struct ray_trace1 *GaussScatteredRay)
+
+// void CalcGaussScatteredRay (struct ray_trace1 *MainRay, struct ray_trace1 *GaussScatteredRay)
 {
 	int i;                               // 0  : Center ray
 	                                     // 1~4: Scattered rays on the first "cone"
@@ -161,10 +164,9 @@ void CalcGaussScatteredRay (struct ray_trace1 *MainRay, struct ray_trace1 *Gauss
 	double input_x, input_y, input_z;    // Used for calculating (theta, phi)
 	double output_x, output_y, output_z; // Used for calculating (theta, phi)
 
-	
 	for (i=0; i<MAX_OUTPUT_RAY;i++)
 	{
-	
+		
 		GaussScatteredRay[i].ngaus = i;      // 0: Main ray, 1~4: Scattered ray
 		GaussScatteredRay[i].n1 = MainRay->n1; // n1 of GaussScatteredRay = n1 of Main Ray.
 		GaussScatteredRay[i].n2 = MainRay->n2; // n2 of GaussScatteredRay = n2 of Main Ray.
@@ -209,6 +211,7 @@ void CalcGaussScatteredRay (struct ray_trace1 *MainRay, struct ray_trace1 *Gauss
 			GaussScatteredRay[i].inty = MainRay->inty * I1_4/(I0+I1_4*4);
 		}
 
+		GaussScatteredRay[i].phir = i;
 	}
 	// (xr, yr, zr) and (nx, ny, nz) don't need to be calculated here.
 }

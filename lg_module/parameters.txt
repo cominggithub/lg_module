@@ -26,7 +26,7 @@ yl_rng=100.0
 zl_rng=0.0
 
 // for ray tracing
-n_ray=100
+n_ray=10000
 n_gauss=1
 
 // for lguide performance (record/measurement)
