@@ -56,6 +56,21 @@
 
 static unsigned long hit_local_error_count = 0;
 static unsigned long iteration_count = 0;
+static char name[256];
+
+bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long int *nray)
+{
+	data_file_header dfh;
+
+	if(!load_ray_source_file_header(ray_source_file, &dfh))
+		return false;
+	
+	allocmem_ray_traces(dfh.count, rays);
+	printf("%s handles ray source offset: %d, ray count: %d\n", name, dfh.offset, dfh.count);
+
+	load_ray_source_file(ray_source_file, rays);
+	*nray = dfh.count;
+}
 
 void hanldOneRay(ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
@@ -103,9 +118,9 @@ void hanldOneRay(ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str
 	}
 	// call_CalcGaussScatteredRay(&source_ray[0]);
 }
-int dbg_start()
-{
 
+int ray_handler(const char *ray_source_file)
+{
 	int i;
 	// define variables
 	opt_mat opm;					// for optic materials
@@ -118,6 +133,8 @@ int dbg_start()
 	dot_position dpos;				// for global dot potision
 	char fpname[256];					// for reading parameters
 	struct ray_trace1 source_ray[2];
+	data_file_header dfh;
+
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -127,12 +144,11 @@ int dbg_start()
 
 	read_setup(fpname);
 
-
-
+	read_ray_source_file(ray_source_file, &rays, &n_ray);
+	
 	// allocate memory
 	allocmem_opm(n_wl, n_mat, &opm);			
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
-	allocmem_rays(n_ray, n_gaus, &rays, &ray1);	
 	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);			
 	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);		
 	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);	
@@ -141,30 +157,17 @@ int dbg_start()
 	// program body
 		
 
-	set_start_time("gen_source_ray");
 	// generate light source rays & initialize microstructure
-	gen_source_ray(&ops, &rays);
-	set_end_time("gen_source_ray");
+	// gen_source_ray(&ops, &rays);
 	
-	set_start_time("read_microstr");
 	read_microstr(str_file, &lstr);
-	set_end_time("read_microstr");
-
+	
 	// moduel 2...
 	//debug test
-	set_start_time("debug_den_to_pos");
 	debug_den_to_pos(&dden, &dpos);	// generate dot pattern for test;
-	set_end_time("debug_den_to_pos");
-
-	set_start_time("part_dots");
-	part_dots(&dpos);
-	set_end_time("part_dots");
-
-
 	
-
-	set_start_time("ray tracing");
-
+	part_dots(&dpos);
+	
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
@@ -202,8 +205,7 @@ int dbg_start()
 		// CalcMainTransmittanceRay(&ray1, &source_ray[1]);
 		// call_CalcGaussScatteredRay(&source_ray[0]);
 	}
-	set_end_time("ray tracing");
-
+	
 	// for(i=0; i<1; i++)
 	// {
 	// 	// CalcMainReflectiveRay(&incident_ray[i], &source_ray[i]);
@@ -218,13 +220,7 @@ int dbg_start()
 	// 	call_CalcGaussScatteredRay(&source_ray[i]);
 	// }
 
-	pLU(hit_local_error_count);
-	pLU(iteration_count);
-
 	// module 5...	
-
-
-
 
 	//deallocate memory
 	deallocmem_opm(&opm);
@@ -239,10 +235,21 @@ int dbg_start()
 	return 0;
 }
 
-/*
 int main(int argc, char** argv)
 {
-	dbg_start();
+	char fname[256];
+
+	pI(argc);
+	if (argc != 3)
+		return 1;
+	
+	strcpy(name, argv[1]);
+	strcpy(fname, argv[2]);
+
+	pStr(name);
+	pStr(fname);
+	ray_handler(fname);
+
+	printf("%s done\n", fname);
 	return 0;
 }
-*/

@@ -14,6 +14,7 @@
 #endif
 
 #define pl()	do{printf("%s:%s(%d)\n", __FILE__, __FUNCTION__, __LINE__);}while(0)
+#define pls(s)	do{printf("%s:%s(%d) %s\n", __FILE__, __FUNCTION__, __LINE__, s);}while(0)
 
 #define pI(v) 	do{printf("%s: %d\n", #v, v);}while(0)
 #define pU(v) 	do{printf("%s: %u\n", #v, v);}while(0)

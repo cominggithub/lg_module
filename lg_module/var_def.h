@@ -20,7 +20,7 @@ extern long int n_x, n_y, n_z;						// grid number along x, y, and z axes; <defa
 extern long int n_tha, n_phi;						// grid number along theta and phi; <default value>
 extern double xl_or, yl_or, zl_or;					// origin of the coordinate
 extern double xl_rng, yl_rng, zl_rng;				// dimensions along x, y, and z directions
-
+extern double z_reflector;
 // ray tracing
 extern long int n_ray;								// number of sampling rays
 extern long int n_gaus;							// number of gaussin-scattering rays;

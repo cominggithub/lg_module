@@ -7,12 +7,12 @@
 
 
 // input: ray1, dpos, opr
-// output: ray1, opr
-void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr)  // change coordinate origin into the center of the top plane of the box containg a microstrcuture
+// output: ray1, opr, type
+bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, int *type)  // change coordinate origin into the center of the top plane of the box containg a microstrcuture
 {
 	long int i, j, xi, yi, indx, begi, endi;
 	double dx, dy;
-	double x, y, z, r, nx, ny, nz, xc, yc, nx0, ny0, nz0;
+	double x, y, z, zf, r, ru, nx, ny, nz, xc, yc, nx0, ny0, nz0; //add zf,ru definition
 	double x0, y0, z0;
 	double xmin, xmax, ymin, ymax, zmin, zmax, rmin;
 	double mx, my, mz;
@@ -22,7 +22,7 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 
 	if(ray1->zr >=0.0 && ray1->thar<90.0)
 	{
-		// light emitted from light-guide plate. record the performance;
+		// light emitted from light-guide plate top surface. record the performance;
 		// herein, a normal luminance (theta<5) is recorded only for a example
 		dx = xdim/opr->nx+delta; dy = ydim/opr->ny+delta;
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
@@ -30,7 +30,16 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 		opr->inty[indx] = opr->inty[indx]+ray1->inty;
 
 	}
-	else if( (ray1->zr==0.0 && ray1->thar>90.0) || (ray1->zr<0 && ray1->zr>-zdim_in) || (ray1->zr==-zdim_in && ray1->thar<90.0) )
+	// light emitted from back,front,right,left surface. delete the ray.
+	else if( (ray1->yr==0.0 && ray1->phir>180.0 && ray1->phir>360) || (ray1->yr<ydim && ray1->phir>180.0 && ray1->phir>360) || (ray1->xr==0 && ray1->phir>90.0 && ray1->phir<270.0) ||
+		     (ray1->xr==xdim && ray1->phir>90.0 && ray1->phir<270.0))
+	{
+		ray1->inty = 0;
+	}
+
+	// the position of ray is between z=0 and -zdim_in, polar angle >90 deg 
+	// do 2 check (1)light-guide front, back , right, left, top bottom plane (2) microstr box
+	else if( (ray1->zr<=0.0 && ray1->thar>90.0) || (ray1->zr>-zdim_in && ray1->thar>90.0) || (ray1->zr<0 && ray1->zr<=-zdim_in && ray1->thar<90.0) )
 	{
 		x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
 		xmin = 0.0;		xmax = xdim;
@@ -40,7 +49,43 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 		mz = cos(ray1->thar*pi/180.0);
 		nx = 0.0; ny = 0.0; nz = 0.0;
 		solved = false;
-		// sovle the intersection of ray and top plane z=zmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// solve the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// and check the ray if in the box. 
+		// if the ray1 is inside a box, call the find_str_hit_local to obtain the accuracy intersection point;
+		if(!solved)
+		{
+			z = zmin;	r = (z-z0)/mz;
+			x = r*mx+x0;	 y = r*my+y0;
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			{
+				solved = true;
+				nx = 0.0; ny = 0.0; nz = -1.0;
+			
+			    dx = xdim/dpos->partnx+delta; dy = ydim/dpos->partny+delta;
+		        xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
+		        indx = xi*dpos->partny + yi;
+		        if(indx>0) begi = dpos->partaccni[indx-1];
+		        else begi = 0;
+		        endi = dpos->partaccni[indx];
+		        rmin = pow(10.0,5.0);
+		        x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
+		        nx0 = ray1->nx;	ny0 = ray1->ny;	nz0 = ray1->nz;
+		        for(i=begi; i<endi; i++)
+		        {
+			
+			        // check whether the ray1 is inside a box
+					// and inside a box, call find_str_hit_local
+			        xc = dpos->xd[i]; yc = dpos->yd[i];
+			        if( abs(ray1->xr-xc)<0.5*xstr_rng && abs(ray1->yr-yc)<0.5*ystr_rng )		// inside a box
+			        {
+			        	ray1->xr = x0; ray1->yr = y0; ray1->zr = z0;
+				        ray1->nx = nx0; ray1->ny = ny0; ray1->nz = nz0;
+				      break;
+			        }
+			    }
+			}
+		}
+		// solve the intersection of ray and top plane z=zmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		if(!solved)
 		{
 			z = zmax;	r = (z-z0)/mz;
@@ -51,18 +96,7 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 				nx = 0.0; ny = 0.0; nz = 1.0;
 			}
 		}
-		// sovle the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
-		if(!solved)
-		{
-			z = zmin;	r = (z-z0)/mz;
-			x = r*mx+x0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
-			{
-				solved = true;
-				nx = 0.0; ny = 0.0; nz = -1.0;
-			}
-		}
-		// sovle the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// solve the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		if(!solved)
 		{
 			y = ymin;	r = (y-y0)/my;
@@ -73,7 +107,7 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 				nx = 0.0; ny = -1.0; nz = 0.0;
 			}
 		}
-		// sovle the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// solve the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		if(!solved)
 		{
 			y = ymax;	r = (y-y0)/my;
@@ -84,7 +118,7 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 				nx = 0.0; ny = 1.0; nz = 0.0;
 			}
 		}
-		// sovle the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// solve the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		if(!solved)
 		{
 			x = xmin;	r = (x-x0)/mx;
@@ -95,7 +129,7 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 				nx = -1.0; ny = 0.0; nz = 0.0;
 			}
 		}
-		// sovle the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// solve the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		if(!solved)
 		{
 			x = xmax;	r = (x-x0)/mx;
@@ -106,13 +140,15 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 				nx = 1.0; ny = 0.0; nz = 0.0;
 			}
 		}
+		
 	}
-	else if( (ray1->zr==-zdim_in && ray1->thar>90.0) || (ray1->zr<-zdim_in && ray1->zr>-zdim_out) || (ray1->zr==-zdim_out && ray1->thar<90.0) )
-	{
-		// find the dots in nearby partition, In this case, we consier the dots in occupied partition only.
+	    // the position of ray is between zdim_in and z_refl, and polar angle >90 deg.
+	    //do 2 check : (1) nearest box (2) reflector plane
+	    // find the dots in nearby partition, In this case, we consier the dots in occupied partition only.
 		// In this global finding, every microstructure for a dot is effectively treated as box;
-		// (1) if the ray1 is inside a box, call the find_str_hit_local to obtain the accuracy intersection point;
-		// (2) if the ray1 is outside the boxes, find the box that ray1 belongs to
+		// find the box that ray1 belongs to
+	else if( (ray1->zr <=-zdim_in && ray1->thar>90.0) || (ray1->zr >-z_reflector && ray1->thar>90.0) )
+	{
 		dx = xdim/dpos->partnx+delta; dy = ydim/dpos->partny+delta;
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		indx = xi*dpos->partny + yi;
@@ -122,27 +158,22 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 		rmin = pow(10.0,5.0);
 		x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
 		nx0 = ray1->nx;	ny0 = ray1->ny;	nz0 = ray1->nz;
+		zf = -z_reflector;
 		solved = false;
+		mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0); mz = cos(ray1->thar*pi/180.0);
+	    nx = 0.0; ny = 0.0; nz = 0.0;
 		for(i=begi; i<endi; i++)
 		{
 			
-			// check whether the ray1 is inside a box
-			xc = dpos->xd[i]; yc = dpos->yd[i];
-			if( abs(ray1->xr-xc)<0.5*xstr_rng && abs(ray1->yr-yc)<0.5*ystr_rng )		// inside a box
-			{
-				ray1->xr = x0; ray1->yr = y0; ray1->zr = z0;
-				ray1->nx = nx0; ray1->ny = ny0; ray1->nz = nz0;
-				break;
-			}
-
-			// if not inside a box, find the nearest plane hitted
+			
+			// find the nearest box hitted
 			xmin = xc-0.5*xstr_rng;		xmax = xc+0.5*xstr_rng;
 			ymin = yc-0.5*ystr_rng;		ymax = yc+0.5*ystr_rng;
 			zmin = -zdim_out;		zmax = -zdim_in;
-			mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
-			mz = cos(ray1->thar*pi/180.0);
-			nx = 0.0; ny = 0.0; nz = 0.0;
+			
 			// sovle the intersection of ray and top plane z=zmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
 				z = zmax;	r = (z-z0)/mz;
 				x = r*mx+x0;	 y = r*my+y0;
 				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
@@ -155,7 +186,10 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
 				}
-			// sovle the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			}
+			// solve the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
 				z = zmin;	r = (z-z0)/mz;
 				x = r*mx+x0;	 y = r*my+y0;
 				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
@@ -168,7 +202,10 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
 				}
-			// sovle the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			}
+			// solve the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
 				y = ymin;	r = (y-y0)/my;
 				x = r*mx+x0;	 z = r*mz+z0;
 				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
@@ -181,7 +218,10 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
 				}
-			// sovle the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			}
+			// solve the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
 				y = ymax;	r = (y-y0)/my;
 				x = r*mx+x0;	 z = r*mz+z0;
 				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
@@ -194,7 +234,10 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
 				}
-			// sovle the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			}
+			// solve the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
 				x = xmin;	r = (x-x0)/mx;
 				z = r*mz+z0;	 y = r*my+y0;
 				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
@@ -207,7 +250,10 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
 				}
-			// sovle the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			}
+			// solve the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
 				x = xmax;	r = (x-x0)/mx;
 				z = r*mz+z0;	 y = r*my+y0;
 				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
@@ -220,9 +266,183 @@ void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr) 
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
 				}
+			}
 		}
-		if(solved==false){ printf("find_str_hit_global: ray1 hit no dot in considered partitions"); exit(0); }  // modify the rule according to demand.
+
+		// solve the intersection of ray and reflector plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// and if ray is solved on the reflector plane, call the RayFromReflector
+		if (!solved)
+		{
+				z = zf;	r = (z-z0)/mz;
+				x = r*mx+x0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 0.0; ny = 0.0; nz = 1.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+		}
+		if(solved==false)
+		{ 
+			printf("find_str_hit_global: ray1 hit no dot in considered partitions"); 
+			return false;
+		}  // modify the rule according to demand.
 	}
+
+	 // the position of ray is between zdim_in and z_refl, and polar angle <90 deg.
+	 // do 2 check : (1) nearest box (2) light-guide bottom plane 
+	else if( (ray1->zr <-zdim_in && ray1->thar<90.0) || (ray1->zr >=-z_reflector && ray1->thar<90.0) )
+	{
+		dx = xdim/dpos->partnx+delta; dy = ydim/dpos->partny+delta;
+		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
+		indx = xi*dpos->partny + yi;
+		if(indx>0) begi = dpos->partaccni[indx-1];
+		else begi = 0;
+		endi = dpos->partaccni[indx];
+		rmin = pow(10.0,5.0);
+		x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
+		nx0 = ray1->nx;	ny0 = ray1->ny;	nz0 = ray1->nz;
+		zf = -z_reflector;
+		solved = false;
+		mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0); mz = cos(ray1->thar*pi/180.0);
+	    nx = 0.0; ny = 0.0; nz = 0.0;
+		for(i=begi; i<endi; i++)
+		{
+			
+			
+			// find the nearest box hitted
+			xmin = xc-0.5*xstr_rng;		xmax = xc+0.5*xstr_rng;
+			ymin = yc-0.5*ystr_rng;		ymax = yc+0.5*ystr_rng;
+			zmin = -zdim_out;		zmax = -zdim_in;
+			
+			// sovle the intersection of ray and top plane z=zmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
+				z = zmax;	r = (z-z0)/mz;
+				x = r*mx+x0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 0.0; ny = 0.0; nz = 1.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+			}
+			// solve the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
+				z = zmin;	r = (z-z0)/mz;
+				x = r*mx+x0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 0.0; ny = 0.0; nz = -1.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+			}
+			// solve the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
+				y = ymin;	r = (y-y0)/my;
+				x = r*mx+x0;	 z = r*mz+z0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 0.0; ny = -1.0; nz = 0.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+			}
+			// solve the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
+				y = ymax;	r = (y-y0)/my;
+				x = r*mx+x0;	 z = r*mz+z0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 0.0; ny = 1.0; nz = 0.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+			}
+			// solve the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
+				x = xmin;	r = (x-x0)/mx;
+				z = r*mz+z0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = -1.0; ny = 0.0; nz = 0.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+			}
+			// solve the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+			if (!solved)
+			{
+				x = xmax;	r = (x-x0)/mx;
+				z = r*mz+z0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 1.0; ny = 0.0; nz = 0.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+			}
+		}
+
+		// solve the intersection of ray and reflector plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// and if ray is solved on the bottom plane, call the module IV
+		if (!solved)
+		{
+				z = -zdim_in;	r = (z-z0)/mz;
+				x = r*mx+x0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				{
+					solved = true;
+					nx = 0.0; ny = 0.0; nz = -1.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+				}
+		}
+		if(solved==false)
+		{ 
+			printf("find_str_hit_global: ray1 hit no dot in considered partitions"); 
+			false;
+		}  // modify the rule according to demand.
+	}
+
+
+	return true;
 }
 
 void part_dots(dot_position *dpos)

@@ -56,6 +56,23 @@ void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long i
 	return;
 }
 
+void allocmem_ray_traces(long int n_ray, ray_traces *rays)
+{
+	
+	rays->nray = n_ray;
+	rays->xr = new double[rays->nray];
+	if( rays->xr == nullptr ) { printf("allocmem_rays: x in rays error\n"); exit(0); }
+	rays->yr = new double[rays->nray];
+	if( rays->yr == nullptr ) { printf("allocmem_rays: y in rays error\n"); exit(0); }
+	rays->zr = new double[rays->nray];
+	if( rays->zr == nullptr ) { printf("allocmem_rays: z in rays error\n"); exit(0); }
+	rays->thar = new double[rays->nray];
+	if( rays->thar == nullptr ) { printf("allocmem_rays: theta in rays error\n"); exit(0); }
+	rays->phir = new double[rays->nray];
+	if( rays->phir == nullptr ) { printf("allocmem_rays: phi in rays error\n"); exit(0); }
+	return;
+}
+
 void allocmem_rays(long int n_ray, long int n_gaus, ray_traces *rays, ray_trace1 *ray1)
 {
 	// allocate memory for sampling of rays
@@ -187,6 +204,16 @@ void deallocmem_ops(opt_source *ops)
 	// deallocate memory for light source
 	delete [] ops->inty;
 	delete [] ops->accinty;
+	return;
+}
+
+void deallocmem_ray_traces(ray_traces *rays)
+{
+	delete [] rays->xr;
+	delete [] rays->yr;
+	delete [] rays->zr;
+	delete [] rays->thar;
+	delete [] rays->phir;
 	return;
 }
 

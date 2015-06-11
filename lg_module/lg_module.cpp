@@ -52,12 +52,8 @@
 // main program
 
 
-extern int dbg_start();
 int main(int argc, char** argv)
 {
-
-	dbg_start();
-	return 0;
 	// define variables
 	opt_mat opm;					// for optic materials
 	opt_source ops;					// for optic source
@@ -68,6 +64,7 @@ int main(int argc, char** argv)
 	dot_density dden;				// for global dot density
 	dot_position dpos;				// for global dot potision
 	char fpname[256];					// for reading parameters
+	int type;
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -115,7 +112,7 @@ int main(int argc, char** argv)
 	set_start_time("find_str_hit_global");
 	// input: ray1, dpos, opr
 	// output: ray1, opr
-	find_str_hit_global(&ray1, &dpos, &opr);
+	find_str_hit_global(&ray1, &dpos, &opr, &type);
 	set_end_time("find_str_hit_global");
 
 	// moduel 3...

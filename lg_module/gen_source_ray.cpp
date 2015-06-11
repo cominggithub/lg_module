@@ -8,6 +8,7 @@
 #include "mem_func.h"
 #include "plt_figure.h"
 #include "den_to_pos.h"
+#include "dbg_log.h"
 
 void gen_source_ray(opt_source *ops, ray_traces *rays)
 {
@@ -26,7 +27,8 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 	dphi = 170.0/ops->nphi;
 	nray = rays->nray;
 	nrayi = int(1.0*nray/ops->ntha/ops->nphi/ops->ny);
-	rays->nray = nrayi*ops->ntha/ops->nphi/ops->ny;
+//	rays->nray = nrayi*ops->ntha/ops->nphi/ops->ny;
+	
 
 	// simulate a gaussin-type light source profiles (2d+1d)
 	for (i=0; i<ops->ntha*ops->nphi; i++)

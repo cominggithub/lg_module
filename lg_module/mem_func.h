@@ -6,6 +6,7 @@
 void allocmem_opm(long int n_wl, long int n_mat, opt_mat *opm);
 void allocmem_ops(long int n_x, long int n_y, long int n_z, long int n_tha, long int n_phi, double xl_or, \
 				double yl_or, double zl_or, double xl_rng, double yl_rng, double zl_rng, opt_source *ops);
+void allocmem_ray_traces(long int n_ray, ray_traces *rays);
 void allocmem_rays(long int n_ray, long int n_gaus, ray_traces *rays, ray_trace1 *ray1);
 void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long int nphi_rcd, double xrcd_or,\
 			double yrcd_or, double zrcd_or, double xrcd_rng, double yrcd_rng, opt_record *opr);
@@ -20,6 +21,7 @@ void allocmem_gnuplot_3d_matrix(long int n1, long int n2, plot_3d_matrix *plt3dm
 void allocmem_gnuplot_3d_vector(long int n1, plot_3d_vector *plt3dv);
 void deallocmem_opm(opt_mat *opm);
 void deallocmem_ops(opt_source *ops);
+void deallocmem_ray_traces(ray_traces *rays);
 void deallocmem_rays(ray_traces *rays, ray_trace1 *ray1);
 void deallocmem_record(opt_record *opr);
 void deallocmem_local_str(local_str *lstr);

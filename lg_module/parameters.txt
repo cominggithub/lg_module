@@ -26,7 +26,7 @@ yl_rng=100.0
 zl_rng=0.0
 
 // for ray tracing
-n_ray=10000
+n_ray=100
 n_gauss=1
 
 // for lguide performance (record/measurement)
@@ -41,7 +41,7 @@ nx_str=100
 ny_str=100
 center_x=0.0
 center_y=0.0
-xstr_rng=0.0276 
+xstr_rng=0.0276
 ystr_rng=0.0276
 str_file=microstr.txt
 
@@ -58,3 +58,6 @@ partn_x=10
 partn_y=10
 hex_bl=T
 hex_lng=0.5
+
+
+  

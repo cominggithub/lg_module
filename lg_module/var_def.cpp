@@ -5,7 +5,7 @@ double pi = 3.141592653589793;
 double delta = pow(10.0,-12.0);
 
 // light-guide geometry (mm)
-double xdim, ydim, zdim_in, zdim_out;					// zdim_out is decided by zdim_in + heightness of microstructure
+double xdim, ydim, zdim_in, zdim_out, z_reflector;					// zdim_out is decided by zdim_in + heightness of microstructure
 
 
 // optical material
