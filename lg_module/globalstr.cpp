@@ -19,7 +19,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	bool solved;
 	
 	
-
+	*type = 0;
 	if(ray1->zr >=0.0 && ray1->thar<90.0)
 	{
 		// light emitted from light-guide plate top surface. record the performance;
@@ -28,6 +28,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		indx = xi*opr->ny + yi;
 		opr->inty[indx] = opr->inty[indx]+ray1->inty;
+		*type = 1;
 
 	}
 	// light emitted from back,front,right,left surface. delete the ray.
@@ -35,6 +36,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		     (ray1->xr==xdim && ray1->phir>90.0 && ray1->phir<270.0))
 	{
 		ray1->inty = 0;
+		*type = 2;
 	}
 
 	// the position of ray is between z=0 and -zdim_in, polar angle >90 deg 
@@ -80,9 +82,14 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			        {
 			        	ray1->xr = x0; ray1->yr = y0; ray1->zr = z0;
 				        ray1->nx = nx0; ray1->ny = ny0; ray1->nz = nz0;
+						*type = 3;
 				      break;
 			        }
 			    }
+			}
+			if (solved == true && *type == 0)
+			{
+				*type = 4;
 			}
 		}
 		// solve the intersection of ray and top plane z=zmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
@@ -93,7 +100,9 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
 			{
 				solved = true;
-				nx = 0.0; ny = 0.0; nz = 1.0;
+				ray1->nx = 0.0; ray1->ny = 0.0; ray1->nz = 1.0;
+				ray1->xr = x; ray1->yr = y; ray1->zr = z;
+
 			}
 		}
 		// solve the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
@@ -104,7 +113,8 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
 			{
 				solved = true;
-				nx = 0.0; ny = -1.0; nz = 0.0;
+				ray1->nx = 0.0; ray1->ny = -1.0; ray1->nz = 0.0;
+				ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			}
 		}
 		// solve the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
@@ -115,7 +125,8 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
 			{
 				solved = true;
-				nx = 0.0; ny = 1.0; nz = 0.0;
+				ray1->nx = 0.0; ray1->ny = 1.0; ray1->nz = 0.0;
+				ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			}
 		}
 		// solve the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
@@ -126,7 +137,8 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
 			{
 				solved = true;
-				nx = -1.0; ny = 0.0; nz = 0.0;
+				ray1->nx = -1.0; ray1->ny = 0.0; ray1->nz = 0.0;
+				ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			}
 		}
 		// solve the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
@@ -137,10 +149,11 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
 			{
 				solved = true;
-				nx = 1.0; ny = 0.0; nz = 0.0;
+				ray1->nx = 1.0; ray1->ny = 0.0; ray1->nz = 0.0;
+				ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			}
 		}
-		
+	    *type = 4;	
 	}
 	    // the position of ray is between zdim_in and z_refl, and polar angle >90 deg.
 	    //do 2 check : (1) nearest box (2) reflector plane
@@ -268,6 +281,10 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 				}
 			}
 		}
+		if (solved)
+		{
+			*type = 3;
+		}
 
 		// solve the intersection of ray and reflector plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		// and if ray is solved on the reflector plane, call the RayFromReflector
@@ -284,6 +301,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 						ray1->xr = x; ray1->yr = y; ray1->zr = z;
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
+					*type = 5;
 				}
 		}
 		if(solved==false)
@@ -291,6 +309,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			printf("find_str_hit_global: ray1 hit no dot in considered partitions"); 
 			return false;
 		}  // modify the rule according to demand.
+		
 	}
 
 	 // the position of ray is between zdim_in and z_refl, and polar angle <90 deg.
@@ -416,8 +435,12 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 				}
 			}
 		}
+		if (solved)
+		{
+			*type = 3;
+		}
 
-		// solve the intersection of ray and reflector plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// solve the intersection of ray and bottom plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		// and if ray is solved on the bottom plane, call the module IV
 		if (!solved)
 		{
@@ -432,6 +455,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 						ray1->xr = x; ray1->yr = y; ray1->zr = z;
 						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
 					}
+					*type = 4;
 				}
 		}
 		if(solved==false)
@@ -439,6 +463,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			printf("find_str_hit_global: ray1 hit no dot in considered partitions"); 
 			false;
 		}  // modify the rule according to demand.
+		
 	}
 
 

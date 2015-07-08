@@ -3,6 +3,7 @@
 
 #include "mem_func.h"
 #include "var_def.h"
+#include "dbg_log.h"
 
 void allocmem_opm(long int n_wl, long int n_mat, opt_mat *opm)
 {
@@ -51,6 +52,7 @@ void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long i
 	opr->xrng = xrcd_rng;
 	opr->yrng = yrcd_rng;
 	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
+	
 	if( opr->inty == nullptr ) { printf("allocmem_record: light recording error\n"); exit(0); }
 	for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ ){ opr->inty[i]=0.0; }
 	return;

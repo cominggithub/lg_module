@@ -89,8 +89,9 @@ void split_ray(const char* prefix, ray_traces *rays, int count)
 		sprintf(fname, "%s_ray_source_%d.dat", prefix, i);
 		sprintf(dfh.prefix, "%s", fname);
 		printf("%s\n", fname);
-		dfh.count 	= blockCount;
-		dfh.offset 	= offset;
+		dfh.count 		= blockCount;
+		dfh.offset 		= offset;
+		dfh.entry_size 	= sizeof(ray_traces_data);
 		save_ray_source_file(fname, &dfh, tmpRays);
 
 		offset += perBlockCount;
@@ -139,11 +140,7 @@ int main(int argc, char** argv)
 	// allocate memory
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
 	allocmem_ray_traces(n_ray, &rays);	
-	pI(n_ray);
-	pI(rays.nray);
 	gen_source_ray(&ops, &rays);
-	pI(rays.nray);
-	
 	split_ray(prefix, &rays, count);
 
 

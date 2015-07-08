@@ -38,10 +38,15 @@ OBJ_FILES := \
 	Module_IV.o \
 	plt_figure.o \
 	time_util.o \
+	ray_tracer.o \
+	opt_reflector.o \
+	glist.o \
+	opt_record.cpp \
+	mem_alloc.cpp \
 	var_def.o
 
 
-all: prepare lg_module dbg_main data_precessor ray_handler
+all: prepare lg_module data_precessor ray_handler
 
 
 prepare:

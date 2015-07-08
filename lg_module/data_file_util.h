@@ -2,12 +2,29 @@
 #define _LG_MULTI_PROCESSOR_H_
 
 #include "var_type.h"
+#include "opt_record.h"
+
 typedef struct _data_file_header
 {
 	char prefix[256];
 	unsigned int offset;
+	int entry_size;
 	long int count;
 }data_file_header;
+
+typedef struct _ray_traces_data
+{
+	double xr, yr, zr, thar, phir;
+}ray_traces_data;
+
+typedef struct _opt_record_data
+{
+	long int nx, ny, ntha, nphi;
+	double x0, y0, z0, xrng, yrng;
+	double inty[0];										// intensity profile
+
+}opt_record_data;
+
 
 bool save_ray_source_file(
 	const char* fname, 
@@ -25,7 +42,31 @@ bool load_ray_source_file(
 	struct ray_traces* rays
 );
 
+bool save_opt_record_file(
+	const char* fname, 
+	data_file_header *dh, 
+	opt_record_head *h
+);
+
+bool load_opt_record_file(
+	const char* fname, 
+	data_file_header *dfh, 
+	opt_record_head *head
+);
+
+void copy_opr_to_opr_data(
+	opt_record_data *data, 
+	opt_record* opr, 
+	int array_size
+);
+
+void copy_opr_data_to_opr(
+	opt_record *opr, 
+	opt_record_data* data, 
+	int array_size
+);
 
 void test_ray_source_file();
 void dump_ray_traces(struct ray_traces *rays);
+void dump_opt_record_data(opt_record_data *opr);
 #endif

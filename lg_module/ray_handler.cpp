@@ -28,6 +28,7 @@
 #include "dbg_log.h"
 #include "time_util.h"
 #include "data_file_util.h"
+#include "ray_tracer.h"
 
 // // function for memory arrangement
 // void read_setup(char *fpname);
@@ -66,57 +67,12 @@ bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long in
 		return false;
 	
 	allocmem_ray_traces(dfh.count, rays);
-	printf("%s handles ray source offset: %d, ray count: %d\n", name, dfh.offset, dfh.count);
+	printf("%s handles ray source offset: %d, ray count: %ld\n", name, dfh.offset, dfh.count);
 
 	load_ray_source_file(ray_source_file, rays);
 	*nray = dfh.count;
-}
 
-void hanldOneRay(ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
-{
-	int i, j;
-	int type;
-	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
-	struct ray_trace1 src_ray[2];
-
-	ray->ngaus 	= 1; 
-	// ray->inty 	= 1.0; 
-	ray->n1		= 1.0; 
-	ray->n2 	= 1.0;
-	ray->xr 	= 0.0; 
-	ray->yr 	= 0.0; 
-	ray->zr 	= 0; 
-	ray->thar 	= 100; 
-	ray->phir 	= 0.0;
-
-	iteration_count++;
-	find_str_hit_global(ray, dpos, opr, &type);
-	if (!find_str_hit_local(ray, lstr))
-	{
-		hit_local_error_count++;
-		return;
-	}
-	CalcMainReflectiveRay(ray, &src_ray[0]);
-	CalcMainTransmittanceRay(ray, &src_ray[1]);
-
-	for(i=0; i<2; i++)
-	{
-		output_ray[i][0].phir = 1;
-		output_ray[i][1].phir = 2;
-		output_ray[i][2].phir = 3;
-		output_ray[i][3].phir = 4;
-		output_ray[i][4].phir = 5;
-		CalcGaussScatteredRay(&src_ray[i], (ray_trace1 *)&output_ray[i]);
-
-		for(j=0; j<MAX_OUTPUT_RAY; j++)
-		{
-			if(output_ray[i][j].inty > IntensityThreshold)
-			{
-				hanldOneRay(&output_ray[i][j], dpos, opr, lstr);
-			}
-		}
-	}
-	// call_CalcGaussScatteredRay(&source_ray[0]);
+	return true;
 }
 
 int ray_handler(const char *ray_source_file)
@@ -132,8 +88,12 @@ int ray_handler(const char *ray_source_file)
 	dot_density dden;				// for global dot density
 	dot_position dpos;				// for global dot potision
 	char fpname[256];					// for reading parameters
+	char prefix[256];
+	char opr_record_fileName[256];
 	struct ray_trace1 source_ray[2];
-	data_file_header dfh;
+	data_file_header rays_dfh;
+	data_file_header opr_dfh;
+	opt_record_head *opr_head;
 
 
 	set_start_time("Total");
@@ -168,6 +128,7 @@ int ray_handler(const char *ray_source_file)
 	
 	part_dots(&dpos);
 	
+	opr_head = new_opt_record_head();
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
@@ -193,7 +154,7 @@ int ray_handler(const char *ray_source_file)
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
 
-		hanldOneRay(&ray1, &dpos, &opr, &lstr);
+		trace_one_ray(&ray1, &dpos, opr_head, &lstr);
 
 		// find_str_hit_global(&ray1, &dpos, &opr);
 		// if (!find_str_hit_local(&ray1, &lstr))
@@ -206,19 +167,15 @@ int ray_handler(const char *ray_source_file)
 		// call_CalcGaussScatteredRay(&source_ray[0]);
 	}
 	
-	// for(i=0; i<1; i++)
-	// {
-	// 	// CalcMainReflectiveRay(&incident_ray[i], &source_ray[i]);
-	// 	// CalcMainTransmittanceRay(&incident_ray[i], &source_ray[i+100]);
 
-	// 	CalcMainReflectiveRay(&ray1, &source_ray[i]);
-	// 	CalcMainTransmittanceRay(&ray1, &source_ray[i+100]);
-	// }
+	sprintf(opr_record_fileName, "%s.opt_record", prefix);
+	opr_dfh.count 		= ((glist_head_t*)opr_head)->len;
+	opr_dfh.offset 		= 0;
+	opr_dfh.entry_size 	= ACTUAL_OPT_RECORD_SIZE;
 
-	// for(i=0; i<200; i++)
-	// {
-	// 	call_CalcGaussScatteredRay(&source_ray[i]);
-	// }
+	save_opt_record_file("", &opr_dfh, opr_head);
+
+	free_opt_record_head(&opr_head);
 
 	// module 5...	
 

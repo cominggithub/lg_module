@@ -3,12 +3,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include "dbg_log.h"
-
-
-typedef struct _ray_traces_data
-{
-	double xr, yr, zr, thar, phir;
-}ray_traces_data;
+#include "glist.h"
 
 bool save_ray_source_file(
 	const char* fname, 
@@ -21,9 +16,9 @@ bool save_ray_source_file(
 	ray_traces_data data;
 
 	size_t dataSize;
-	RETURNR_ON_NULL(dfh, false);
-	RETURNR_ON_ZERO(dfh->count, false);
-	RETURNR_ON_NULL(rays, false);
+	RETURNV_ON_NULL(dfh, false);
+	RETURNV_ON_ZERO(dfh->count, false);
+	RETURNV_ON_NULL(rays, false);
 
 	if (dfh->count != rays->nray)
 		return false;
@@ -194,4 +189,190 @@ void dump_ray_traces(struct ray_traces *rays)
 			rays->phir[i]
 		);
 	}
+}
+
+
+// 
+
+bool save_opt_record_file(
+	const char* fname, 
+	data_file_header *dfh, 
+	opt_record_head *head
+)
+{
+	unsigned int i, j;
+	int entry_size;
+	int opr_size;
+	int inty_size;
+	FILE *fp;
+	glist_t *cur;
+
+	opt_record_data *data;
+	struct opt_record *opr;
+
+	RETURNV_ON_NULL(dfh, false);
+	RETURNV_ON_NULL(head, false);
+    
+
+	size_t dataSize;
+	
+	fp = fopen(fname, "wb");
+	if (!fp)
+		return false;
+	
+	if (!fwrite(dfh, sizeof(data_file_header), 1, fp))
+	{
+		return false;
+	}
+
+	// dont count the size of double point inty
+
+	opr_size 	= sizeof(opt_record) - sizeof(double*);
+	entry_size 	= dfh->entry_size;
+	inty_size	= dfh->entry_size - opr_size;
+	cur 		= ((glist_head_t*)head)->child;
+	data 		= (opt_record_data*)malloc(entry_size);
+
+	for(i=0; i<dfh->count && cur != NULL; i++)
+	{
+		opr = (opt_record*)cur->vptr;
+		RETURNV_ON_NULL(opr, false);
+		copy_opr_to_opr_data(data, opr, inty_size);
+		if (!fwrite(data, entry_size, 1, fp))
+		{
+			return false;
+		}
+		cur = cur->next;
+	}
+
+	if (i != dfh->count)
+	{
+		printf("[Error] count not matched: expected : %ld, actual: %ld\n", dfh->count, i);
+	}
+
+	fflush(fp);
+	fclose(fp);
+
+	// free(data);
+
+	return true;
+
+}
+
+
+bool load_opt_record_file(
+	const char* fname, 
+	data_file_header *dfh, 
+	opt_record_head *head
+)
+{
+	unsigned int i, j;
+	int entry_size;
+	int opr_size;
+	int inty_size;
+	glist_t *cur;
+	opt_record_data *data;
+	struct opt_record *opr;
+	FILE *fp;
+	size_t read_count;
+	double *dd;
+
+	
+	fp = fopen(fname, "rb");
+	if (!fp)
+	{
+		return false;
+	}
+	
+	if(!fread(dfh, sizeof(data_file_header), 1, fp))
+	{
+		return false;
+	}
+
+	opr_size 	= sizeof(opt_record) - sizeof(double*);
+	entry_size 	= dfh->entry_size;
+	inty_size 	= dfh->entry_size - opr_size;
+	data 		= (opt_record_data*)malloc(entry_size);
+
+	for(i=0; i<dfh->count; i++)
+	{
+		opr = new_opt_record();
+		
+		if (!fread(data, entry_size, 1, fp))
+		{
+			return false;
+		}
+
+		copy_opr_data_to_opr(opr, data, inty_size);
+		add_opt_record(head, opr);
+	}
+
+	fclose(fp);
+	return true;
+
+}
+
+
+		
+// 		struct opt_record
+// {
+// 	long int nx, ny, ntha, nphi;
+// 	double x0, y0, z0, xrng, yrng;
+// 	double *inty;										// intensity profile
+// };
+
+void copy_opr_to_opr_data(opt_record_data *data, opt_record* opr, int array_size)
+{
+	// data->nx 	= opr->nx;
+	// data->ny 	= opr->ny;
+	// data->ntha 	= opr->ntha;
+	// data->nphi 	= opr->nphi;
+	// data->x0 	= opr->x0;
+	// data->y0 	= opr->y0;
+	// data->z0 	= opr->z0;
+	// data->xrng 	= opr->xrng;
+	// data->yrng	= opr->yrng;
+
+	memcpy(data, opr, sizeof(opt_record_data));
+	memcpy(data->inty, opr->inty, array_size);
+}
+
+void copy_opr_data_to_opr(opt_record *opr, opt_record_data* data, int array_size)
+{	
+	memcpy(opr, data, sizeof(opt_record_data));
+	memcpy(opr->inty, data->inty, array_size);
+}
+
+void dump_opt_record_data(opt_record_data *opr)
+{
+	int i;
+	int inty_count;
+
+	RETURN_ON_NULL(opr);
+
+	inty_count = opr->nx*opr->ny*opr->ntha*opr->nphi;
+	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f\n",
+			opr->nx, 
+			opr->ny,
+			opr->ntha,
+			opr->nphi,
+			opr->x0,
+			opr->y0,
+			opr->z0,
+			opr->xrng,
+			opr->yrng
+
+	);
+	
+	for(i=0; i<3 && i < inty_count; i++)
+	{
+		printf("%.5f, ", opr->inty[i]);
+	}
+
+	for(i=inty_count-3; i>3 && i < inty_count; i++)
+	{
+		printf("%.5f, ", opr->inty[i]);
+	}
+
+	printf("\n");
 }

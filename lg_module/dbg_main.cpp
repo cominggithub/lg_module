@@ -28,29 +28,7 @@
 #include "dbg_log.h"
 #include "time_util.h"
 #include "data_file_util.h"
-
-// // function for memory arrangement
-// void read_setup(char *fpname);
-
-// // function for moudles
-// void gen_source_ray(opt_source *ops, ray_traces *rays);
-// void read_microstr(char *fname, local_str *lstr);
-// void find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr);				// find the intersection of ray and global geometry
-// void find_str_hit_local(ray_trace1 *ray1, local_str *lstr);										// find the intersection of ray and local microstructure
-// void part_dots(dot_position *dpos);																// partition random dots into regular grids
-// void den2pos(dot_density *dden, dot_position *dpos, bool hex_bl, double hex_lng);				// transfer dot_density to dot_position
-// void den2pos_tetgen(dot_density *dden, dot_position *dpos, bool hex_bl, double hex_lng);		// transfer dot_density to dot_position by tetgen software
-
-// // functino for figure
-// void gnuplot_2d(plot_2d *plt2d);
-// void gnuplot_3d(plot_3d *plt3d);
-// void gnuplot_3d_matrix(plot_3d_matrix *plt3dm);
-// void gnuplot_3d_vector(plot_3d_vector *plt3dv);
-
-// // function for debug
-// void debug_den_to_pos(dot_density *dden, dot_position *dpos);
-
-// main program
+#include "ray_tracer.h"
 
 #define MAX_OUTPUT_RAY 5
 
@@ -103,6 +81,7 @@ void hanldOneRay(ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str
 	}
 	// call_CalcGaussScatteredRay(&source_ray[0]);
 }
+
 int dbg_start()
 {
 
@@ -184,13 +163,8 @@ int dbg_start()
 		// ray1.thar 	= rays.thar[i]; 
 		
 		ray1.phir 	= 0;
-		// ray1.phir 	= rays.phir[i];
-
-		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
-		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
-		// ray1.thar = 100; ray1.phir =0.0;
-
-		hanldOneRay(&ray1, &dpos, &opr, &lstr);
+		
+		traceOneRay(&ray1, &dpos, &opr, &lstr);
 
 		// find_str_hit_global(&ray1, &dpos, &opr);
 		// if (!find_str_hit_local(&ray1, &lstr))
@@ -239,10 +213,10 @@ int dbg_start()
 	return 0;
 }
 
-/*
-int main(int argc, char** argv)
-{
-	dbg_start();
-	return 0;
-}
-*/
+
+// int main(int argc, char** argv)
+// {
+// 	dbg_start();
+// 	return 0;
+// }
+
