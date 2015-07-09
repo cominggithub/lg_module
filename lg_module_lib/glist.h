@@ -3,7 +3,7 @@
 
 #define PRT_SIZE
 #include <stdlib.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 #include <stdint.h>
 
 typedef struct glist_s{

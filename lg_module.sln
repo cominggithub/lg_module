@@ -2,6 +2,26 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lg_module", "lg_module\lg_module.vcxproj", "{D4176201-2A70-4762-9F30-D37E2CCB4C52}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F899A216-1287-4B1F-8712-10A7115653B8} = {F899A216-1287-4B1F-8712-10A7115653B8}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lg_module_lib", "lg_module_lib\lg_module_lib.vcxproj", "{F899A216-1287-4B1F-8712-10A7115653B8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ray_handler", "ray_handler\ray_handler.vcxproj", "{A3244A9C-733B-48E1-A96F-079790EACDFF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F899A216-1287-4B1F-8712-10A7115653B8} = {F899A216-1287-4B1F-8712-10A7115653B8}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data_preprocessor", "data_preprocessor\data_preprocessor.vcxproj", "{13FB3080-79E0-4C73-8683-999D23A2C634}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F899A216-1287-4B1F-8712-10A7115653B8} = {F899A216-1287-4B1F-8712-10A7115653B8}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data_postprocessor", "data_postprocessor\data_postprocessor.vcxproj", "{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F899A216-1287-4B1F-8712-10A7115653B8} = {F899A216-1287-4B1F-8712-10A7115653B8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +33,22 @@ Global
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Debug|Win32.Build.0 = Debug|Win32
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|Win32.ActiveCfg = Release|Win32
 		{D4176201-2A70-4762-9F30-D37E2CCB4C52}.Release|Win32.Build.0 = Release|Win32
+		{F899A216-1287-4B1F-8712-10A7115653B8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F899A216-1287-4B1F-8712-10A7115653B8}.Debug|Win32.Build.0 = Debug|Win32
+		{F899A216-1287-4B1F-8712-10A7115653B8}.Release|Win32.ActiveCfg = Release|Win32
+		{F899A216-1287-4B1F-8712-10A7115653B8}.Release|Win32.Build.0 = Release|Win32
+		{A3244A9C-733B-48E1-A96F-079790EACDFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A3244A9C-733B-48E1-A96F-079790EACDFF}.Debug|Win32.Build.0 = Debug|Win32
+		{A3244A9C-733B-48E1-A96F-079790EACDFF}.Release|Win32.ActiveCfg = Release|Win32
+		{A3244A9C-733B-48E1-A96F-079790EACDFF}.Release|Win32.Build.0 = Release|Win32
+		{13FB3080-79E0-4C73-8683-999D23A2C634}.Debug|Win32.ActiveCfg = Debug|Win32
+		{13FB3080-79E0-4C73-8683-999D23A2C634}.Debug|Win32.Build.0 = Debug|Win32
+		{13FB3080-79E0-4C73-8683-999D23A2C634}.Release|Win32.ActiveCfg = Release|Win32
+		{13FB3080-79E0-4C73-8683-999D23A2C634}.Release|Win32.Build.0 = Release|Win32
+		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Debug|Win32.Build.0 = Debug|Win32
+		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Release|Win32.ActiveCfg = Release|Win32
+		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

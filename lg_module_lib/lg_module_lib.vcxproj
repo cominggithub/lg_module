@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F899A216-1287-4B1F-8712-10A7115653B8}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>lg_module_lib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="checker.h" />
+    <ClInclude Include="conf_util.h" />
+    <ClInclude Include="data_file_util.h" />
+    <ClInclude Include="dbg_log.h" />
+    <ClInclude Include="debug_fun.h" />
+    <ClInclude Include="den_to_pos.h" />
+    <ClInclude Include="gen_source_ray.h" />
+    <ClInclude Include="glist.h" />
+    <ClInclude Include="globalstr.h" />
+    <ClInclude Include="ini_var.h" />
+    <ClInclude Include="lg_module_lib.h" />
+    <ClInclude Include="mem_alloc.h" />
+    <ClInclude Include="mem_func.h" />
+    <ClInclude Include="microstr.h" />
+    <ClInclude Include="Module_IV.h" />
+    <ClInclude Include="opt_record.h" />
+    <ClInclude Include="opt_reflector.h" />
+    <ClInclude Include="plt_figure.h" />
+    <ClInclude Include="ray_tracer.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="time_util.h" />
+    <ClInclude Include="var_def.h" />
+    <ClInclude Include="var_type.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="conf_util.cpp" />
+    <ClCompile Include="data_file_util.cpp" />
+    <ClCompile Include="dbg_log.cpp" />
+    <ClCompile Include="dbg_main.cpp" />
+    <ClCompile Include="debug_fun.cpp" />
+    <ClCompile Include="den_to_pos.cpp" />
+    <ClCompile Include="gen_source_ray.cpp" />
+    <ClCompile Include="glist.cpp" />
+    <ClCompile Include="globalstr.cpp" />
+    <ClCompile Include="ini_var.cpp" />
+    <ClCompile Include="lg_module_lib.cpp" />
+    <ClCompile Include="mem_alloc.cpp" />
+    <ClCompile Include="mem_func.cpp" />
+    <ClCompile Include="microstr.cpp" />
+    <ClCompile Include="Module_IV.cpp" />
+    <ClCompile Include="opt_record.cpp" />
+    <ClCompile Include="opt_reflector.cpp" />
+    <ClCompile Include="plt_figure.cpp" />
+    <ClCompile Include="ray_tracer.cpp" />
+    <ClCompile Include="time_util.cpp" />
+    <ClCompile Include="var_def.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

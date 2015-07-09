@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
 #include "mem_alloc.h"
 #include "checker.h"
 
@@ -151,7 +152,7 @@ bool glist_getUInt32ByIndex(glist_head_t *head, size_t index, uint32_t *v)
     if (node == NULL)
         return false;
 
-    *v = (uint32_t)atoll(node);
+    //*v = (uint32_t)atoll(node);
 
     return true;
 }

@@ -4,6 +4,7 @@
 #include <memory.h>
 #include "dbg_log.h"
 #include "glist.h"
+#include <string.h>
 
 bool save_ray_source_file(
 	const char* fname, 
