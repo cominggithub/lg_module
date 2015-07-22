@@ -128,24 +128,27 @@ int single_proc_main()
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
-
+		
 		ray1.ngaus 	= 1; 
 		ray1.inty 	= 1.0; 
 		ray1.n1 	= 1.0; 
 		ray1.n2 	= 1.0;
+		
+
 		ray1.xr 	= rays.xr[i]; 
 		
-		ray1.yr 	= 0.0; 
-		// ray1.yr 	= rays.yr[i]; 
+		// ray1.yr 	= 0.0; 
+		ray1.yr 	= rays.yr[i]; 
 		
 		ray1.zr 	= rays.zr[i]; 
 		
-		ray1.thar 	= 100; 
-		// ray1.thar 	= rays.thar[i]; 
+		// ray1.thar 	= 100; 
+		ray1.thar 	= rays.thar[i]; 
 		
-		ray1.phir 	= 0;
-		// ray1.phir 	= rays.phir[i];
-
+		// ray1.phir 	= 0;
+		ray1.phir 	= rays.phir[i];
+		
+		dumpRay1(&ray1);
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
@@ -216,6 +219,8 @@ int single_proc_main()
 	deallocmem_dot_position(&dpos);
 	set_end_time("Total");
 	print_all_execution_time();
+
+	system("pause");
 	return 0;
 
 }
@@ -344,6 +349,7 @@ int old_main()
 	deallocmem_dot_position(&dpos);
 	set_end_time("Total");
 	print_all_execution_time();
+	system("pause");
 	return 0;
 
 }
@@ -507,7 +513,8 @@ int main(int argc, char** argv)
 {
 
 	return single_proc_main();
-	// return test_main();
+	//return test_main();
 	// return test_opt_main();
+	//return old_main();
 }
 

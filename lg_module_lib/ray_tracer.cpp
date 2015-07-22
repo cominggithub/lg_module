@@ -33,11 +33,11 @@ void trace_ray_type3(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_h
 
 	for(i=0; i<2; i++)
 	{
-		output_ray[i][0].phir = 1;
-		output_ray[i][1].phir = 2;
-		output_ray[i][2].phir = 3;
-		output_ray[i][3].phir = 4;
-		output_ray[i][4].phir = 5;
+		// output_ray[i][0].phir = 1;
+		// output_ray[i][1].phir = 2;
+		// output_ray[i][2].phir = 3;
+		// output_ray[i][3].phir = 4;
+		// output_ray[i][4].phir = 5;
 		CalcGaussScatteredRay(&src_ray[i], (ray_trace1 *)&output_ray[i]);
 
 		for(j=0; j<MAX_OUTPUT_RAY; j++)
@@ -61,11 +61,11 @@ void trace_ray_type4(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_h
 
 	for(i=0; i<2; i++)
 	{
-		output_ray[i][0].phir = 1;
-		output_ray[i][1].phir = 2;
-		output_ray[i][2].phir = 3;
-		output_ray[i][3].phir = 4;
-		output_ray[i][4].phir = 5;
+		// output_ray[i][0].phir = 1;
+		// output_ray[i][1].phir = 2;
+		// output_ray[i][2].phir = 3;
+		// output_ray[i][3].phir = 4;
+		// output_ray[i][4].phir = 5;
 		CalcGaussScatteredRay(&src_ray[i], (ray_trace1 *)&output_ray[i]);
 
 		for(j=0; j<MAX_OUTPUT_RAY; j++)
@@ -97,6 +97,7 @@ void trace_one_ray(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_hea
 
 	// if(ray1->zr >=0.0 && ray1->thar<90.0)
 
+	/*
 	ray->ngaus 	= 1; 
 	// ray->inty 	= 1.0; 
 	ray->n1		= 1.0; 
@@ -106,6 +107,9 @@ void trace_one_ray(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_hea
 	ray->zr 	= 0.1; 
 	ray->thar 	= 80; 
 	ray->phir 	= 0.0;
+	*/
+
+	// dumpRay1(ray);
 
 	iteration_count++;
 	opr = new_opt_record();
@@ -115,20 +119,18 @@ void trace_one_ray(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_hea
 		switch(type)
 		{
 			case 1:
-			case 2:
 				// just skip it, and go to next round
 				add_opt_record(opr_head, opr);
+			case 2:
+				
 				break;
 			case 3:
-				add_opt_record(opr_head, opr);
 				trace_ray_type3(ray, dpos, opr_head, lstr);
 				break;
 			case 4:
-				add_opt_record(opr_head, opr);
 				trace_ray_type4(ray, dpos, opr_head, lstr);
 				break;
 			case 5:
-				add_opt_record(opr_head, opr);
 				trace_ray_type5(ray, dpos, opr_head, lstr);
 				break;
 		}

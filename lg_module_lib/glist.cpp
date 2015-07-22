@@ -56,9 +56,6 @@ void glist_addNode(glist_head_t *head, void* vptr)
     new_node = glist_newVoidList();
     new_node->vptr = vptr;
 
-    pl();
-    pI(head);
-    pI(head->len);
     /* check duplicately registration */
     while(cur != NULL)
     {
@@ -114,7 +111,7 @@ void glist_dumpStr(glist_head_t *head)
 {
     glist_t *cur;
     cur = head->child;
-    pU(head->len);
+    
     while(cur)
     {
         pStr((char*)cur->vptr);

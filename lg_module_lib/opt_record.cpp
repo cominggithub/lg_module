@@ -18,7 +18,7 @@ void free_opt_record_head(opt_record_head **head)
 void add_opt_record(opt_record_head *head, opt_record *r)
 {
 
-	dump_opt_record(r);
+	// dump_opt_record(r);
 	glist_addNode((glist_head_t*)head, r);
 }
 
