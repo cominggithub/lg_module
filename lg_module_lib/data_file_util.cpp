@@ -228,8 +228,10 @@ bool save_opt_record_file(
 
 	// dont count the size of double point inty
 
+
 	opr_size 	= sizeof(opt_record) - sizeof(double*);
 	entry_size 	= dfh->entry_size;
+
 	inty_size	= dfh->entry_size - opr_size;
 	cur 		= ((glist_head_t*)head)->child;
 	data 		= (opt_record_data*)malloc(entry_size);
@@ -239,6 +241,7 @@ bool save_opt_record_file(
 		opr = (opt_record*)cur->vptr;
 		RETURNV_ON_NULL(opr, false);
 		copy_opr_to_opr_data(data, opr, inty_size);
+
 		if (!fwrite(data, entry_size, 1, fp))
 		{
 			return false;
@@ -313,6 +316,16 @@ bool load_opt_record_file(
 
 }
 
+bool merge_opt_record_files(const char* dest_file, int file_cnt, const char** src_files)
+{
+	int i;
+	pStr(dest_file);
+
+	for(i=0; i<file_cnt; i++)
+	{
+		pStr(src_files[i]);
+	}
+}
 
 		
 // 		struct opt_record
@@ -335,13 +348,13 @@ void copy_opr_to_opr_data(opt_record_data *data, opt_record* opr, int array_size
 	// data->yrng	= opr->yrng;
 
 	memcpy(data, opr, sizeof(opt_record_data));
-	memcpy(data->inty, opr->inty, array_size);
+	// memcpy(data->inty, opr->inty, array_size);
 }
 
 void copy_opr_data_to_opr(opt_record *opr, opt_record_data* data, int array_size)
 {	
 	memcpy(opr, data, sizeof(opt_record_data));
-	memcpy(opr->inty, data->inty, array_size);
+	// memcpy(opr->inty, data->inty, array_size);
 }
 
 void dump_opt_record_data(opt_record_data *opr)
@@ -352,7 +365,7 @@ void dump_opt_record_data(opt_record_data *opr)
 	RETURN_ON_NULL(opr);
 
 	inty_count = opr->nx*opr->ny*opr->ntha*opr->nphi;
-	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f\n",
+	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f, index:%d, inty:%.2f\n",
 			opr->nx, 
 			opr->ny,
 			opr->ntha,
@@ -361,19 +374,21 @@ void dump_opt_record_data(opt_record_data *opr)
 			opr->y0,
 			opr->z0,
 			opr->xrng,
-			opr->yrng
+			opr->yrng,
+			opr->index,
+			opr->inty
 
 	);
 	
-	for(i=0; i<3 && i < inty_count; i++)
-	{
-		printf("%.5f, ", opr->inty[i]);
-	}
+	// for(i=0; i<3 && i < inty_count; i++)
+	// {
+	// 	printf("%.5f, ", opr->inty[i]);
+	// }
 
-	for(i=inty_count-3; i>3 && i < inty_count; i++)
-	{
-		printf("%.5f, ", opr->inty[i]);
-	}
+	// for(i=inty_count-3; i>3 && i < inty_count; i++)
+	// {
+	// 	printf("%.5f, ", opr->inty[i]);
+	// }
 
-	printf("\n");
+	// printf("\n");
 }

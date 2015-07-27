@@ -90,7 +90,6 @@ int single_proc_main()
 	read_setup(fpname);
 
 
-
 	// allocate memory
 	allocmem_opm(n_wl, n_mat, &opm);			
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
@@ -148,7 +147,7 @@ int single_proc_main()
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
 		
-		dumpRay1(&ray1);
+		// dumpRay1(&ray1);
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
@@ -178,6 +177,7 @@ int single_proc_main()
 	save_opt_record_file("aaa.opt_recoder", &opr_data_file_header, opr_head);
 	set_end_time("save opt file");
 
+	// dump_opt_record_head(opr_head);
 	free_opt_record_head(&opr_head);
 
 	opr_head = new_opt_record_head();
@@ -354,6 +354,23 @@ int old_main()
 
 }
 
+int test_merge_main()
+{
+	int i;
+	char dest_file[100];
+	char *opt_record_name[4];
+
+	strcpy(dest_file, "prefix");
+	for(i=0; i<4; i++)
+	{
+		opt_record_name[i] = (char*)malloc(100);
+		sprintf(opt_record_name[i], "prefix_%d", i);
+	}
+
+	merge_opt_record_files(dest_file, 4, (const char**)opt_record_name);
+
+	return 0;
+}
 int test_main()
 {
 
@@ -373,9 +390,7 @@ int test_main()
 	opr->y0 = 2.1;
 	opr->z0 = 3.1;
 
-	opr->inty[0] = 9.1;
-	opr->inty[1] = 9.2;
-	opr->inty[2] = 9.3;
+	
 	add_opt_record(opr_head, opr);
 
 	opr = new opt_record;
@@ -384,10 +399,7 @@ int test_main()
 	opr->y0 = 2.2;
 	opr->z0 = 3.2;
 
-	opr->inty[0] = 8.1;
-	opr->inty[1] = 8.2;
-	opr->inty[2] = 8.3;
-
+	
 	add_opt_record(opr_head, opr);
 
 
@@ -454,9 +466,7 @@ int test_opt_main()
 	opr->y0 = 2.1;
 	opr->z0 = 3.1;
 
-	opr->inty[0] = 9.1;
-	opr->inty[1] = 9.2;
-	opr->inty[2] = 9.3;
+	
 	add_opt_record(opr_head, opr);
 	
 	copy_opr_to_opr_data(opr_data, opr, array_size);
@@ -468,9 +478,6 @@ int test_opt_main()
 	opr->y0 = 2.2;
 	opr->z0 = 3.2;
 
-	opr->inty[0] = 8.1;
-	opr->inty[1] = 8.2;
-	opr->inty[2] = 8.3;
 
 	add_opt_record(opr_head, opr);
 	
@@ -512,9 +519,10 @@ int test_opt_main()
 int main(int argc, char** argv)
 {
 
-	return single_proc_main();
+	// return single_proc_main();
 	//return test_main();
 	// return test_opt_main();
 	//return old_main();
+	return test_merge_main();
 }
 

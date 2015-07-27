@@ -26,7 +26,7 @@ yl_rng=100.0
 zl_rng=0.0
 
 // for ray tracing
-n_ray=1000
+n_ray=10
 n_gauss=1
 
 // for lguide performance (record/measurement)
@@ -53,7 +53,7 @@ yden_or=0.0
 den_2_pos_scale=10000.0
 
 // for dot spatial pattern
-n_dots=5000
+n_dots=50
 partn_x=10
 partn_y=10
 hex_bl=T

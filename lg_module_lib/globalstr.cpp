@@ -27,7 +27,9 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		dx = xdim/opr->nx+delta; dy = ydim/opr->ny+delta;
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		indx = xi*opr->ny + yi;
-		opr->inty[indx] = opr->inty[indx]+ray1->inty;
+		opr->index = indx;
+		opr->inty += ray1->inty;
+		// opr->inty[indx] = opr->inty[indx]+ray1->inty;
 		*type = 1;
 
 	}

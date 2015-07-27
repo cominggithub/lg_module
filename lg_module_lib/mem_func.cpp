@@ -30,6 +30,8 @@ void allocmem_ops(long int n_x, long int n_y, long int n_z, long int n_tha, long
 	ops->xrng = xl_rng;
 	ops->yrng = yl_rng;
 	ops->zrng = zl_rng;
+
+	
 	ops->inty = new double[ops->nx*ops->ny*ops->nz*ops->ntha*ops->nphi];
 	if( ops->inty == nullptr ) { printf("allocmem_ops: light intensity error\n"); exit(0); }
 	ops->accinty = new double[ops->nx*ops->ny*ops->nz*ops->ntha*ops->nphi];
@@ -51,10 +53,12 @@ void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long i
 	opr->z0 = zrcd_or;
 	opr->xrng = xrcd_rng;
 	opr->yrng = yrcd_rng;
-	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
+	opr->index = 0;
+	opr->inty = 0;
+	// opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
 	
-	if( opr->inty == nullptr ) { printf("allocmem_record: light recording error\n"); exit(0); }
-	for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ ){ opr->inty[i]=0.0; }
+	// if( opr->inty == nullptr ) { printf("allocmem_record: light recording error\n"); exit(0); }
+	// for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ ){ opr->inty[i]=0.0; }
 	return;
 }
 
@@ -233,7 +237,7 @@ void deallocmem_rays(ray_traces *rays, ray_trace1 *ray1)
 void deallocmem_record(opt_record *opr)
 {
 	// deallocate memory for recording emitted light from light-guide
-	delete [] opr->inty;
+	// delete [] opr->inty;
 	return;
 }
 

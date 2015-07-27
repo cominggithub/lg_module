@@ -1,6 +1,6 @@
 
 
-CPPFLAGS= -I. -I/usr/include/malloc -std=c++0x -ggdb
+CPPFLAGS= -I. -I../lg_module_lib -I/usr/include/malloc -std=c++0x -ggdb
 LDFLAGS= -lstdc++
 OUTPUT_DATA = \
 	data2d.txt \
@@ -25,28 +25,28 @@ OBJ_DIR = obj
 #CPP_FILES := $(wildcard *.cpp)
 #OBJ_FILES := $(addprefix ${OBJ_DIR}/,$(notdir $(CPP_FILES:.cpp=.o)))
 OBJ_FILES := \
-	conf_util.o \
-	data_file_util.o \
-	dbg_log.o \
-	debug_fun.o \
-	den_to_pos.o \
-	gen_source_ray.o \
-	globalstr.o \
-	ini_var.o \
-	mem_func.o \
-	microstr.o \
-	Module_IV.o \
-	plt_figure.o \
-	time_util.o \
-	ray_tracer.o \
-	opt_reflector.o \
-	glist.o \
-	opt_record.cpp \
-	mem_alloc.cpp \
-	var_def.o
+	../lg_module_lib/conf_util.o \
+	../lg_module_lib/data_file_util.o \
+	../lg_module_lib/dbg_log.o \
+	../lg_module_lib/debug_fun.o \
+	../lg_module_lib/den_to_pos.o \
+	../lg_module_lib/gen_source_ray.o \
+	../lg_module_lib/globalstr.o \
+	../lg_module_lib/ini_var.o \
+	../lg_module_lib/mem_func.o \
+	../lg_module_lib/microstr.o \
+	../lg_module_lib/Module_IV.o \
+	../lg_module_lib/plt_figure.o \
+	../lg_module_lib/time_util.o \
+	../lg_module_lib/ray_tracer.o \
+	../lg_module_lib/opt_reflector.o \
+	../lg_module_lib/glist.o \
+	../lg_module_lib/opt_record.cpp \
+	../lg_module_lib/mem_alloc.cpp \
+	../lg_module_lib/var_def.o
 
 
-all: prepare lg_module data_precessor ray_handler
+all: prepare lg_module data_preprocessor ray_handler
 
 
 prepare:
@@ -63,12 +63,13 @@ dbg_main: $(OBJ_FILES) dbg_main.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
 	
 
-data_precessor: $(OBJ_FILES) data_precessor.o
+
+
+data_preprocessor: $(OBJ_FILES) ../data_preprocessor/data_preprocessor.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
 
-ray_handler: $(OBJ_FILES) ray_handler.o
+ray_handler: $(OBJ_FILES) ../ray_handler/ray_handler.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
-
 
 ${OBJ_DIR}/%.o: %.cpp
 	g++ $(CPPFLAGS) -c -o $@ $<

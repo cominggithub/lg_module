@@ -22,12 +22,6 @@ void add_opt_record(opt_record_head *head, opt_record *r)
 	glist_addNode((glist_head_t*)head, r);
 }
 
-
-
-
-
-
-
 // struct opt_record
 // {
 // 	long int nx, ny, ntha, nphi;
@@ -38,12 +32,12 @@ void add_opt_record(opt_record_head *head, opt_record *r)
 void dump_opt_record(struct opt_record *opr)
 {
 	int i;
-	int inty_count;
+	// int inty_count;
 
 	RETURN_ON_NULL(opr);
 
-	inty_count = opr->nx*opr->ny*opr->ntha*opr->nphi;
-	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f\n",
+	// inty_count = opr->nx*opr->ny*opr->ntha*opr->nphi;
+	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f, index: %d, inty: %.2f\n",
 			opr->nx, 
 			opr->ny,
 			opr->ntha,
@@ -52,19 +46,20 @@ void dump_opt_record(struct opt_record *opr)
 			opr->y0,
 			opr->z0,
 			opr->xrng,
-			opr->yrng
-
+			opr->yrng,
+			opr->index,
+			opr->inty
 	);
 	
-	for(i=0; i<3 && i < inty_count; i++)
-	{
-		printf("%.5f, ", opr->inty[i]);
-	}
+	// for(i=0; i<3 && i < inty_count; i++)
+	// {
+	// 	printf("%.5f, ", opr->inty[i]);
+	// }
 
-	for(i=inty_count-3; i>3 && i < inty_count; i++)
-	{
-		printf("%.5f, ", opr->inty[i]);
-	}
+	// for(i=inty_count-3; i>3 && i < inty_count; i++)
+	// {
+	// 	printf("%.5f, ", opr->inty[i]);
+	// }
 
 	printf("\n");
 }
@@ -93,7 +88,7 @@ struct opt_record* new_opt_record()
 
 void free_opt_record(struct opt_record** opr)
 {
-	delete (*opr)->inty;
+	// delete (*opr)->inty;
 	delete *opr;
 	*opr = NULL;
 }

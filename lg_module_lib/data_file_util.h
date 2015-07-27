@@ -21,7 +21,9 @@ typedef struct _opt_record_data
 {
 	long int nx, ny, ntha, nphi;
 	double x0, y0, z0, xrng, yrng;
-	double inty[0];										// intensity profile
+	int index;
+	double inty;
+	// double inty[0];										// intensity profile
 
 }opt_record_data;
 
@@ -52,6 +54,12 @@ bool load_opt_record_file(
 	const char* fname, 
 	data_file_header *dfh, 
 	opt_record_head *head
+);
+
+bool merge_opt_record_files(
+	const char* dest_file, 
+	int file_cnt, 
+	const char** src_files
 );
 
 void copy_opr_to_opr_data(

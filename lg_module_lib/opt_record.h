@@ -21,7 +21,8 @@
 // opr->ntha *
 // opr->nphi
 
-#define ACTUAL_OPT_RECORD_SIZE (sizeof(struct opt_record)-sizeof(double*)+sizeof(double)*nx_rcd*ny_rcd*ntha_rcd*nphi_rcd)
+// #define ACTUAL_OPT_RECORD_SIZE (sizeof(struct opt_record)-sizeof(double*)+sizeof(double)*nx_rcd*ny_rcd*ntha_rcd*nphi_rcd)
+#define ACTUAL_OPT_RECORD_SIZE (sizeof(struct opt_record))
 
 typedef glist_t opt_record_head;
 

@@ -18,6 +18,7 @@ struct opt_source
 {
 	long int nx, ny, nz, ntha, nphi;
 	double x0, y0, z0, xrng, yrng, zrng;
+
 	double *inty;							// intensity profile
 	double *accinty;						// accumulation intensity.
 };
@@ -41,7 +42,9 @@ struct opt_record
 {
 	long int nx, ny, ntha, nphi;
 	double x0, y0, z0, xrng, yrng;
-	double *inty;										// intensity profile
+	int index;
+	double inty;
+	// double *inty;										// intensity profile
 };
 
 // local structure

@@ -23,10 +23,13 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 	bool solving;
 
 
+	pU(ops->ntha);
 	dtha = 170.0/ops->ntha;
 	dphi = 170.0/ops->nphi;
 	nray = rays->nray;
 	nrayi = int(1.0*nray/ops->ntha/ops->nphi/ops->ny);
+
+	pD(dtha);
 //	rays->nray = nrayi*ops->ntha/ops->nphi/ops->ny;
 	
 
