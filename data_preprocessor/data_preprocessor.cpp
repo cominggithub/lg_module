@@ -86,7 +86,7 @@ void split_ray(const char* prefix, ray_traces *rays, int count)
 		RETURN_ON_ZERO(blockCount);
 		tmpRays = get_ray_traces_by_offset(rays, offset, blockCount);
 		
-		sprintf(fname, "%s_ray_source_%d.dat", prefix, i);
+		sprintf(fname, "%s/ray_source_%d.dat", prefix, i);
 		sprintf(dfh.prefix, "%s", fname);
 		printf("%s\n", fname);
 		dfh.count 		= blockCount;
@@ -111,22 +111,29 @@ int main(int argc, char** argv)
 	opt_source ops;					// for optic source
 	ray_traces rays;				// for samplings of ray tracing
 	char fpname[256];					// for reading parameters
+	time_t t;
+	struct tm *now;
 
-	if (argc != 3)
+	t 		= time(0);
+	now 	= localtime(&t);
+	count 	= 1;
+
+	sprintf(prefix, "_lg_module_%d_%d_%d_%d_%d_%d\n", 
+			now->tm_year+1900,
+			now->tm_mon+1,
+			now->tm_mday,
+			now->tm_hour,
+			now->tm_min,
+			now->tm_sec
+	);
+
+	if (argc > 1)
 	{
-		return 1;	
+		count = atoi(argv[1]);
 	}
-	
-	count = atoi(argv[2]);
-	strcpy(prefix, argv[1]);
-
-	if (strlen(prefix) == 0)
+	if (argc > 2)
 	{
-		strcpy(prefix, "ms");
-	} 
-	if (count == 0)
-	{
-		count = 1;
+		strcpy(prefix, argv[2]);	
 	}
 	
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -142,7 +149,6 @@ int main(int argc, char** argv)
 	allocmem_ray_traces(n_ray, &rays);	
 	gen_source_ray(&ops, &rays);
 	split_ray(prefix, &rays, count);
-
 
 	deallocmem_ops(&ops);
 	deallocmem_ray_traces(&rays);

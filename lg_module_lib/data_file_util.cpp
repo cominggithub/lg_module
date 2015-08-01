@@ -309,23 +309,64 @@ bool load_opt_record_file(
 
 		copy_opr_data_to_opr(opr, data, inty_size);
 		add_opt_record(head, opr);
+
 	}
 
+	free(data);
 	fclose(fp);
 	return true;
 
 }
 
-bool merge_opt_record_files(const char* dest_file, int file_cnt, const char** src_files)
+bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_cnt, const char** src_files)
 {
 	int i;
-	pStr(dest_file);
+	int count;
+	
 
+	opt_record_head *dst_head;
+	opt_record_head *src_head;
+	data_file_header dfh;
+	glist_t *cur;
+
+	dst_head = new_opt_record_head();
+	src_head = new_opt_record_head();
+
+	count = 0;
 	for(i=0; i<file_cnt; i++)
 	{
-		pStr(src_files[i]);
+		if (!load_opt_record_file(src_files[i], &dfh, dst_head))
+		{
+
+			fprintf(stderr, "load opt record file failed: %s\n", src_files[i]);
+			return false;
+		}
+		dump_opt_record_head(dst_head);
+		printf("--\n");
+		count += dfh.count;
 	}
+
+// typedef struct _data_file_header
+// {
+// 	char prefix[256];
+// 	unsigned int offset;
+// 	int entry_size;
+// 	long int count;
+// }data_file_header;
+
+	strcpy(dfh.prefix, prefix);
+	dfh.offset 		= 0;
+	dfh.entry_size 	= sizeof(opt_record);
+	dfh.count 		= count;
+	save_opt_record_file(dst_file, &dfh, dst_head);
+	
+	free_opt_record_head(&dst_head);
+	
+	return true;
+
 }
+
+
 
 		
 // 		struct opt_record

@@ -57,6 +57,7 @@ bool load_opt_record_file(
 );
 
 bool merge_opt_record_files(
+	const char *prefix,
 	const char* dest_file, 
 	int file_cnt, 
 	const char** src_files

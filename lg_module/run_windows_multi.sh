@@ -3,7 +3,7 @@
 cd output
 START=$(date +%s)
 
-./data_precessor
+./data_preprocessor 
 
 END=$(date +%s)
 

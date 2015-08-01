@@ -30,6 +30,7 @@ typedef glist_t opt_record_head;
 
 opt_record_head* new_opt_record_head();
 void add_opt_record(opt_record_head *head, opt_record *r);
+bool merge_opt_record_head(opt_record_head *dst_head, opt_record_head *src_head);
 void free_opt_record_head(opt_record_head **head);
 struct opt_record* new_opt_record();
 void free_opt_record(struct opt_record**);

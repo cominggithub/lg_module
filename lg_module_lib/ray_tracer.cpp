@@ -122,7 +122,6 @@ void trace_one_ray(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_hea
 				// just skip it, and go to next round
 				add_opt_record(opr_head, opr);
 			case 2:
-				
 				break;
 			case 3:
 				trace_ray_type3(ray, dpos, opr_head, lstr);

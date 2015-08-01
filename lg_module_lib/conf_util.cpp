@@ -62,7 +62,6 @@ int conf_load(const char* fileName)
 	double dd=12.3;
 
 	fp = fopen(fileName, "r");
-	pStr(fileName);
 	if (fp == NULL)
 	{
 		fprintf(stderr, "cannot read config file\n");

@@ -46,7 +46,7 @@ OBJ_FILES := \
 	../lg_module_lib/var_def.o
 
 
-all: prepare lg_module data_preprocessor ray_handler
+all: prepare lg_module data_preprocessor ray_handler data_postprocessor
 
 
 prepare:
@@ -63,10 +63,11 @@ dbg_main: $(OBJ_FILES) dbg_main.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
 	
 
-
-
 data_preprocessor: $(OBJ_FILES) ../data_preprocessor/data_preprocessor.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
+
+data_postprocessor: $(OBJ_FILES) ../data_postprocessor/data_postprocessor.o
+	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^	
 
 ray_handler: $(OBJ_FILES) ../ray_handler/ray_handler.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^

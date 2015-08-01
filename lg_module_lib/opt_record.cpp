@@ -5,6 +5,8 @@
 #include "var_def.h"
 
 
+static int index=0;
+static int inty=0;
 opt_record_head* new_opt_record_head()
 {
 	return (opt_record_head*)glist_newGListHead();
@@ -18,8 +20,11 @@ void free_opt_record_head(opt_record_head **head)
 void add_opt_record(opt_record_head *head, opt_record *r)
 {
 
-	// dump_opt_record(r);
+	// r->index	= index++;
+	// r->inty 	= inty++;
+
 	glist_addNode((glist_head_t*)head, r);
+
 }
 
 // struct opt_record
@@ -60,8 +65,6 @@ void dump_opt_record(struct opt_record *opr)
 	// {
 	// 	printf("%.5f, ", opr->inty[i]);
 	// }
-
-	printf("\n");
 }
 
 void dump_opt_record_head(opt_record_head *head)
@@ -75,6 +78,24 @@ void dump_opt_record_head(opt_record_head *head)
 		dump_opt_record((opt_record*)cur->vptr);
 		cur = cur->next;
 	}
+}
+
+bool merge_opt_record_head(opt_record_head *dst_head, opt_record_head *src_head)
+{
+
+	glist_t *cur;
+	RETURNV_ON_NULL(dst_head, false);
+	RETURNV_ON_NULL(src_head, false);
+
+	cur = ((glist_head_t*)src_head)->child;
+
+	while(cur != NULL)
+	{
+		add_opt_record(dst_head, (opt_record *)cur->vptr);
+		cur = cur->next;
+	}
+
+	return true;
 }
 
 struct opt_record* new_opt_record()

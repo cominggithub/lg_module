@@ -360,14 +360,31 @@ int test_merge_main()
 	char dest_file[100];
 	char *opt_record_name[4];
 
-	strcpy(dest_file, "prefix");
+	time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+
+    char prefix[100];
+	
+	sprintf(prefix, "_lg_module_%d_%d_%d_%d_%d_%d\n", 
+		now->tm_year+1900,
+		now->tm_mon+1,
+		now->tm_mday,
+		now->tm_hour,
+		now->tm_min,
+		now->tm_sec
+	);
+
+	pStr(prefix);
+	strcpy(dest_file, prefix);
+	
+
 	for(i=0; i<4; i++)
 	{
 		opt_record_name[i] = (char*)malloc(100);
-		sprintf(opt_record_name[i], "prefix_%d", i);
+		sprintf(opt_record_name[i], "%s_%d", prefix, i);
 	}
 
-	merge_opt_record_files(dest_file, 4, (const char**)opt_record_name);
+	merge_opt_record_files(prefix, dest_file, 4, (const char**)opt_record_name);
 
 	return 0;
 }
