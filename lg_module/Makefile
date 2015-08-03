@@ -41,8 +41,8 @@ OBJ_FILES := \
 	../lg_module_lib/ray_tracer.o \
 	../lg_module_lib/opt_reflector.o \
 	../lg_module_lib/glist.o \
-	../lg_module_lib/opt_record.cpp \
-	../lg_module_lib/mem_alloc.cpp \
+	../lg_module_lib/opt_record.o \
+	../lg_module_lib/mem_alloc.o \
 	../lg_module_lib/var_def.o
 
 
@@ -80,5 +80,10 @@ ${OBJ_DIR}/%.o: %.cpp
 
 clean:
 	rm -f *.o *.png *.svg ${OUTPUT_DATA}
+	rm -f ${OBJ_FILES}
 	rm -rf ${OUTPUT_DIR}
 	rm -rf ${OBJ_DIR}
+	rm -f ../data_preprocessor/*.o
+	rm -f ../data_postprocessor/*.o
+	rm -f ../ray_handler/*.o
+

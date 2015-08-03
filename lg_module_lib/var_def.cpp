@@ -57,5 +57,5 @@ double IntensityThreshold = 0.001;   // The threshold for determine the intensit
 
 
 // debug config
-bool enable_gnu_plot = false;
+bool enable_gnu_plot = true;
 unsigned long gaussScatteredRaycount = 0;

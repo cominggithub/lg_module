@@ -78,8 +78,8 @@ void CalcMainReflectiveRay (struct ray_trace1 *IncidentRay, struct ray_trace1 *M
 	// c. thar = acos(z/r)
 	// d. phi = atan2(y,z)
 	r= pow( (pow(Rrx,2)+pow(Rry,2)+pow(Rrz,2)), 0.5);
-	MainReflectiveRay->thar = acos(Rrz/r);
-	MainReflectiveRay->phir   = atan2(Rry, Rrz);		
+	MainReflectiveRay->thar = acos(Rrz/r)*180/pi;
+	MainReflectiveRay->phir   = atan2(Rry, Rrx)*180/pi;		
 
 	// Intensity of Reflective Ray = Intensity of Incident Ray * 0.5 * (Rs + Rp)
 	MainReflectiveRay->inty = IncidentRay->inty * 0.5 *  (
@@ -129,8 +129,8 @@ void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1
 		// c. thar = acos(z/r)
 		// d. phi = atan2(y,z)
 		r= pow( (pow(Rtx,2)+pow(Rty,2)+pow(Rtz,2)), 0.5);
-		MainTransmittanceRay->thar = acos(Rtz/r);
-		MainTransmittanceRay->phir   = atan2(Rty, Rtz);
+		MainTransmittanceRay->thar = acos(Rtz/r)*180/pi;
+		MainTransmittanceRay->phir   = atan2(Rty, Rtx)*180/pi;
 
 		// Intensity of Transmittance Ray = Intensity of Incident Ray - Intensity of Reflective Ray;
 		// Intensity of Reflective Ray (gReflectiveRayIntensity) has been calculated in in CalcMainReflectiveRay().

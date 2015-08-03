@@ -28,3 +28,24 @@ void dumpRay1(struct ray_trace1* ray)
 
 
 }
+
+void dumpRay1toFile(struct ray_trace1* ray)
+{
+	FILE *fo;
+	char foname[256] = "ray1.txt";
+	fo = fopen(foname, "a");
+
+	fprintf(fo,"ray:\n");
+	fprintf(fo,"\t ngaus: %ld\n", ray->ngaus);
+	fprintf(fo,"\t  inty: %f\n", ray->inty);
+	fprintf(fo,"\t    n1: %f\n", ray->n1);
+	fprintf(fo,"\t    n2: %f\n", ray->n2);
+	fprintf(fo,"\t    xr: %f\n", ray->xr);
+	fprintf(fo,"\t    yr: %f\n", ray->yr);
+	fprintf(fo,"\t    zr: %f\n", ray->zr);
+	fprintf(fo,"\t  thar: %f\n", ray->thar);
+	fprintf(fo,"\t  phir: %f\n", ray->phir);
+	fprintf(fo,"\t    nx: %f\n", ray->nx);
+	fprintf(fo,"\t    ny: %f\n", ray->ny);
+	fprintf(fo,"\t    nz: %f\n", ray->nz);
+}

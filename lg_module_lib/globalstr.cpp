@@ -20,6 +20,25 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	
 	
 	*type = 0;
+ 	x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
+	xmin = 0.0;		xmax = xdim;
+	ymin = 0.0;		ymax = ydim;
+	zmin = -zdim_in;		zmax = 0.0;
+	mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
+	mz = cos(ray1->thar*pi/180.0);
+	nx = 0.0; ny = 0.0; nz = 0.0;
+	if(ray1->xr <0.0)
+	{
+		    x = xmin;	r = (x-x0)/mx;
+			z = r*mz+z0;	 y = r*my+y0;
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			{
+				
+				ray1->nx = -1.0; ray1->ny = 0.0; ray1->nz = 0.0;
+				ray1->xr = x; ray1->yr = y; ray1->zr = z;
+			}
+			*type = 4;
+	}
 	if(ray1->zr >=0.0 && ray1->thar<90.0)
 	{
 		// light emitted from light-guide plate top surface. record the performance;
@@ -30,6 +49,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		opr->index = indx;
 		opr->inty += ray1->inty;
 		// opr->inty[indx] = opr->inty[indx]+ray1->inty;
+		printf("xi: %ld, opr->ny: %ld, yi: %ld, opr->index: %ld\n", xi, opr->ny, yi, opr->index);
 		*type = 1;
 
 	}
@@ -45,13 +65,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	// do 2 check (1)light-guide front, back , right, left, top bottom plane (2) microstr box
 	else if( (ray1->zr<=0.0 && ray1->thar>90.0) || (ray1->zr>-zdim_in && ray1->thar>90.0) || (ray1->zr<0 && ray1->zr<=-zdim_in && ray1->thar<90.0) )
 	{
-		x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
-		xmin = 0.0;		xmax = xdim;
-		ymin = 0.0;		ymax = ydim;
-		zmin = -zdim_in;		zmax = 0.0;
-		mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
-		mz = cos(ray1->thar*pi/180.0);
-		nx = 0.0; ny = 0.0; nz = 0.0;
+		
 		solved = false;
 		// solve the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 		// and check the ray if in the box. 

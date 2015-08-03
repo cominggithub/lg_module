@@ -18,7 +18,6 @@ struct opt_source
 {
 	long int nx, ny, nz, ntha, nphi;
 	double x0, y0, z0, xrng, yrng, zrng;
-
 	double *inty;							// intensity profile
 	double *accinty;						// accumulation intensity.
 };
@@ -27,7 +26,7 @@ struct opt_source
 struct ray_traces							// for the initial ray-samplings
 {
 	long int nray;
-	double *xr, *yr, *zr, *thar, *phir;
+	double *xr, *yr, *zr, *thar, *phir, *inty;
 };
 struct ray_trace1									// for individual tracing ray
 {

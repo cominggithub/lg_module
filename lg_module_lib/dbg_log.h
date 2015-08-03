@@ -26,5 +26,6 @@
 
 
 void dumpRay1(struct ray_trace1*);
+void dumpRay1toFile(struct ray_trace1*);
 
 #endif

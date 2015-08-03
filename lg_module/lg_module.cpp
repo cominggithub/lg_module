@@ -90,6 +90,7 @@ int single_proc_main()
 	read_setup(fpname);
 
 
+
 	// allocate memory
 	allocmem_opm(n_wl, n_mat, &opm);			
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
@@ -129,9 +130,8 @@ int single_proc_main()
 	{
 		
 		ray1.ngaus 	= 1; 
-		ray1.inty 	= 1.0; 
 		ray1.n1 	= 1.0; 
-		ray1.n2 	= 1.0;
+		ray1.n2 	= 1.49;
 		
 
 		ray1.xr 	= rays.xr[i]; 
@@ -146,8 +146,10 @@ int single_proc_main()
 		
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
-		
-		// dumpRay1(&ray1);
+		ray1.inty   = 10.0*rays.inty[i];
+		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
+		//dumpRay1(&ray1);
+		dumpRay1toFile(&ray1);
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
@@ -536,10 +538,10 @@ int test_opt_main()
 int main(int argc, char** argv)
 {
 
-	// return single_proc_main();
+	return single_proc_main();
 	//return test_main();
 	// return test_opt_main();
 	//return old_main();
-	return test_merge_main();
+	//return test_merge_main();
 }
 

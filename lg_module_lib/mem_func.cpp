@@ -30,8 +30,6 @@ void allocmem_ops(long int n_x, long int n_y, long int n_z, long int n_tha, long
 	ops->xrng = xl_rng;
 	ops->yrng = yl_rng;
 	ops->zrng = zl_rng;
-
-	
 	ops->inty = new double[ops->nx*ops->ny*ops->nz*ops->ntha*ops->nphi];
 	if( ops->inty == nullptr ) { printf("allocmem_ops: light intensity error\n"); exit(0); }
 	ops->accinty = new double[ops->nx*ops->ny*ops->nz*ops->ntha*ops->nphi];
@@ -76,6 +74,8 @@ void allocmem_ray_traces(long int n_ray, ray_traces *rays)
 	if( rays->thar == nullptr ) { printf("allocmem_rays: theta in rays error\n"); exit(0); }
 	rays->phir = new double[rays->nray];
 	if( rays->phir == nullptr ) { printf("allocmem_rays: phi in rays error\n"); exit(0); }
+	rays->inty = new double[rays->nray];
+	if( rays->inty == nullptr ) { printf("allocmem_rays: inty in rays error\n"); exit(0); }
 	return;
 }
 
@@ -83,6 +83,7 @@ void allocmem_rays(long int n_ray, long int n_gaus, ray_traces *rays, ray_trace1
 {
 	// allocate memory for sampling of rays
 	ray1->ngaus = n_gaus;
+	
 	rays->nray = n_ray;
 	rays->xr = new double[rays->nray];
 	if( rays->xr == nullptr ) { printf("allocmem_rays: x in rays error\n"); exit(0); }
@@ -94,6 +95,8 @@ void allocmem_rays(long int n_ray, long int n_gaus, ray_traces *rays, ray_trace1
 	if( rays->thar == nullptr ) { printf("allocmem_rays: theta in rays error\n"); exit(0); }
 	rays->phir = new double[rays->nray];
 	if( rays->phir == nullptr ) { printf("allocmem_rays: phi in rays error\n"); exit(0); }
+	rays->inty = new double[rays->nray];
+	if( rays->inty == nullptr ) { printf("allocmem_rays: inty in rays error\n"); exit(0); }
 	return;
 }
 

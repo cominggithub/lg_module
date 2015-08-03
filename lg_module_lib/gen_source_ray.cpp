@@ -15,19 +15,18 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 	long int i, j, k, n;
 	long int nray, nrayi, ibuf1, ibuf2;
 	long int thai, phii, begi, endi, midi;
-	double tha, phi, dtha, dphi, inty_tot;
+	double tha, phi, dtha, dphi, inty_tot, rinty_tot;
 	double thasol,phisol,ratio;
 	double rndtha, rndphi;
 	double *inty, *accintytha, *accintyphi;
 	plot_3d_vector plt3dv;
 	bool solving;
 
-
+	
 	dtha = 170.0/ops->ntha;
 	dphi = 170.0/ops->nphi;
 	nray = rays->nray;
 	nrayi = int(1.0*nray/ops->ntha/ops->nphi/ops->ny);
-
 //	rays->nray = nrayi*ops->ntha/ops->nphi/ops->ny;
 	
 
@@ -36,7 +35,7 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 	{
 		phii = int(i%ops->nphi);	thai = int(1.0*(i-phii)/ops->nphi);
 		tha = (thai+0.5)*dtha; phi = (phii+0.5)*dphi;
-		ops->inty[i] = 1.0*exp( -2.0*pow((tha-90.0)*pi/180.0,2.0) )*exp( -1.0*pow((phi-180.0)*pi/180.0,2.0) );  // phi is centered on 180 for symmetry, but the true value is from 0 to 170.
+		ops->inty[i] = 1.0*exp( -2.0*pow((tha-90.0)*pi/180.0,2.0) )*exp( -1.0*pow((phi-90.0)*pi/180.0,2.0) );  // phi is centered on 180 for symmetry, but the true value is from 0 to 170.
 	}
 
 	// initiate memroy
@@ -49,7 +48,7 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 	accintytha[0] = 0.0;	accintyphi[0] = 0.0;
 
 	// calculate and normalize the cumulative distribution function for dot_density
-	inty_tot = 0.0;
+	inty_tot = 0.0;  rinty_tot=0.0;
 	for(i=0; i<ops->ntha*ops->nphi; i++){ inty_tot = inty_tot+ops->inty[i]; }
 	for(i=0; i<ops->ntha*ops->nphi; i++){ inty[i] = ops->inty[i]/inty_tot; }
 	for(i=0; i<ops->ntha ; i++)
@@ -108,11 +107,15 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 		// record position
 		rays->thar[n] = thasol;	
 		rays->phir[n] = phisol - 0.5*dphi*ops->nphi;     // note! phi is centered on 180 for symmetry previously, and now is revised
-		rays->xr[n] = 0.0; rays->zr[n] = 0.0;
-		rays->yr[n] = 1.0*ops->yrng *rand()/RAND_MAX + 1.0*ops->y0;
+		rays->xr[n] = 1.0*ops->x0; rays->zr[n] = 1.0*ops->z0;
+		rays->yr[n] = 1.0*ops->y0 +int(n%ops->ny)*((ops->yrng - ops->y0)/ops->ny );
+		rays->inty[n] =1.0*exp( -2.0*pow((thasol-90.0)*pi/180.0,2.0) )*exp( -1.0*pow((phisol-90)*pi/180.0,2.0) );
+		rinty_tot = rinty_tot + rays->inty[n];
+		//rays->yr[n] = 1.0*ops->yrng *rand()/RAND_MAX + 1.0*ops->y0;
 		n = n+1;
 		printf("transfer density to position on %9d of %9d\r", n, nray);
 	}
+	for(i=0; i<nray; i++){ rays->inty[i] = rays->inty[i]/rinty_tot; }
 	printf("\n");
 
 	// plot results
