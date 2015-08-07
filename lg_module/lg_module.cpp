@@ -149,7 +149,7 @@ int single_proc_main()
 		ray1.inty   = 10.0*rays.inty[i];
 		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
 		//dumpRay1(&ray1);
-		dumpRay1toFile(&ray1);
+		//dumpRay1toFile(&ray1);
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;

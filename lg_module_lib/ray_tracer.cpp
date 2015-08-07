@@ -109,7 +109,7 @@ void trace_one_ray(ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_hea
 	ray->phir 	= 0.0;
 	*/
 
-	// dumpRay1(ray);
+	dumpRay1(ray);
 
 	iteration_count++;
 	opr = new_opt_record();

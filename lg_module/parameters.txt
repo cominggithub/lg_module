@@ -16,13 +16,13 @@ refl_indx=2
 n_x=1
 n_y=10
 n_z=1
-n_tha=10
-n_phi=20
-xl_or=0.0
-yl_or=0.0
-zl_or=0.0
+n_tha=20
+n_phi=10
+xl_or=-0.01
+yl_or=10.0
+zl_or=-0.5
 xl_rng=0.0
-yl_rng=100.0
+yl_rng=90.0
 zl_rng=0.0
 
 // for ray tracing

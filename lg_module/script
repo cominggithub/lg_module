@@ -1,4 +1,2 @@
-set pm3d 
-unset surface 
-splot "data3dm.txt" matrix 
+plot "data2d.txt" with points pointtype 7 pointsize 0.2 
 pause -1 "press RETURN to continue"

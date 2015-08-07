@@ -1,6 +1,6 @@
 #!/bin/bash
 date_str=$(date +%Y_%m_%d_%H_%M_%S)
-PROCESS_COUNT=1
+PROCESS_COUNT=5
 PREFIX="_lg_module_${date_str}"
 
 OUTPUT_FOLDER=${date_str}
