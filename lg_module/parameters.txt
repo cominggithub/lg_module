@@ -8,26 +8,27 @@ zdim_in=10.0
 // for optical materials
 n_wl=1
 n_mat=3
-air_indx=0
-guide_indx=1
-refl_indx=2
+air_indx=1.0
+guide_indx=1.5
+refl_indx=0.0
 
 // for light source (all length units are mm)
 n_x=1
 n_y=10
 n_z=1
-n_tha=20
-n_phi=10
-xl_or=-0.01
-yl_or=10.0
-zl_or=-0.5
+n_tha=10
+n_phi=20
+xl_or=0.00001
+yl_or=0.0
+zl_or=-5.0
 xl_rng=0.0
-yl_rng=90.0
+yl_rng=100.0
 zl_rng=0.0
 
 // for ray tracing
 n_ray=10
 n_gauss=1
+ray_threshold=0.001
 
 // for lguide performance (record/measurement)
 nx_rcd=100

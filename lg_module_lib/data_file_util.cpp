@@ -6,6 +6,8 @@
 #include "glist.h"
 #include <string.h>
 
+static FILE* rayCsvFp = NULL;
+
 bool save_ray_source_file(
 	const char* fname, 
 	data_file_header *dfh, 
@@ -433,3 +435,92 @@ void dump_opt_record_data(opt_record_data *opr)
 
 	// printf("\n");
 }
+
+void open_ray_csv(const char* fname)
+{
+	if (rayCsvFp == NULL)
+	{
+		rayCsvFp = fopen(fname, "w");
+		if (rayCsvFp != NULL)
+		{
+			fprintf(rayCsvFp, 
+				"num,"
+				"ngaus, inty, n1, n2, "
+				"xr, yr, zr, "
+				"thar, phir, "
+				"nx, ny, nz, "
+				"opt_index, opt_inty"
+				"\n"
+			);
+		}
+	}
+}
+
+void close_ray_csv()
+{
+	if (rayCsvFp != NULL)
+	{
+		fclose(rayCsvFp);
+	}
+
+	rayCsvFp = NULL;
+}
+
+void append_ray_to_csv(const char *prefix, ray_trace1 *ray)
+{
+	RETURN_ON_NULL(rayCsvFp);
+
+	fprintf(rayCsvFp, 
+		"[%s], %ld, %f, %f, %f, "
+		"%f, %f, %f, "
+		"%f, %f, "
+		"%f, %f, %f\n",
+		prefix,
+		ray->ngaus, ray->inty, ray->n1, ray->n2,
+		ray->xr, ray->yr, ray->zr,
+		ray->thar, ray->phir,
+		ray->nx, ray->ny, ray->nz
+	);
+
+	fflush(rayCsvFp);
+}
+
+void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_record *opr)
+{
+	RETURN_ON_NULL(rayCsvFp);
+
+	if (opr != NULL)
+	{
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, "
+			"%ld, %f"
+			"\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz,
+			opr->r_index, opr->r_inty
+		);
+	}
+	else
+	{
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz
+	);
+	}
+
+	fflush(rayCsvFp);
+}
+

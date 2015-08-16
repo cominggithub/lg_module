@@ -13,7 +13,7 @@ extern double xdim, ydim, zdim_in, zdim_out;					// zdim_out is decided by zdim_
 // optical material
 extern long int n_wl;											// n_wl: number of wavelength; <default value>
 extern long int n_mat;											// n_material: number of optical materials; <default value>
-extern long int air_indx, guide_indx, refl_indx;	// material indexes = 0 ~ (n_material-1) corresponding to n_material;
+extern double air_indx, guide_indx, refl_indx;	// material indexes = 0 ~ (n_material-1) corresponding to n_material;
 
 // light source
 extern long int n_x, n_y, n_z;						// grid number along x, y, and z axes; <default value>
@@ -22,8 +22,9 @@ extern double xl_or, yl_or, zl_or;					// origin of the coordinate
 extern double xl_rng, yl_rng, zl_rng;				// dimensions along x, y, and z directions
 extern double z_reflector;
 // ray tracing
-extern long int n_ray;								// number of sampling rays
+extern long int n_ray;							// number of sampling rays
 extern long int n_gaus;							// number of gaussin-scattering rays;
+extern double ray_threshold;					// ignored ray if ray-intensity is below this threshold value
 
 // lguide performance (measurement)
 extern long int nx_rcd, ny_rcd;								// grid number along x, y, and z axes for records; <default value>

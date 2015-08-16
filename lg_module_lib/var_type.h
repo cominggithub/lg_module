@@ -41,9 +41,9 @@ struct opt_record
 {
 	long int nx, ny, ntha, nphi;
 	double x0, y0, z0, xrng, yrng;
-	int index;
-	double inty;
-	// double *inty;										// intensity profile
+	int r_index;
+	double r_inty;
+	double *inty;										// intensity profile
 };
 
 // local structure

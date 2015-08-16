@@ -51,12 +51,12 @@ void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long i
 	opr->z0 = zrcd_or;
 	opr->xrng = xrcd_rng;
 	opr->yrng = yrcd_rng;
-	opr->index = 0;
-	opr->inty = 0;
-	// opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
+	opr->r_index = 0;
+	opr->r_inty = 0;
+	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
 	
-	// if( opr->inty == nullptr ) { printf("allocmem_record: light recording error\n"); exit(0); }
-	// for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ ){ opr->inty[i]=0.0; }
+	if( opr->inty == nullptr ) { printf("allocmem_record: light recording error\n"); exit(0); }
+	for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ ){ opr->inty[i]=0.0; }
 	return;
 }
 

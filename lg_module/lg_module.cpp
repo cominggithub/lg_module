@@ -80,6 +80,7 @@ int single_proc_main()
 	struct ray_trace1 source_ray[2];
 	opt_record_head *opr_head;
 	data_file_header opr_data_file_header;
+	char child_prefix[256];
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -125,6 +126,8 @@ int single_proc_main()
 	set_start_time("ray tracing");
 
 	opr_head = new_opt_record_head();
+
+	open_ray_csv("ray_log.csv");
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
@@ -154,7 +157,8 @@ int single_proc_main()
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
 
-		trace_one_ray(&ray1, &dpos, opr_head, &lstr);
+		get_child_prefix("", child_prefix, i);
+		trace_one_ray(child_prefix, &ray1, &dpos, opr_head, &lstr);
 
 		// find_str_hit_global(&ray1, &dpos, &opr);
 		// if (!find_str_hit_local(&ray1, &lstr))
@@ -167,6 +171,7 @@ int single_proc_main()
 		// call_CalcGaussScatteredRay(&source_ray[0]);
 	}
 
+	close_ray_csv();
 	set_end_time("ray tracing");
 
 	strcpy(opr_data_file_header.prefix, "prefix--");

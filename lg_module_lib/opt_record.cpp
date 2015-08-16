@@ -52,8 +52,8 @@ void dump_opt_record(struct opt_record *opr)
 			opr->z0,
 			opr->xrng,
 			opr->yrng,
-			opr->index,
-			opr->inty
+			opr->r_index,
+			opr->r_inty
 	);
 	
 	// for(i=0; i<3 && i < inty_count; i++)

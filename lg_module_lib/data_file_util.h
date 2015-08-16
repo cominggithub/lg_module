@@ -78,4 +78,10 @@ void copy_opr_data_to_opr(
 void test_ray_source_file();
 void dump_ray_traces(struct ray_traces *rays);
 void dump_opt_record_data(opt_record_data *opr);
+
+void open_ray_csv(const char* fname);
+void close_ray_csv();
+void append_ray_to_csv(const char *prefix, ray_trace1 *ray);
+void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_record *opr);
+
 #endif

@@ -90,6 +90,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 	char fpname[256];					// for reading parameters
 	struct ray_trace1 source_ray[2];
 	data_file_header opr_data_file_header;
+	char child_prefix[256];
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -160,8 +161,8 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
-
-		trace_one_ray(&ray1, &dpos, opr_head, &lstr);
+		get_child_prefix(NULL, child_prefix, i);
+		trace_one_ray(child_prefix, &ray1, &dpos, opr_head, &lstr);
 
 		// find_str_hit_global(&ray1, &dpos, &opr);
 		// if (!find_str_hit_local(&ray1, &lstr))

@@ -26,9 +26,9 @@ void read_setup(char *fpname)
 	// for optical materials
 	n_wl = conf_getVarInt("n_wl");
 	n_mat = conf_getVarInt("n_mat");
-	air_indx = conf_getVarInt("air_indx");
-	guide_indx = conf_getVarInt("guide_indx");
-	refl_indx = conf_getVarInt("refl_indx");
+	air_indx = conf_getVarDouble("air_indx");
+	guide_indx = conf_getVarDouble("guide_indx");
+	refl_indx = conf_getVarDouble("refl_indx");
 
 	// for light source
 	n_x = conf_getVarInt("n_x");
@@ -46,6 +46,7 @@ void read_setup(char *fpname)
 	// for ray tracing
 	n_ray = conf_getVarInt("n_ray");
 	n_gaus = conf_getVarInt("n_gaus");
+	ray_threshold =  conf_getVarDouble("ray_threshold");
 
 	// for lguide performance (record/measurement)
 	nx_rcd = conf_getVarInt("nx_rcd");

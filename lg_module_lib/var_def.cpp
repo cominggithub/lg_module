@@ -2,7 +2,7 @@
 #include <math.h>
 // general constants
 double pi = 3.141592653589793;
-double delta = pow(10.0,-12.0);
+double delta = pow(10.0,-10.0);
 
 // light-guide geometry (mm)
 double xdim, ydim, zdim_in, zdim_out, z_reflector;					// zdim_out is decided by zdim_in + heightness of microstructure
@@ -11,7 +11,7 @@ double xdim, ydim, zdim_in, zdim_out, z_reflector;					// zdim_out is decided by
 // optical material
 long int n_wl;											// n_wl: number of wavelength; <default value>
 long int n_mat;											// n_material: number of optical materials; <default value>
-long int air_indx = 0, guide_indx = 1, refl_indx = 2;	// material indexes = 0 ~ (n_material-1) corresponding to n_material;
+double air_indx = 0, guide_indx = 1, refl_indx = 2;	// material indexes = 0 ~ (n_material-1) corresponding to n_material;
 
 // light source
 long int n_x, n_y, n_z;						// grid number along x, y, and z axes; <default value>
@@ -22,6 +22,7 @@ double xl_rng, yl_rng, zl_rng;				// dimensions along x, y, and z directions
 // ray tracing
 long int n_ray;								// number of sampling rays
 long int n_gaus;							// number of gaussin-scattering rays;
+double ray_threshold;
 
 // lguide performance (measurement)
 long int nx_rcd, ny_rcd;								// grid number along x, y, and z axes for records; <default value>

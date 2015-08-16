@@ -28,7 +28,6 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
 	mz = cos(ray1->thar*pi/180.0);
 	nx = 0.0; ny = 0.0; nz = 0.0;
-	dumpRay1(ray1);
 	if(ray1->xr <0.0)
 	{
 		    x = xmin;	r = (x-x0)/mx;
@@ -40,9 +39,6 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 				ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			}
 			*type = 4;
-			dumpRay1(ray1);
-
-			printf("--\n\n");
 			//printf("x: %ld, y: %ld, z: %ld, thar: %.2f, phir:%.2f\n", ray1->xr, ray1->yr, ray1->zr, ray1->thar, ray1->phir);
 	}
 	if(ray1->zr >=0.0 && ray1->thar<90.0)
@@ -52,9 +48,9 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		dx = xdim/opr->nx+delta; dy = ydim/opr->ny+delta;
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		indx = xi*opr->ny + yi;
-		opr->index = indx;
-		opr->inty += ray1->inty;
-		// opr->inty[indx] = opr->inty[indx]+ray1->inty;
+		opr->r_index = indx;
+		opr->r_inty += ray1->inty;
+		opr->inty[indx] = opr->inty[indx]+ray1->inty;
 		//printf("xi: %ld, opr->ny: %ld, yi: %ld, opr->index: %ld\n", xi, opr->ny, yi, opr->index);
 		*type = 1;
 
