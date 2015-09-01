@@ -90,8 +90,6 @@ int single_proc_main()
 
 	read_setup(fpname);
 
-
-
 	// allocate memory
 	allocmem_opm(n_wl, n_mat, &opm);			
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
@@ -540,10 +538,49 @@ int test_opt_main()
 
 }
 
+int load_matrix()
+{
+
+
+	int i, j;
+	int nx;
+	int ny;
+
+
+	nx = 10;
+	ny = 10;
+	double matrix[10][10];
+	double data[10*10];
+	load_matrix("dot_density.txt", nx, ny, data);
+
+	for(i=0; i<ny; i++)
+	for(j=0; j<nx; j++)
+	{
+		matrix[i][j] = data[i*ny+j];
+	}
+
+
+	printf("\n\nresult: \n");
+	for(i=0; i<ny; i++)
+	{
+		for(j=0; j<nx; j++)
+		{
+			printf("%f ", matrix[i][j]);
+		}
+	
+		printf("\n");
+	}
+
+	system("pause");
+	return 0;
+
+}
+
 int main(int argc, char** argv)
 {
 
-	return single_proc_main();
+	return load_matrix();
+	// return single_proc_main();
 	//return test_main();
 	// return test_opt_main();
 	//return old_main();

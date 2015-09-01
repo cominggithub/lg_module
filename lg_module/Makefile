@@ -16,7 +16,8 @@ OUTPUT_DATA = \
 
 DATA_FILE = \
 	parameters.txt \
-	microstr.txt
+	microstr.txt \
+	dot_density.txt
 
 SRC_DIR = ./
 OUTPUT_DIR = output

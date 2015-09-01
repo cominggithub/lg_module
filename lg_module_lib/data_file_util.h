@@ -84,4 +84,5 @@ void close_ray_csv();
 void append_ray_to_csv(const char *prefix, ray_trace1 *ray);
 void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_record *opr);
 
+bool load_matrix(const char *filename, int nx, int ny, double *data);
 #endif

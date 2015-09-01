@@ -524,3 +524,42 @@ void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_r
 	fflush(rayCsvFp);
 }
 
+
+bool load_matrix(const char *filename, int nx, int ny, double *data)
+{
+	int i;
+  	int j;
+
+	/*matrix*/
+	/*Use double , you have floating numbers not int*/
+
+	FILE *file;
+	
+	
+	file=fopen(filename, "r");
+  	if (!file)
+  	{
+  		fprintf(stderr, "cannot open %s\n", filename);
+  		return false;
+  	}
+  	
+ 	for(i = 0; i < ny; i++)
+  	{
+		for(j = 0; j < nx; j++) 
+		{
+			if (!fscanf(file, "%lf ", &data[i*ny+j])) 
+  			{
+  				fprintf(stderr, "read matrix: %s, fail\n", filename);
+				break;
+  			}
+      	
+       		// printf("%f ", data[i*ny+j]);
+       		
+      	}
+      	// printf("\n");
+
+  	}
+  	fclose(file);
+
+  	return true;
+}
