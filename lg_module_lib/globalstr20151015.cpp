@@ -14,11 +14,11 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 {
 	long int i, j, xi, yi, indx, begi, endi;
 	double dx, dy;
-	double x, y, z, zf, r, t, ru, nx, ny, nz, xc, yc, nx0, ny0, nz0; //add zf,ru definition
+	double x, y, z, zf, r, ru, nx, ny, nz, xc, yc, nx0, ny0, nz0; //add zf,ru definition
 	double x0, y0, z0;
 	double xmin, xmax, ymin, ymax, zmin, zmax, rmin;
 	double mx, my, mz;
-	bool solved, bcheck, c1, c2;
+	bool solved, bcheck;
 	
 	
 	*type = 0;
@@ -26,7 +26,6 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	xmin = 0.0;		xmax = xdim;
 	ymin = 0.0;		ymax = ydim;
 	zmin = -zdim_in;		zmax = 0.0;
-	zf = -z_reflector;
 	mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
 	mz = cos(ray1->thar*pi/180.0);
 	//nx = 0.0; ny = 0.0; nz = 0.0;
@@ -67,7 +66,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 
 	// the position of ray is between z=0 and -zdim_in, polar angle >90 deg 
 	// do 2 check (1)light-guide front, back , right, left, top bottom plane (2) microstr box
-	else if( (ray1->zr<=0.0 && ray1->zr>-zdim_in && ray1->thar>90.0) || (ray1->zr<0 && ray1->zr>=-zdim_in && ray1->thar<90.0) )
+	else if( (ray1->zr<=0.0 && ray1->thar>90.0) || (ray1->zr>-zdim_in && ray1->thar>90.0) || (ray1->zr<0 && ray1->zr>=-zdim_in && ray1->thar<90.0) )
 	{
 		
 		solved = false;
@@ -99,7 +98,9 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			        //if( abs(ray1->xr-xc)<0.5*xstr_rng && abs(ray1->yr-yc)<0.5*ystr_rng )		// inside a box
                     if( pow(pow((ray1->xr-xc),2.0)+pow((ray1->yr-yc),2.0),0.5)<= 0.5*xstr_rng )      // inside a box
 			        {
-			        	*type = 3;
+			        	//ray1->xr = x0; ray1->yr = y0; ray1->zr = z0;
+				        //ray1->nx = nx0; ray1->ny = ny0; ray1->nz = nz0;
+						*type = 3;
 						lstr->x0 = xc; lstr->y0 = yc;//record dot center coordinate
 				      //break;
 						return true;
@@ -109,8 +110,8 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			if (solved == true && *type == 0)
 			{
 				*type = 4;
-				//ray1->xr = x ; ray1->yr = y ; ray1->zr = z ;
-				//ray1->nx = 0.0; ray1->ny = 0.0; ray1->nz = -1.0;
+				ray1->xr = x ; ray1->yr = y ; ray1->zr = z ;
+				ray1->nx = 0.0; ray1->ny = 0.0; ray1->nz = -1.0;
 				return true;
 			}
 		}
@@ -121,121 +122,143 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	    //do 2 check : (1) nearest box (2) reflector plane
 	    // find the dots in nearby partition, In this case, we consier the dots in occupied partition only.
 		// In this global finding, every microstructure for a dot is effectively treated as box;
-	else if((ray1->zr<= -zdim_in && ray1->zr >-z_reflector && ray1->thar>90.0))
+		// find the box that ray1 belongs to
+	else if( (ray1->zr <=-zdim_in && ray1->thar>90.0) || (ray1->zr >-z_reflector && ray1->thar>90.0) )
 	{
-		z = -zdim_out; r=(z-z0)/mz;
-		x = r*mx+x0; y = r*my+y0;
 		dx = xdim/dpos->partnx+delta; dy = ydim/dpos->partny+delta;
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		indx = xi*dpos->partny + yi;
 		if(indx>0) begi = dpos->partaccni[indx-1];
 		else begi = 0;
 		endi = dpos->partaccni[indx];
+		rmin = pow(10.0,5.0);
+		//x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
+		//nx0 = ray1->nx;	ny0 = ray1->ny;	nz0 = ray1->nz;
+		zf = -z_reflector;
+		//solved = false;
+		//mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0); mz = cos(ray1->thar*pi/180.0);
+	    //nx = 0.0; ny = 0.0; nz = 0.0;
 		for(i=begi; i<endi; i++)
 		{
+			// find the nearest box hitted
 			xc = dpos->xd[i]; yc = dpos->yd[i];
-			t = -((x0-xc)+(y0-yc))/(pow((mx*r),2.0)+pow((my*r),2.0));
-			if ((xc-x0)/mx>=0.0 && (xc-x0)/mx<=r) {c1 = true;}
-			if ((yc-y0)/my>=0.0 && (yc-y0)/my<=r) {c2 = true;}
-			if (c1 || c2)
-			{
-				ru=pow(pow((mx*r*t+x0-xc),2.0)+pow((my*r*t+y0-yc),2.0),0.5);  //distance between microstr center and ray
-				if (ru<=0.5*xstr_rng)
-				{
-					xmin = xc-0.5*xstr_rng;		xmax = xc+0.5*xstr_rng;
-			        ymin = yc-0.5*ystr_rng;		ymax = yc+0.5*ystr_rng;
-			        zmin = -zdim_out;		zmax = -zdim_in;
-					bcheck = box_examine_nobottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
-					if (bcheck = true){lstr->x0 = xc; lstr->y0 = yc; *type = 3;return true;}
-				}
-			}
-		}
-		//no hit any box, will hit the reflector
-		xmin = 0.0;		xmax = xdim;
-	    ymin = 0.0;		ymax = ydim;
-	    z = zf;	r = (z-z0)/mz;
-		x = r*mx+x0;	 y = r*my+y0;
-		if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax) 
-		{
-			nx = 0.0; ny = 0.0; nz = 1.0;
-			ray1->xr = x; ray1->yr = y; ray1->zr = z;
-			ray1->nx = 0.0; ray1->ny = 0.0; ray1->nz = 1.0;
-			*type = 5;
-		}
-		else
-		{
-			*type = 2;
-		}
-
-	}
-	 // the position of ray is between zdim_in and z_refl, and polar angle <90 deg.
-	 // do 2 check : (1) nearest box (2) light-guide bottom plane 
-	else if(ray1->zr <-zdim_in && ray1->zr>=-z_reflector && ray1->thar<90.0)
-	{
-		//if ray in the microstr
-		if (ray1->n1 > 1.0)
-		{
-			xc=lstr->x0; yc=lstr->y0;
 			xmin = xc-0.5*xstr_rng;		xmax = xc+0.5*xstr_rng;
 			ymin = yc-0.5*ystr_rng;		ymax = yc+0.5*ystr_rng;
 			zmin = -zdim_out;		zmax = -zdim_in;
-			bcheck = box_examine_nobottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
-			if (bcheck && ray1->zr==-zdim_in){*type = 6;}
-			else if (bcheck) {*type = 3;}
-			else if (!bcheck) {*type = 2;}
-		    return true;
+			
+			bcheck = box_examine_w_bottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
 		}
-		// if ray not in the microstr
+		if (bcheck)
+		{
+			lstr->x0 = xc; lstr->y0 = yc; 
+			*type = 3;
+		}
+
+		// solve the intersection of ray and reflector plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// and if ray is solved on the reflector plane, call the RayFromReflector
+		if (!bcheck)
+		{       
+			    xmin = 0.0;		xmax = xdim;
+	            ymin = 0.0;		ymax = ydim;
+	            z = zf;	r = (z-z0)/mz;
+				x = r*mx+x0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax) 
+				{
+					solved = true;
+					nx = 0.0; ny = 0.0; nz = 1.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+					*type = 5;
+				}
+				else
+				{
+				    *type = 2;
+				}
+
+		}
+		if(bcheck==false)
+		{ 
+			printf("find_str_hit_global: ray1 hit no dot in considered partitions"); 
+			return false;
+		}  // modify the rule according to demand.
+		
+	}
+
+	 // the position of ray is between zdim_in and z_refl, and polar angle <90 deg.
+	 // do 2 check : (1) nearest box (2) light-guide bottom plane 
+	else if( (ray1->zr <-zdim_in && ray1->thar<90.0) || (ray1->zr >=-z_reflector && ray1->thar<90.0) )
+	{
+		//To avoid ray with large thar hits LGP bottom plane far away from original positon.
+		//so let ray hits the z=-zdim_out plane.
+		if (ray1->n1 > 1.0)
+		{
+		  z = -zdim_in;	r = (z-z0)/mz;
+		  x = r*mx+x0;	 y = r*my+y0;
+		  ray1->xr = x; ray1->yr = y; ray1->zr = z;
+		  ray1->nx =0.0; ray1->ny =0.0; ray1->nz =-1.0;
+		  *type = 6;
+		  return true;
+		}
 		dx = xdim/dpos->partnx+delta; dy = ydim/dpos->partny+delta;
 		xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		indx = xi*dpos->partny + yi;
 		if(indx>0) begi = dpos->partaccni[indx-1];
 		else begi = 0;
 		endi = dpos->partaccni[indx];
+		rmin = pow(10.0,5.0);
+		//nx0 = ray1->nx;	ny0 = ray1->ny;	nz0 = ray1->nz;
+		zf = -z_reflector;
+		solved = false;
+		mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0); mz = cos(ray1->thar*pi/180.0);
+	    nx = 0.0; ny = 0.0; nz = 0.0;
+		
 		for(i=begi; i<endi; i++)
 		{
+			// find the nearest box hitted
 			xc = dpos->xd[i]; yc = dpos->yd[i];
-			t = -((x0-xc)+(y0-yc))/(pow((mx*r),2.0)+pow((my*r),2.0));
-			if ((xc-x0)/mx>=0.0 && (xc-x0)/mx<=r) {c1 = true;}
-			if ((yc-y0)/my>=0.0 && (yc-y0)/my<=r) {c2 = true;}
-			if (c1 || c2)
-			{
-				ru=pow(pow((mx*r*t+x0-xc),2.0)+pow((my*r*t+y0-yc),2.0),0.5);  //distance between microstr center and ray
-				if (ru<=0.5*xstr_rng)
+			xmin = xc-0.5*xstr_rng;		xmax = xc+0.5*xstr_rng;
+			ymin = yc-0.5*ystr_rng;		ymax = yc+0.5*ystr_rng;
+			zmin = -zdim_out;		zmax = -zdim_in;
+			
+			bcheck = box_examine_w_bottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
+		}
+		if (bcheck)
+		{
+			lstr->x0 = xc; lstr->y0 = yc;
+			*type = 3;
+		}
+
+		// solve the intersection of ray and bottom plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
+		// and if ray is solved on the bottom plane, call the module IV
+		if (!bcheck)
+		{
+				z = -zdim_in;	r = (z-z0)/mz;
+				x = r*mx+x0;	 y = r*my+y0;
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
 				{
-					xmin = xc-0.5*xstr_rng;		xmax = xc+0.5*xstr_rng;
-			        ymin = yc-0.5*ystr_rng;		ymax = yc+0.5*ystr_rng;
-			        zmin = -zdim_out;		zmax = -zdim_in;
-					bcheck = box_examine_w_bottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
-					if (bcheck = true){lstr->x0 = xc; lstr->y0 = yc; *type = 3;return true;}
+					solved = true;
+					nx = 0.0; ny = 0.0; nz = -1.0;
+					if(r<rmin)
+					{
+						ray1->xr = x; ray1->yr = y; ray1->zr = z;
+						ray1->nx = nx; ray1->ny = ny; ray1->nz = nz;
+					}
+					*type = 4;
 				}
-			}
 		}
-		// solve the intersection of ray and bottom plane z=-zdim_in; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
-		//no hit any box, will hit the reflector
-		xmin = 0.0;		xmax = xdim;
-	    ymin = 0.0;		ymax = ydim;
-	    z = -zdim_in;	r = (z-z0)/mz;
-		x = r*mx+x0;	 y = r*my+y0;
-		if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax) 
-		{
-			nx = 0.0; ny = 0.0; nz = 1.0;
-			ray1->xr = x; ray1->yr = y; ray1->zr = z;
-			ray1->nx = 0.0; ray1->ny = 0.0; ray1->nz = 1.0;
-			*type = 5;
-		}
-		else
-		{
-			*type = 2;
-		}
-		/*
 		if(solved==false)
 		{ 
 			printf("find_str_hit_global: ray1 hit no dot in considered partitions"); 
 			false;
 		}  // modify the rule according to demand.
-		*/
-	}return true;
+		
+	}
+
+
+	return true;
 }
 
 void part_dots(dot_position *dpos)

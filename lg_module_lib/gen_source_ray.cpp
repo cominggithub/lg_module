@@ -108,7 +108,7 @@ void gen_source_ray(opt_source *ops, ray_traces *rays)
 		rays->thar[n] = thasol;	
 		rays->phir[n] = phisol - 0.5*dphi*ops->nphi;     // note! phi is centered on 180 for symmetry previously, and now is revised
 		rays->xr[n] = 1.0*ops->x0; rays->zr[n] = 1.0*ops->z0;
-		rays->yr[n] = 1.0*ops->y0 +int(n%ops->ny)*((ops->yrng - ops->y0)/ops->ny );
+		rays->yr[n] = 1.0*ops->y0 +int(n%ops->ny)*((ops->yrng - ops->y0)/(ops->ny -1)  );
 		rays->inty[n] =1.0*exp( -2.0*pow((thasol-90.0)*pi/180.0,2.0) )*exp( -1.0*pow((phisol-90)*pi/180.0,2.0) );
 		rinty_tot = rinty_tot + rays->inty[n];
 		//rays->yr[n] = 1.0*ops->yrng *rand()/RAND_MAX + 1.0*ops->y0;

@@ -251,3 +251,7 @@ lg_module/ray1.txt
 lg_module/data3dv.txt
 lg_module/data3dv.txt
 lg_module/ray_log.csv
+lg_module/dot_density.txt
+lg_module/dot_density.txt
+*.xlsx
+lg_module/dot_position.txt

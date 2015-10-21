@@ -7,7 +7,7 @@ extern double pi;
 extern double delta;
 
 // light-guide geometry (mm)
-extern double xdim, ydim, zdim_in, zdim_out;					// zdim_out is decided by zdim_in + heightness of microstructure
+extern double xdim, ydim, zdim_in, zdim_out, z_reflector;					// zdim_out is decided by zdim_in + heightness of microstructure
 
 
 // optical material

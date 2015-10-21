@@ -44,6 +44,7 @@ OBJ_FILES := \
 	../lg_module_lib/glist.o \
 	../lg_module_lib/opt_record.o \
 	../lg_module_lib/mem_alloc.o \
+	../lg_module_lib/box_check.o \
 	../lg_module_lib/var_def.o
 
 

@@ -31,6 +31,7 @@
 #include "ray_tracer.h"
 #include "opt_record.h"
 #include "data_file_util.h"
+#include "box_check.h"
 // // function for memory arrangement
 // void read_setup(char *fpname);
 
@@ -56,7 +57,7 @@
 
 
 int single_proc_main();
-int old_main();
+//int old_main();
 
 #define MAX_OUTPUT_RAY 5
 
@@ -118,7 +119,9 @@ int single_proc_main()
 	set_end_time("debug_den_to_pos");
 
 	set_start_time("part_dots");
+
 	part_dots(&dpos);
+	save_dot_position_file(&dpos);
 	set_end_time("part_dots");
 
 	set_start_time("ray tracing");
@@ -130,9 +133,9 @@ int single_proc_main()
 	// for(i=0; i<1; i++)
 	{
 		
-		ray1.ngaus 	= 1; 
+		ray1.ngaus 	= 0; 
 		ray1.n1 	= 1.0; 
-		ray1.n2 	= 1.49;
+		ray1.n2 	= 1.58;
 		
 
 		ray1.xr 	= rays.xr[i]; 
@@ -150,7 +153,7 @@ int single_proc_main()
 		ray1.inty   = 10.0*rays.inty[i];
 		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
 		//dumpRay1(&ray1);
-		//dumpRay1toFile(&ray1);
+		dumpRay1toFile(&ray1);
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
@@ -289,7 +292,7 @@ int old_main()
 	set_start_time("find_str_hit_global");
 	// input: ray1, dpos, opr
 	// output: ray1, opr
-	find_str_hit_global(&ray1, &dpos, &opr, &type);
+	//find_str_hit_global(&ray1, &dpos, &opr, &type);
 	set_end_time("find_str_hit_global");
 
 	// moduel 3...
@@ -579,8 +582,8 @@ int load_matrix()
 int main(int argc, char** argv)
 {
 
-	return load_matrix();
-	// return single_proc_main();
+	//return load_matrix();
+	 return single_proc_main();
 	//return test_main();
 	// return test_opt_main();
 	//return old_main();

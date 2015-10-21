@@ -83,6 +83,12 @@ void open_ray_csv(const char* fname);
 void close_ray_csv();
 void append_ray_to_csv(const char *prefix, ray_trace1 *ray);
 void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_record *opr);
+void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, opt_record *opr, int type);
 
 bool load_matrix(const char *filename, int nx, int ny, double *data);
+
+
+void save_dot_position_file(dot_position *dpos);
+
+
 #endif

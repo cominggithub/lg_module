@@ -48,4 +48,6 @@ void dumpRay1toFile(struct ray_trace1* ray)
 	fprintf(fo,"\t    nx: %f\n", ray->nx);
 	fprintf(fo,"\t    ny: %f\n", ray->ny);
 	fprintf(fo,"\t    nz: %f\n", ray->nz);
+
+	fflush(fo);
 }
