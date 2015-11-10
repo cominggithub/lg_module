@@ -674,3 +674,46 @@ void save_dot_position_file(dot_position *dpos)
 	fflush(fp);
 	fclose(fp);
 }
+
+
+void save_opt_record_txt_file(
+	const char *fname,
+	opt_record *opr
+)
+{
+	int i, j, k, l;
+	FILE *fp;
+
+	if (opr == NULL)
+	{
+		return;
+	}
+
+	fp = fopen(fname, "w");
+	if (fp == NULL)
+	{
+		return;
+	}
+
+	fprintf(fp, "nx: %d, ny = %d, ntha = %d, nphi = %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (i=0; i<opr->nx; i++)
+	{
+		for (j=0; j<opr->ny; j++)
+		{
+			fprintf(fp, "\nnx = %d, ny = %d\n", i, j);
+			for (k=0; k<opr->ntha; k++)
+			{
+				for(l=0; l<opr->nphi; l++)
+				{
+					long index = i*opr->ny + j*opr->ntha + k*opr->nphi + l;
+					fprintf(fp, "%f ", opr->inty[index]);
+				}
+				fprintf(fp, "\n");
+			}
+		}
+		
+	}
+	
+}
+
+	

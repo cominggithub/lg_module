@@ -129,6 +129,7 @@ int single_proc_main()
 	opr_head = new_opt_record_head();
 
 	open_ray_csv("ray_log.csv");
+	
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
@@ -159,17 +160,8 @@ int single_proc_main()
 		// ray1.thar = 100; ray1.phir =0.0;
 
 		get_child_prefix("", child_prefix, i);
-		trace_one_ray(child_prefix, &ray1, &dpos, opr_head, &lstr);
+		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
 
-		// find_str_hit_global(&ray1, &dpos, &opr);
-		// if (!find_str_hit_local(&ray1, &lstr))
-		// {
-		// 	dumpRay1(&ray1);
-		// 	continue;	
-		// }
-		// CalcMainReflectiveRay(&ray1, &source_ray[0]);
-		// CalcMainTransmittanceRay(&ray1, &source_ray[1]);
-		// call_CalcGaussScatteredRay(&source_ray[0]);
 	}
 
 	close_ray_csv();
@@ -181,39 +173,22 @@ int single_proc_main()
 	opr_data_file_header.count 			= ((glist_head_t*)opr_head)->len;
 
 	
-	set_start_time("save opt file");
-	save_opt_record_file("aaa.opt_recoder", &opr_data_file_header, opr_head);
-	set_end_time("save opt file");
+	save_opt_record_txt_file(output_opt_record_txt, &opr);
+	// set_start_time("save opt file");
+	// save_opt_record_file(output_opt_record, &opr_data_file_header, opr_head);
+	// set_end_time("save opt file");
 
 	// dump_opt_record_head(opr_head);
-	free_opt_record_head(&opr_head);
+	// free_opt_record_head(&opr_head);
 
-	opr_head = new_opt_record_head();
+	// opr_head = new_opt_record_head();
 
-	memset(&opr_data_file_header, 0, sizeof(data_file_header));
-	set_start_time("load opt file");
-	load_opt_record_file("aaa.opt_recoder", &opr_data_file_header, opr_head);
-	set_end_time("load opt file");
+	// memset(&opr_data_file_header, 0, sizeof(data_file_header));
+	// set_start_time("load opt file");
+	// load_opt_record_file(output_opt_record, &opr_data_file_header, opr_head);
+	// set_end_time("load opt file");
 	// dump_opt_record_head(opr_head);
-	free_opt_record_head(&opr_head);
-
-
-	// for(i=0; i<1; i++)
-	// {
-	// 	// CalcMainReflectiveRay(&incident_ray[i], &source_ray[i]);
-	// 	// CalcMainTransmittanceRay(&incident_ray[i], &source_ray[i+100]);
-
-	// 	CalcMainReflectiveRay(&ray1, &source_ray[i]);
-	// 	CalcMainTransmittanceRay(&ray1, &source_ray[i+100]);
-	// }
-
-	// for(i=0; i<200; i++)
-	// {
-	// 	call_CalcGaussScatteredRay(&source_ray[i]);
-	// }
-
-	pLU(hit_local_error_count);
-	pLU(iteration_count);
+	// free_opt_record_head(&opr_head);
 
 	// module 5...	
 
@@ -228,7 +203,6 @@ int single_proc_main()
 	set_end_time("Total");
 	print_all_execution_time();
 
-	system("pause");
 	return 0;
 
 }

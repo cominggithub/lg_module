@@ -35,6 +35,10 @@ void dumpRay1toFile(struct ray_trace1* ray)
 	char foname[256] = "ray1.txt";
 	fo = fopen(foname, "a");
 
+	if (fo == NULL)
+	{
+		return;
+	}
 	fprintf(fo,"ray:\n");
 	fprintf(fo,"\t ngaus: %ld\n", ray->ngaus);
 	fprintf(fo,"\t  inty: %f\n", ray->inty);

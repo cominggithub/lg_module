@@ -30,6 +30,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
 	mz = cos(ray1->thar*pi/180.0);
 	//nx = 0.0; ny = 0.0; nz = 0.0;
+	
 	if(ray1->xr<0.0)
 	{
 		    x = xmin;	r = (x-x0)/mx;
@@ -45,6 +46,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	}
 	else if(ray1->zr >=0.0 && ray1->thar<90.0)
 	{
+		pl();
 		// light emitted from light-guide plate top surface. record the performance;
 		// herein, a normal luminance (theta<5) is recorded only for a example
 		dx = xdim/opr->nx+delta; dy = ydim/opr->ny+delta;
@@ -53,7 +55,8 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		opr->r_index = indx;
 		opr->r_inty += ray1->inty;
 		opr->inty[indx] = opr->inty[indx]+ray1->inty;
-		//printf("xi: %ld, opr->ny: %ld, yi: %ld, opr->index: %ld\n", xi, opr->ny, yi, opr->index);
+		// printf("xi: %ld, opr->ny: %ld, yi: %ld, opr->index: %ld\n", xi, opr->ny, yi, opr->r_index);
+		printf("r_index: %d, r_inty: %d\n", opr->r_index, opr->r_inty);
 		*type = 1;
 
 	}

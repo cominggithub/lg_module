@@ -32,10 +32,10 @@ void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 		sprintf(child_prefix, "%s-%d", prefix, child_num);	
 	}
 	
-	printf("%s\n", child_prefix);
+	// printf("%s\n", child_prefix);
 }
 
-void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
 	int i, j;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
@@ -53,34 +53,46 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 
 	for(i=0; i<2; i++)
 	{
-		// output_ray[i][0].phir = 1;
-		// output_ray[i][1].phir = 2;
-		// output_ray[i][2].phir = 3;
-		// output_ray[i][3].phir = 4;
-		// output_ray[i][4].phir = 5;
-		/*
-		CalcGaussScatteredRay(&src_ray[i], (ray_trace1 *)&output_ray[i]);
-
-		for(j=0; j<MAX_OUTPUT_RAY; j++)
-		{
-			if(output_ray[i][j].inty > IntensityThreshold)
-			{
-				get_child_prefix(prefix, child_prefix, i*MAX_OUTPUT_RAY + j);
-				trace_one_ray(child_prefix, &output_ray[i][j], dpos, opr_head, lstr);
-			}
-		}
-		*/
 		get_child_prefix(prefix, child_prefix, i);
 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 		if (src_ray[i].inty > IntensityThreshold)
 		{
 			
-            trace_one_ray(child_prefix, &src_ray[i], dpos, opr_head, lstr);
+            trace_one_ray(child_prefix, &src_ray[i], dpos, opr, lstr);
 		}
 	}
 }
 
-void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// {
+// 	int i, j;
+// 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
+// 	struct ray_trace1 src_ray[2];
+// 	char child_prefix[256];
+
+// 	if (!find_str_hit_local(ray, lstr))
+// 	{
+// 		hit_local_error_count++;
+// 		return;
+// 	}
+
+// 	CalcMainReflectiveRay(ray, &src_ray[0]);
+// 	CalcMainTransmittanceRay(ray, &src_ray[1]);
+
+// 	for(i=0; i<2; i++)
+// 	{
+// 		get_child_prefix(prefix, child_prefix, i);
+// 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
+// 		if (src_ray[i].inty > IntensityThreshold)
+// 		{
+			
+//             trace_one_ray(child_prefix, &src_ray[i], dpos, opr_head, lstr);
+// 		}
+// 	}
+// }
+
+
+void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
 	int i, j;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
@@ -92,69 +104,107 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 
 	for(i=0; i<2; i++)
 	{
-		// output_ray[i][0].phir = 1;
-		// output_ray[i][1].phir = 2;
-		// output_ray[i][2].phir = 3;
-		// output_ray[i][3].phir = 4;
-		// output_ray[i][4].phir = 5;
-		/*
-		CalcGaussScatteredRay(&src_ray[i], (ray_trace1 *)&output_ray[i]);
-
-		for(j=0; j<MAX_OUTPUT_RAY; j++)
-		{
-			if(output_ray[i][j].inty > IntensityThreshold)
-
-			{
-				get_child_prefix(prefix, child_prefix, i*MAX_OUTPUT_RAY + j);
-				trace_one_ray(child_prefix, &output_ray[i][j], dpos, opr_head, lstr);
-			}
-		}
-		*/
 		get_child_prefix(prefix, child_prefix, i);
 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 		if (src_ray[i].inty > IntensityThreshold)
 		{
 			
-            trace_one_ray(child_prefix, &src_ray[i], dpos, opr_head, lstr);
+            trace_one_ray(child_prefix, &src_ray[i], dpos, opr, lstr);
 		}
 	}
 }
 
+// void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// {
+// 	int i, j;
+// 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
+// 	struct ray_trace1 src_ray[2];
+// 	char child_prefix[256];
 
-void trace_ray_type5(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// 	CalcMainReflectiveRay(ray, &src_ray[0]);
+// 	CalcMainTransmittanceRay(ray, &src_ray[1]);
+
+// 	for(i=0; i<2; i++)
+// 	{
+// 		get_child_prefix(prefix, child_prefix, i);
+// 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
+// 		if (src_ray[i].inty > IntensityThreshold)
+// 		{
+			
+//             trace_one_ray(child_prefix, &src_ray[i], dpos, opr_head, lstr);
+// 		}
+// 	}
+// }
+
+
+// void trace_ray_type5(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// {
+// 	RayFromReflector(ray);
+// 	trace_one_ray(prefix, ray, dpos, opr_head, lstr);
+// }
+
+
+void trace_ray_type5(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
 	RayFromReflector(ray);
-	trace_one_ray(prefix, ray, dpos, opr_head, lstr);
+	trace_one_ray(prefix, ray, dpos, opr, lstr);
 }
 
+// void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// {
+// 	int i, j;
+// 	int type;
+// 	bool result;
+// 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
+// 	struct ray_trace1 src_ray[2];
+// 	opt_record *opr;
 
-void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record_head *opr_head, local_str *lstr)
+// 	iteration_count++;
+// 	// opr = new_opt_record();
+// 	append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
+	
+// 	if (result)
+// 	{
+// 		switch(type)
+// 		{
+// 			case 1:
+// 				// just skip it, and go to next round
+// 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 				add_opt_record(opr_head, opr);
+// 				break;
+// 			case 2:
+// 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 				break;
+// 			case 3:
+// 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 				trace_ray_type3(prefix, ray, dpos, opr_head, lstr);
+// 				break;
+// 			case 4:
+// 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 				trace_ray_type4(prefix, ray, dpos, opr_head, lstr);
+// 				break;
+// 			case 5:
+// 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 				trace_ray_type5(prefix, ray, dpos, opr_head, lstr);
+// 				break;
+// 			case 6:
+// 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+// 				trace_one_ray(prefix, ray, dpos, opr_head, lstr);
+// 		}
+// 	}
+// }
+
+void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
 	int i, j;
 	int type;
 	bool result;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
 	struct ray_trace1 src_ray[2];
-	opt_record *opr;
-
-
-	// if(ray1->zr >=0.0 && ray1->thar<90.0)
-
-	/*
-	ray->ngaus 	= 1; 
-	// ray->inty 	= 1.0; 
-	ray->n1		= 1.0; 
-	ray->n2 	= 1.0;
-	ray->xr 	= 0.0; 
-	ray->yr 	= 0.0; 
-	ray->zr 	= 0.1; 
-	ray->thar 	= 80; 
-	ray->phir 	= 0.0;
-	*/
-
 	
 	iteration_count++;
-	opr = new_opt_record();
+	
 	append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
 	
@@ -165,26 +215,25 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 			case 1:
 				// just skip it, and go to next round
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
-				add_opt_record(opr_head, opr);
 				break;
 			case 2:
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				break;
 			case 3:
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
-				trace_ray_type3(prefix, ray, dpos, opr_head, lstr);
+				trace_ray_type3(prefix, ray, dpos, opr, lstr);
 				break;
 			case 4:
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
-				trace_ray_type4(prefix, ray, dpos, opr_head, lstr);
+				trace_ray_type4(prefix, ray, dpos, opr, lstr);
 				break;
 			case 5:
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
-				trace_ray_type5(prefix, ray, dpos, opr_head, lstr);
+				trace_ray_type5(prefix, ray, dpos, opr, lstr);
 				break;
 			case 6:
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
-				trace_one_ray(prefix, ray, dpos, opr_head, lstr);
+				trace_one_ray(prefix, ray, dpos, opr, lstr);
 		}
 	}
 }

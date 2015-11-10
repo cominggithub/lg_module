@@ -157,22 +157,8 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
 		
-		// dumpRay1(&ray1);
-		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
-		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
-		// ray1.thar = 100; ray1.phir =0.0;
 		get_child_prefix(NULL, child_prefix, i);
-		trace_one_ray(child_prefix, &ray1, &dpos, opr_head, &lstr);
-
-		// find_str_hit_global(&ray1, &dpos, &opr);
-		// if (!find_str_hit_local(&ray1, &lstr))
-		// {
-		// 	dumpRay1(&ray1);
-		// 	continue;	
-		// }
-		// CalcMainReflectiveRay(&ray1, &source_ray[0]);
-		// CalcMainTransmittanceRay(&ray1, &source_ray[1]);
-		// call_CalcGaussScatteredRay(&source_ray[0]);
+		
 	}
 
 	set_end_time("ray tracing");

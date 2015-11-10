@@ -26,7 +26,7 @@ yl_rng=7.5
 zl_rng=0.0
 
 // for ray tracing
-n_ray=36
+n_ray=1000
 n_gauss=1
 ray_threshold=0.001
 
@@ -59,6 +59,11 @@ partn_x=10
 partn_y=10
 hex_bl=T
 hex_lng=0.1
+
+// output_file_name
+output_opt_record_data=output.opt_record.data
+output_opt_record_txt=output.opt_record.txt
+
 
 
   

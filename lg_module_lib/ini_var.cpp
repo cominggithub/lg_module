@@ -84,4 +84,9 @@ void read_setup(char *fpname)
 	hex_bl = *conf_getVarStr("hex_bl");
 	hex_lng = conf_getVarDouble("hex_lng");
 
+	// read output file name
+
+	strcpy(output_opt_record_data, conf_getVarStr("output_opt_record_data"));
+	strcpy(output_opt_record_txt, conf_getVarStr("output_opt_record_txt"));
+
 }
