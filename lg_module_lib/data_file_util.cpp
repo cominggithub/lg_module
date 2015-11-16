@@ -325,7 +325,6 @@ bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_c
 	int i;
 	int count;
 	
-
 	opt_record_head *dst_head;
 	opt_record_head *src_head;
 	data_file_header dfh;
@@ -335,6 +334,7 @@ bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_c
 	src_head = new_opt_record_head();
 
 	count = 0;
+
 	for(i=0; i<file_cnt; i++)
 	{
 		if (!load_opt_record_file(src_files[i], &dfh, dst_head))
@@ -344,10 +344,10 @@ bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_c
 			return false;
 		}
 		dump_opt_record_head(dst_head);
-		printf("--\n");
 		count += dfh.count;
 	}
 
+	
 // typedef struct _data_file_header
 // {
 // 	char prefix[256];

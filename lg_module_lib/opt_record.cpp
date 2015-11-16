@@ -72,14 +72,11 @@ void dump_opt_record_head(opt_record_head *head)
 	glist_t *cur;
 
 	cur = ((glist_head_t*)head)->child;
-
-	pl();
 	while(cur != NULL)
 	{
 		dump_opt_record((opt_record*)cur->vptr);
 		cur = cur->next;
 	}
-	pl();
 }
 
 bool merge_opt_record_head(opt_record_head *dst_head, opt_record_head *src_head)

@@ -35,8 +35,8 @@ int main(int argc, const char** argv)
 	int count;
 	char prefix[256];
 	
-	char dst_file[25];
-	char *opt_record_name[4];
+	char dst_file[256];
+	char *opt_record_name[256];
 
 	// define variables
 	opt_source ops;					// for optic source
@@ -55,12 +55,10 @@ int main(int argc, const char** argv)
 	count = atoi(argv[1]);
 	strcpy(prefix, argv[2]);	
 	
-	
-	printf("    prefix: %s\n", prefix);
-	printf("proc count: %d\n", count);
-	
-	srand((unsigned)time(NULL));	// initiate rand seed 
+	// printf("    prefix: %s\n", prefix);
+	// printf("proc count: %d\n", count);
 
+	srand((unsigned)time(NULL));	// initiate rand seed 
 	// read in setup-parameters
 	strcpy(fpname, "parameters.txt");
 	read_setup(fpname);
@@ -72,9 +70,7 @@ int main(int argc, const char** argv)
 	}
 
 	sprintf(dst_file, "%s/opt_record.dat", prefix);
-	
 	merge_opt_record_files(prefix, dst_file, count, (const char**)opt_record_name);
-	
 	
 	return 0;
 }

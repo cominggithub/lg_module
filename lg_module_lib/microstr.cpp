@@ -12,14 +12,17 @@ void read_microstr(char *fname, local_str *lstr)
 	double cbuf;
 	FILE *fp;
 	fp=fopen(fname,"r");
+	printf("lstr->nx = %d, lstr->ny = %d\n", lstr->nx, lstr->ny);
 	if (fp!=NULL)
 	{
 		zdim_out = pow(10.0,5.0);
 		for(i=0;i<lstr->nx*lstr->ny;i++) 
 		{
-			fscanf(fp,"%lf",&cbuf);
+			// printf("i: %d\n", i);
+			// fscanf(fp,"%lf",&cbuf);
 			//cbuf = cbuf*10.0;					// debug only! magnetify the height of microstructure for easy-debug
-			lstr->thz[i] = cbuf/pow(10.0,3.0);  // Note! in unit of mm; In this case, transform nm to mm
+			// lstr->thz[i] = cbuf/pow(10.0,3.0);  // Note! in unit of mm; In this case, transform nm to mm
+			lstr->thz[i] = 99999;
 			if(zdim_out>cbuf/pow(10.0,3.0)) {zdim_out = cbuf/pow(10.0,3.0);}
 		}
 	}
