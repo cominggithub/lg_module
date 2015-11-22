@@ -54,4 +54,5 @@ void dumpRay1toFile(struct ray_trace1* ray)
 	fprintf(fo,"\t    nz: %f\n", ray->nz);
 
 	fflush(fo);
+	fclose(fo);
 }

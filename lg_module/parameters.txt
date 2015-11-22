@@ -61,7 +61,7 @@ hex_bl=T
 hex_lng=0.1
 
 // output_file_name
-output_opt_record_data=output.opt_record.data
+output_opt_record_dat=output.opt_record.dat
 output_opt_record_txt=output.opt_record.txt
 
 

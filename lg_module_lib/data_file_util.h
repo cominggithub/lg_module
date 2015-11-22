@@ -80,6 +80,15 @@ void save_opt_record_txt_file(
 	opt_record *opr
 );
 
+bool save_opt_record_dat_file(
+	const char *fname,
+	opt_record *opr
+);
+
+bool load_opt_record_dat_file(
+	const char *fname,
+	opt_record *opr
+);
 
 void test_ray_source_file();
 void dump_ray_traces(struct ray_traces *rays);

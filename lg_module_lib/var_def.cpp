@@ -62,5 +62,5 @@ bool enable_gnu_plot = false;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name
-char output_opt_record_data[256];
+char output_opt_record_dat[256];
 char output_opt_record_txt[256];

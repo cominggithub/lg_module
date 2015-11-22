@@ -64,6 +64,6 @@ extern bool enable_gnu_plot;
 extern unsigned long gaussScatteredRaycount;
 
 // output file name
-extern char output_opt_record_data[];
+extern char output_opt_record_dat[];
 extern char output_opt_record_txt[];
 #endif

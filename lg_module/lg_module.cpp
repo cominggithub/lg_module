@@ -95,10 +95,7 @@ int single_proc_main()
 	allocmem_opm(n_wl, n_mat, &opm);			
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
 	allocmem_rays(n_ray, n_gaus, &rays, &ray1);	
-	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);	
-	
-
-
+	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);			
 	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);		
 	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);	
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);	
@@ -111,14 +108,10 @@ int single_proc_main()
 	gen_source_ray(&ops, &rays);
 	set_end_time("gen_source_ray");
 	
-	save_opt_record_txt_file("output.ori.opr.txt", &opr);
-
 	set_start_time("read_microstr");
 	read_microstr(str_file, &lstr);
 	set_end_time("read_microstr");
 
-	save_opt_record_txt_file("output.mic.opr.txt", &opr);
-	
 	// moduel 2...
 	//debug test
 	set_start_time("debug_den_to_pos");
@@ -136,7 +129,7 @@ int single_proc_main()
 	opr_head = new_opt_record_head();
 
 	open_ray_csv("ray_log.csv");
-
+	
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
@@ -166,6 +159,7 @@ int single_proc_main()
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
 
+		
 		get_child_prefix("", child_prefix, i);
 		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
 
@@ -180,7 +174,9 @@ int single_proc_main()
 	opr_data_file_header.count 			= ((glist_head_t*)opr_head)->len;
 
 	
-	save_opt_record_txt_file("output.opr.txt", &opr);
+	save_opt_record_txt_file(output_opt_record_txt, &opr);
+	save_opt_record_dat_file(output_opt_record_dat, &opr);
+
 	// set_start_time("save opt file");
 	// save_opt_record_file(output_opt_record, &opr_data_file_header, opr_head);
 	// set_end_time("save opt file");

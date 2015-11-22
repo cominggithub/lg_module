@@ -148,20 +148,20 @@ void test_ray_source_file()
 	}
 
 	printf("header prefix: %s\n", header.prefix);
-	printf("header count: %u\n", header.count);
+	printf("header count: %ld\n", header.count);
 	printf("header offset: %u\n", header.offset);
 
 	save_ray_source_file(fileName, &header, &rays);
 	memset(&header, 0, sizeof(data_file_header));
 
 	printf("header prefix: %s\n", header.prefix);
-	printf("header count: %u\n", header.count);
+	printf("header count: %ld\n", header.count);
 	printf("header offset: %u\n", header.offset);
 
 	load_ray_source_file_header(fileName, &header);
 
 	printf("header prefix: %s\n", header.prefix);
-	printf("header count: %u\n", header.count);
+	printf("header count: %ld\n", header.count);
 	printf("header offset: %u\n", header.offset);
 
 	for(i=0; i<rays.nray; i++)
@@ -253,7 +253,7 @@ bool save_opt_record_file(
 
 	if (i != dfh->count)
 	{
-		printf("[Error] count not matched: expected : %ld, actual: %ld\n", dfh->count, i);
+		printf("[Error] count not matched: expected : %ld, actual: %u\n", dfh->count, i);
 	}
 
 	fflush(fp);
@@ -497,7 +497,7 @@ void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_r
 			"%f, %f, %f, "
 			"%f, %f, "
 			"%f, %f, %f, "
-			"%ld, %f"
+			"%d, %f"
 			"\n",
 			prefix,
 			ray->ngaus, ray->inty, ray->n1, ray->n2,
@@ -536,7 +536,7 @@ void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, 
 			"%f, %f, %f, "
 			"%f, %f, "
 			"%f, %f, %f, "
-			"%ld, %f, %ld"
+			"%d, %f, %d"
 			"\n",
 			prefix,
 			ray->ngaus, ray->inty, ray->n1, ray->n2,
@@ -553,7 +553,7 @@ void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, 
 			"[%s], %ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
-			"%f, %f, %f, %ld\n",
+			"%f, %f, %f, %d\n",
 			prefix,
 			ray->ngaus, ray->inty, ray->n1, ray->n2,
 			ray->xr, ray->yr, ray->zr,
@@ -639,9 +639,9 @@ void save_dot_position_file(dot_position *dpos)
 	}
 
 
-	fprintf(fp, "ndot: %d\n", dpos->ndot);
-	fprintf(fp, "partnx: %d\n", dpos->partnx);
-	fprintf(fp, "partny: %d\n", dpos->partny);
+	fprintf(fp, "ndot: %ld\n", dpos->ndot);
+	fprintf(fp, "partnx: %ld\n", dpos->partnx);
+	fprintf(fp, "partny: %ld\n", dpos->partny);
 
 	fprintf(fp, "\n\nxd:\n");
 	for(i=0; i<dpos->ndot; i++)
@@ -668,7 +668,7 @@ void save_dot_position_file(dot_position *dpos)
 	fprintf(fp, "\n\npartindx:\n");
 	for(i=0; i<dpos->ndot; i++)
 	{
-		fprintf(fp, "%f ", dpos->partindx[i]);
+		fprintf(fp, "%ld ", dpos->partindx[i]);
 	}
 
 	fflush(fp);
@@ -695,7 +695,7 @@ void save_opt_record_txt_file(
 		return;
 	}
 
-	fprintf(fp, "nx: %d, ny = %d, ntha = %d, nphi = %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	fprintf(fp, "nx: %ld, ny = %ld, ntha = %ld, nphi = %ld\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
 	for (i=0; i<opr->nx; i++)
 	{
 		for (j=0; j<opr->ny; j++)
@@ -713,7 +713,103 @@ void save_opt_record_txt_file(
 		}
 		
 	}
+	fflush(fp);
+	fclose(fp);
 	
 }
 
+
+bool save_opt_record_dat_file(
+	const char *fname,
+	opt_record *opr
+)
+{
+	FILE *fp;
+	size_t inty_size = 0;
+
+	// fp = fopen(fname, "wb");
 	
+
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(opr, false);
+
+	fp = fopen(fname, "wb");
+	
+	if (fp == NULL)
+	{
+		return false;
+	}
+
+	
+	inty_size = sizeof(double)*opr->nx*opr->ny*opr->ntha*opr->nphi;
+
+	if (!fwrite(opr, sizeof(opt_record) - sizeof(double*), 1, fp))
+	{
+		fflush(fp);
+		fclose(fp);
+		return false;
+	}
+
+	if (!fwrite(opr->inty, inty_size, 1, fp))
+	{
+		fflush(fp);
+		fclose(fp);
+		return false;
+	}
+
+	dump_opt_record(opr);
+
+	fflush(fp);
+	fclose(fp);
+	return true;
+}
+
+bool load_opt_record_dat_file(
+	const char *fname,
+	opt_record *opr
+)
+{
+	FILE *fp;
+	size_t inty_size = 0;
+
+	
+	
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(opr, false);
+	
+	
+	fp = fopen(fname, "rb");
+	if (fp == NULL)
+	{
+		fclose(fp);
+		return false;	
+	}
+
+
+	if(!fread(opr, sizeof(opt_record) - sizeof(double*), 1, fp))
+	{
+		fclose(fp);
+		return false;
+	}
+
+	inty_size = sizeof(double)*opr->nx*opr->ny*opr->ntha*opr->nphi;
+	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
+	if( opr->inty == nullptr ) 
+	{ 
+		printf("allocmem_record: light recording error\n");
+		fclose(fp);
+		return false;
+	}
+
+	if (!fread(opr->inty, inty_size, 1, fp))
+	{
+		fclose(fp);
+		return false;
+	}
+
+	dump_opt_record(opr);
+
+	fclose(fp);
+	return true;
+
+}

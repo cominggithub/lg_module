@@ -86,7 +86,7 @@ void read_setup(char *fpname)
 
 	// read output file name
 
-	strcpy(output_opt_record_data, conf_getVarStr("output_opt_record_data"));
+	strcpy(output_opt_record_dat, conf_getVarStr("output_opt_record_dat"));
 	strcpy(output_opt_record_txt, conf_getVarStr("output_opt_record_txt"));
 
 }
