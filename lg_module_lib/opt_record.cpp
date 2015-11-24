@@ -97,6 +97,43 @@ bool merge_opt_record_head(opt_record_head *dst_head, opt_record_head *src_head)
 	return true;
 }
 
+// struct opt_record
+// {
+// 	long int nx, ny, ntha, nphi;
+// 	double x0, y0, z0, xrng, yrng;
+// 	int r_index;
+// 	double r_inty;
+// 	double *inty;										// intensity profile
+// };
+
+bool merge_opt_record(opt_record *dst, opt_record *src)
+{
+	RETURNV_ON_NULL(dst, false);
+	RETURNV_ON_NULL(src, false);
+
+	RETURNV_ON_NULL(src->inty, false);
+	RETURNV_ON_NULL(dst->inty, false);
+
+	RETURNV_ON_NEQ(dst->nx, src->nx, false);
+	RETURNV_ON_NEQ(dst->ny, src->ny, false);
+	RETURNV_ON_NEQ(dst->ntha, src->ntha, false);
+	RETURNV_ON_NEQ(dst->nphi, src->nphi, false);
+	RETURNV_ON_NEQ(dst->x0, src->x0, false);
+	RETURNV_ON_NEQ(dst->y0, src->y0, false);
+	RETURNV_ON_NEQ(dst->z0, src->z0, false);
+	RETURNV_ON_NEQ(dst->xrng, src->xrng, false);
+	RETURNV_ON_NEQ(dst->yrng, src->yrng, false);
+	
+	int i;
+	for(i=0; i<OPT_RECORD_INTY_SIZE(dst); i++)
+	{
+		dst->inty[i] += src->inty[i];
+	}
+
+	return true;
+
+}
+
 struct opt_record* new_opt_record()
 {
 	struct opt_record* opr;

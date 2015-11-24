@@ -1,23 +1,47 @@
 #!/bin/bash
 date_str=$(date +%Y_%m_%d_%H_%M_%S)
-PROCESS_COUNT=5
+PROCESS_COUNT=1
 PREFIX="_lg_module_${date_str}"
 
 OUTPUT_FOLDER=${date_str}
 is_verbose=0
-is_parallel=1
+is_parallel=0
 
 
-for para in $@
+function help_msg {
+	echo "-v verbose mode";
+	echo "-p parallel mode, default sequential mode"
+	echo "-n=<PROCESS_COUNT> process count, default 1 process"
+	echo "e.g., "
+	echo "$0 -v     run in verbose mode"
+	echo "$0 -p     run in parallel mode"
+	echo "$0 -n=5   run in parallel mode, and the process count is 5"
+	exit 0;
+}
+
+while [[ $# > 0 ]]
 do
-	if [ $para == "-v" ]; then
-		is_verbose=1
-	fi
-
-	if [ $para == "-s" ]; then
-		is_parallel=0
-	fi 
-
+key="$1"
+case $key in
+    -v)
+    	is_verbose=1
+    	;;
+    -p)
+    	is_parallel=1
+    	;;
+    -n=*)
+    	PROCESS_COUNT="${key#*=}"
+    	# shift # past argument
+    	;;
+    -h)
+		help_msg
+		;;
+    *)
+    	# unknown option
+    	echo ${key}
+    ;;
+esac
+shift # past argument or value
 done
 
 if [ ${is_parallel} == "1" ]; then
@@ -29,6 +53,8 @@ fi
 if [ ${is_verbose} == "1" ]; then
 	echo "verbose"
 fi
+
+echo "process count: ${PROCESS_COUNT}"
 
 cd output
 mkdir $date_str

@@ -177,6 +177,13 @@ int single_proc_main()
 	save_opt_record_txt_file(output_opt_record_txt, &opr);
 	save_opt_record_dat_file(output_opt_record_dat, &opr);
 
+	// verify merged opt_record;
+	// opt_record opr_new;
+	// load_opt_record_dat_file(output_opt_record_dat, &opr_new);
+	// merge_opt_record(&opr_new, &opr);
+	// save_opt_record_txt_file(output_opt_record_txt, &opr_new);
+	
+
 	// set_start_time("save opt file");
 	// save_opt_record_file(output_opt_record, &opr_data_file_header, opr_head);
 	// set_end_time("save opt file");
