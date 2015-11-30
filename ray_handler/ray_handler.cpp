@@ -18,11 +18,11 @@
 #include "var_def.h"			// define parameters and structe variables
 #include "plt_figure.h"			// call gnuplot for ploting figure
 #include "ini_var.h"			// initialize variables
-#include "mem_func.h"			// allocate/deallocate memory 
+#include "mem_func.h"			// allocate/deallocate memory
 #include "microstr.h"			// local microstructure profile
 #include "gen_source_ray.h"		// generate light-source rays
 #include "globalstr.h"
-#include "den_to_pos.h"			// module for transferring dot_density to dot_position 
+#include "den_to_pos.h"			// module for transferring dot_density to dot_position
 #include "debug_fun.h"			// just for debugging individual module.
 #include "Module_IV.h"
 #include "dbg_log.h"
@@ -65,7 +65,7 @@ bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long in
 
 	if(!load_ray_source_file_header(ray_source_file, &dfh))
 		return false;
-	
+
 	allocmem_ray_traces(dfh.count, rays);
 	printf("%s handles ray source offset: %d, ray count: %ld\n", name, dfh.offset, dfh.count);
 
@@ -75,7 +75,7 @@ bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long in
 	return true;
 }
 
-int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
+int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const char* output_dir)
 {
 	int i;
 	// define variables
@@ -93,31 +93,31 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 	char child_prefix[256];
 
 	set_start_time("Total");
-	srand((unsigned)time(NULL));	// initiate rand seed 
+	srand((unsigned)time(NULL));	// initiate rand seed
 
 	// read in setup-parameters
 	strcpy(fpname, "parameters.txt");
-
-	read_setup(fpname);
-
+	
+	read_setup(fpname, output_dir);
+	pStr(output_data2d_txt);
 
 	// allocate memory
-	allocmem_opm(n_wl, n_mat, &opm);			
-	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
-	allocmem_rays(n_ray, n_gaus, &rays, &ray1);	
-	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);			
-	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);		
-	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);	
-	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);	
+	allocmem_opm(n_wl, n_mat, &opm);
+	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);
+	allocmem_rays(n_ray, n_gaus, &rays, &ray1);
+	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);
+	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);
+	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
+	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
 	// program body
-		
+
 
 	set_start_time("gen_source_ray");
 	// generate light source rays & initialize microstructure
 	gen_source_ray(&ops, &rays);
 	set_end_time("gen_source_ray");
-	
+
 	set_start_time("read_microstr");
 	read_microstr(str_file, &lstr);
 	set_end_time("read_microstr");
@@ -137,33 +137,33 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
-		
-		ray1.ngaus 	= 1; 
-		ray1.inty 	= 1.0; 
-		ray1.n1 	= 1.0; 
-		ray1.n2 	= 1.0;
-		
 
-		ray1.xr 	= rays.xr[i]; 
-		
-		// ray1.yr 	= 0.0; 
-		ray1.yr 	= rays.yr[i]; 
-		
-		ray1.zr 	= rays.zr[i]; 
-		
-		// ray1.thar 	= 100; 
-		ray1.thar 	= rays.thar[i]; 
-		
+		ray1.ngaus 	= 1;
+		ray1.inty 	= 1.0;
+		ray1.n1 	= 1.0;
+		ray1.n2 	= 1.0;
+
+
+		ray1.xr 	= rays.xr[i];
+
+		// ray1.yr 	= 0.0;
+		ray1.yr 	= rays.yr[i];
+
+		ray1.zr 	= rays.zr[i];
+
+		// ray1.thar 	= 100;
+		ray1.thar 	= rays.thar[i];
+
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
-		
+
 		get_child_prefix(NULL, child_prefix, i);
-		
+
 	}
 
 	set_end_time("ray tracing");
 
-	
+
 
 	// for(i=0; i<1; i++)
 	// {
@@ -182,7 +182,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 	// pLU(hit_local_error_count);
 	// pLU(iteration_count);
 
-	// module 5...	
+	// module 5...
 
 	//deallocate memory
 	deallocmem_opm(&opm);
@@ -192,7 +192,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head)
 	deallocmem_local_str(&lstr);
 	deallocmem_dot_density(&dden);
 	deallocmem_dot_position(&dpos);
-	
+
 	return 0;
 
 }
@@ -216,9 +216,9 @@ int ray_handler_old(const char *ray_source_file)
 	struct ray_trace1 source_ray[2];
 	data_file_header rays_dfh;
 	data_file_header opr_dfh;
-	
 
-	srand((unsigned)time(NULL));	// initiate rand seed 
+
+	srand((unsigned)time(NULL));	// initiate rand seed
 
 	// read in setup-parameters
 	strcpy(fpname, "parameters.txt");
@@ -226,53 +226,53 @@ int ray_handler_old(const char *ray_source_file)
 	read_setup(fpname);
 
 	read_ray_source_file(ray_source_file, &rays, &n_ray);
-	
+
 	// allocate memory
-	allocmem_opm(n_wl, n_mat, &opm);			
-	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
-	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);			
-	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);		
-	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);	
-	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);	
+	allocmem_opm(n_wl, n_mat, &opm);
+	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);
+	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);
+	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);
+	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
+	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
 	// program body
-		
+
 
 	// generate light source rays & initialize microstructure
 	// gen_source_ray(&ops, &rays);
-	
+
 	read_microstr(str_file, &lstr);
-	
+
 	// moduel 2...
 	//debug test
 	debug_den_to_pos(&dden, &dpos);	// generate dot pattern for test;
-	
+
 	part_dots(&dpos);
-	
+
 	opr_head = new_opt_record_head();
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
 
-		ray1.ngaus 	= 1; 
-		ray1.inty 	= 1.0; 
-		ray1.n1 	= 1.0; 
+		ray1.ngaus 	= 1;
+		ray1.inty 	= 1.0;
+		ray1.n1 	= 1.0;
 		ray1.n2 	= 1.0;
-		ray1.xr 	= rays.xr[i]; 
-		
-		ray1.yr 	= 0.0; 
-		// ray1.yr 	= rays.yr[i]; 
-		
-		ray1.zr 	= rays.zr[i]; 
-		
-		ray1.thar 	= 100; 
-		// ray1.thar 	= rays.thar[i]; 
-		
+		ray1.xr 	= rays.xr[i];
+
+		ray1.yr 	= 0.0;
+		// ray1.yr 	= rays.yr[i];
+
+		ray1.zr 	= rays.zr[i];
+
+		ray1.thar 	= 100;
+		// ray1.thar 	= rays.thar[i];
+
 		ray1.phir 	= 0;
 		// ray1.phir 	= rays.phir[i];
 
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
-		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
+		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0;
 		// ray1.thar = 100; ray1.phir =0.0;
 
 		trace_one_ray(&ray1, &dpos, opr_head, &lstr);
@@ -281,13 +281,13 @@ int ray_handler_old(const char *ray_source_file)
 		// if (!find_str_hit_local(&ray1, &lstr))
 		// {
 		// 	dumpRay1(&ray1);
-		// 	continue;	
+		// 	continue;
 		// }
 		// CalcMainReflectiveRay(&ray1, &source_ray[0]);
 		// CalcMainTransmittanceRay(&ray1, &source_ray[1]);
 		// call_CalcGaussScatteredRay(&source_ray[0]);
 	}
-	
+
 
 	sprintf(opr_record_fileName, "%s.opt_record", prefix);
 	opr_dfh.count 		= ((glist_head_t*)opr_head)->len;
@@ -298,7 +298,7 @@ int ray_handler_old(const char *ray_source_file)
 
 	free_opt_record_head(&opr_head);
 
-	// module 5...	
+	// module 5...
 
 	//deallocate memory
 	deallocmem_opm(&opm);
@@ -308,7 +308,7 @@ int ray_handler_old(const char *ray_source_file)
 	deallocmem_local_str(&lstr);
 	deallocmem_dot_density(&dden);
 	deallocmem_dot_position(&dpos);
-	
+
 	return 0;
 }
 */
@@ -340,7 +340,8 @@ int main(int argc, char** argv)
 	set_start_time("Total");
 
 	opr_head = new opt_record_head();
-	ray_handler(fname, opr_head);
+	strcpy(output_dir, prefix);
+	ray_handler(fname, opr_head, output_dir);
 
 	dump_opt_record_head(opr_head);
 
@@ -349,12 +350,12 @@ int main(int argc, char** argv)
 	opr_data_file_header.entry_size 	= ACTUAL_OPT_RECORD_SIZE;
 	opr_data_file_header.count 			= ((glist_head_t*)opr_head)->len;
 
-	
+
 
 	sprintf(opt_fname, "%s/opt_record_%d.dat", prefix, num);
 
 	set_start_time("save opt file");
-	
+
 	save_opt_record_file(opt_fname, &opr_data_file_header, opr_head);
 	set_end_time("save opt file");
 

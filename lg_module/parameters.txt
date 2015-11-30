@@ -64,6 +64,11 @@ hex_lng=0.1
 output_opt_record_dat=output.opt_record.dat
 output_opt_record_txt=output.opt_record.txt
 
+input_script=script
+output_data2d_txt=data2d.txt
+output_data3d_txt=data3d.txt
+output_data3dm_txt=data3dm.txt
+output_data3dv_txt=data3dv.txt
 
 
   

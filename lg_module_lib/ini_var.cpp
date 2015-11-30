@@ -8,12 +8,12 @@
 #include "dbg_log.h"
 
 
-void read_setup(char *fpname)
+void read_setup(const char *fpname, const char *output_dir)
 {
 	int err;
-	
+
 	err = conf_load(fpname);
-	if(err == 0) 
+	if(err == 0)
 	{
 		printf("parameter file <%s> is not found!\n",fpname);
 		exit(0);
@@ -67,7 +67,7 @@ void read_setup(char *fpname)
 	xstr_rng = conf_getVarDouble("xstr_rng");
 	ystr_rng = conf_getVarDouble("ystr_rng");
 	strcpy(str_file, conf_getVarStr("str_file"));
-	
+
 	// for global dot density
 	nx_den = conf_getVarInt("nx_den");
 	ny_den = conf_getVarInt("nx_den");
@@ -89,4 +89,19 @@ void read_setup(char *fpname)
 	strcpy(output_opt_record_dat, conf_getVarStr("output_opt_record_dat"));
 	strcpy(output_opt_record_txt, conf_getVarStr("output_opt_record_txt"));
 
+	strcpy(output_data2d_txt, conf_getVarStr("output_data2d_txt"));
+	strcpy(output_data3d_txt, conf_getVarStr("output_data3d_txt"));
+	strcpy(output_data3dm_txt, conf_getVarStr("output_data3dm_txt"));
+	strcpy(output_data3dv_txt, conf_getVarStr("output_data3dv_txt"));
+	strcpy(output_data3dv_txt, conf_getVarStr("input_script"));
+	if (output_dir != NULL)
+	{
+		sprintf(input_script, "%s/%s", output_dir, conf_getVarStr("input_script"));
+		sprintf(output_data2d_txt, "%s/%s", output_dir, conf_getVarStr("output_data2d_txt"));
+		sprintf(output_data3d_txt, "%s/%s", output_dir, conf_getVarStr("output_data3d_txt"));
+		sprintf(output_data3dm_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dm_txt"));
+		sprintf(output_data3dv_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dv_txt"));
+	}
 }
+
+

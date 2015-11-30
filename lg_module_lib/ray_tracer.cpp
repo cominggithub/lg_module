@@ -25,13 +25,13 @@ void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 {
 	if (prefix == NULL || strlen(prefix) == 0)
 	{
-		sprintf(child_prefix, "%d", child_num);		
+		sprintf(child_prefix, "%d", child_num);
 	}
 	else
 	{
-		sprintf(child_prefix, "%s-%d", prefix, child_num);	
+		sprintf(child_prefix, "%s-%d", prefix, child_num);
 	}
-	
+
 	// printf("%s\n", child_prefix);
 }
 
@@ -57,7 +57,7 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 		if (src_ray[i].inty > IntensityThreshold)
 		{
-			
+
             trace_one_ray(child_prefix, &src_ray[i], dpos, opr, lstr);
 		}
 	}
@@ -85,7 +85,7 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 // 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 // 		if (src_ray[i].inty > IntensityThreshold)
 // 		{
-			
+
 //             trace_one_ray(child_prefix, &src_ray[i], dpos, opr_head, lstr);
 // 		}
 // 	}
@@ -108,7 +108,7 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 		if (src_ray[i].inty > IntensityThreshold)
 		{
-			
+
             trace_one_ray(child_prefix, &src_ray[i], dpos, opr, lstr);
 		}
 	}
@@ -130,7 +130,7 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 // 		append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 // 		if (src_ray[i].inty > IntensityThreshold)
 // 		{
-			
+
 //             trace_one_ray(child_prefix, &src_ray[i], dpos, opr_head, lstr);
 // 		}
 // 	}
@@ -163,7 +163,7 @@ void trace_ray_type5(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 // 	// opr = new_opt_record();
 // 	append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 // 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
-	
+
 // 	if (result)
 // 	{
 // 		switch(type)
@@ -202,12 +202,12 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 	bool result;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
 	struct ray_trace1 src_ray[2];
-	
+
 	iteration_count++;
-	
+
 	append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
-	
+
 	if (result)
 	{
 		switch(type)
@@ -248,7 +248,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 	double mx, my, mz;
 	double xbuf, ybuf, zbuf, nxbuf, nybuf, nzbuf;
 	bool solved, found;
-	
+
 	// ignore the ray with intensity being lower than a threshold value
 	if( ray1->inty<ray_threshold){return;}
 
@@ -279,15 +279,15 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			z = zmax;	r = (z-z0)/mz;
 			x = r*mx+x0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = 0.0; nz = 1.0;
-				
+
 				// update ray1
-				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 				ray1->n1 = guide_indx;		ray1->n2 = air_indx;
-				ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+				ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 				ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 				ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 				// calculate transmittance and reflection rays
@@ -304,14 +304,14 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			z = zmin;	r = (z-z0)/mz;
 			x = r*mx+x0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = 0.0; nz = -1.0;
 				// update ray1
-				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 				ray1->n1 = guide_indx;		ray1->n2 = guide_indx;
-				ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+				ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 				ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 				ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 				// continue tracing
@@ -324,7 +324,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			y = ymin;	r = (y-y0)/my;
 			x = r*mx+x0;	 z = r*mz+z0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = -1.0; nz = 0.0;
@@ -337,7 +337,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			y = ymax;	r = (y-y0)/my;
 			x = r*mx+x0;	 z = r*mz+z0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = 1.0; nz = 0.0;
@@ -350,7 +350,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			x = xmin;	r = (x-x0)/mx;
 			z = r*mz+z0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = -1.0; ny = 0.0; nz = 0.0;
@@ -363,7 +363,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			x = xmax;	r = (x-x0)/mx;
 			z = r*mz+z0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 1.0; ny = 0.0; nz = 0.0;
@@ -371,10 +371,10 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 				return;
 			}
 		}
-		if(solved==false){ 
+		if(solved==false){
 			// printf("%f %f %f\n%f %f %f\n%f %f %f\n%f %f\n",ray1->xr,xmin,xmax,ray1->yr,ymin,ymax,ray1->zr,zmin,zmax,ray1->thar,ray1->phir);
-			printf("find_str_hit_global (region 2): Warning! ray1 hit no boundary considered partitions"); 
-			return; 
+			printf("find_str_hit_global (region 2): Warning! ray1 hit no boundary considered partitions");
+			return;
 		}  // modify the rule according to demand.
 	}
 	else if( (ray1->zr==-zdim_in && ray1->thar>90.0) || (ray1->zr<-zdim_in && ray1->zr>-zdim_out) || (ray1->zr==-zdim_out && ray1->thar<90.0) )  // region 3
@@ -395,7 +395,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		solved = false;
 		for(i=begi; i<endi; i++)
 		{
-			
+
 			// check whether the ray1 is inside a box
 			xc = dpos->xd[i]; yc = dpos->yd[i];
 			if( abs(ray1->xr-xc)<0.5*(xstr_rng-delta) && abs(ray1->yr-yc)<0.5*(ystr_rng-delta) )		// inside a box
@@ -412,7 +412,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 				if(ray1->inty>ray_threshold) {trace_one_ray_single_thread(ray1, dpos, opr, lstr);}
 				if(ray3->inty>ray_threshold) {trace_one_ray_single_thread(ray3, dpos, opr, lstr);}
 				return;
-				
+
 			}
 
 			// if not inside a box, find the nearest plane hitted
@@ -425,7 +425,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			// sovle the intersection of ray and top plane z=zmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 				z = zmax;	r = (z-z0)/mz;
 				x = r*mx+x0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = 0.0; nz = 1.0;
@@ -438,7 +438,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			// sovle the intersection of ray and down plane z=zmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 				z = zmin;	r = (z-z0)/mz;
 				x = r*mx+x0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = 0.0; nz = -1.0;
@@ -451,7 +451,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			// sovle the intersection of ray and back plane y=ymin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 				y = ymin;	r = (y-y0)/my;
 				x = r*mx+x0;	 z = r*mz+z0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = -1.0; nz = 0.0;
@@ -464,7 +464,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			// sovle the intersection of ray and front plane y=ymax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 				y = ymax;	r = (y-y0)/my;
 				x = r*mx+x0;	 z = r*mz+z0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = 1.0; nz = 0.0;
@@ -477,7 +477,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			// sovle the intersection of ray and left plane x=xmin; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 				x = xmin;	r = (x-x0)/mx;
 				z = r*mz+z0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = -1.0; ny = 0.0; nz = 0.0;
@@ -490,7 +490,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			// sovle the intersection of ray and right plane x=xmax; ray equation: x=r*mx+x0, y=r*my+y0, z=r*mz+z0;
 				x = xmax;	r = (x-x0)/mx;
 				z = r*mz+z0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 1.0; ny = 0.0; nz = 0.0;
@@ -526,14 +526,14 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 				{
 					z = zmax-pow(10.0,-3);	r = (z-z0)/mz;
 					x = r*mx+x0;	 y = r*my+y0;
-					if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+					if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 					{
 						solved = true;
 						nx = 0.0; ny = 0.0; nz = 1.0;
 						// update ray1
-						ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+						ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 						ray1->n1 = air_indx;		ray1->n2 = guide_indx;
-						ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+						ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 						ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 						ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 						// calculate transmittance and reflection rays
@@ -554,15 +554,15 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 				{
 					z = zmax;	r = (z-z0)/mz;
 					x = r*mx+x0;	 y = r*my+y0;
-					if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+					if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 					{
 						solved = true;
 						nx = 0.0; ny = 0.0; nz = 1.0;
-				
+
 						// update ray1
-						ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+						ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 						ray1->n1 = guide_indx;		ray1->n2 = guide_indx;
-						ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+						ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 						ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 						ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 						// continue tracing
@@ -574,15 +574,15 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 				{
 					z = zmax-pow(10.0,-3);	r = (z-z0)/mz;
 					x = r*mx+x0;	 y = r*my+y0;
-					if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+					if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 					{
 						solved = true;
 						nx = 0.0; ny = 0.0; nz = 1.0;
-				
+
 						// update ray1
-						ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+						ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 						ray1->n1 = guide_indx;		ray1->n2 = air_indx;
-						ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+						ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 						ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 						ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 						// calculate transmittance and reflection rays
@@ -600,15 +600,15 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			{
 				z = zmin;	r = (z-z0)/mz;
 				x = r*mx+x0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = 0.0; nz = -1.0;
-				
+
 					// update ray1
-					ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+					ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 					ray1->n1 = air_indx;		ray1->n2 = air_indx;
-					ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+					ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 					ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 					ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 					// continue tracing
@@ -621,7 +621,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			{
 				y = ymin;	r = (y-y0)/my;
 				x = r*mx+x0;	 z = r*mz+z0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = -1.0; nz = 0.0;
@@ -634,7 +634,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			{
 				y = ymax;	r = (y-y0)/my;
 				x = r*mx+x0;	 z = r*mz+z0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 0.0; ny = 1.0; nz = 0.0;
@@ -647,7 +647,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			{
 				x = xmin;	r = (x-x0)/mx;
 				z = r*mz+z0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = -1.0; ny = 0.0; nz = 0.0;
@@ -660,7 +660,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 			{
 				x = xmax;	r = (x-x0)/mx;
 				z = r*mz+z0;	 y = r*my+y0;
-				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+				if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 				{
 					solved = true;
 					nx = 1.0; ny = 0.0; nz = 0.0;
@@ -687,15 +687,15 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			z = zmax;	r = (z-z0)/mz;
 			x = r*mx+x0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = 0.0; nz = 1.0;
-				
+
 				// update ray1
-				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 				ray1->n1 = air_indx;		ray1->n2 = air_indx;
-				ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+				ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 				ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 				ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 				// continue tracing
@@ -708,15 +708,15 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			z = zmin;	r = (z-z0)/mz;
 			x = r*mx+x0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = 0.0; nz = -1.0;
-				
+
 				// update ray1
-				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty; 
+				ray1->ngaus = ray1->ngaus;	ray1->inty = ray1->inty;
 				ray1->n1 = air_indx;		ray1->n2 = refl_indx;
-				ray1->xr = x;				ray1->yr = y;			ray1->zr = z; 
+				ray1->xr = x;				ray1->yr = y;			ray1->zr = z;
 				ray1->thar = ray1->thar;		ray1->phir = ray1->phir;
 				ray1->nx = nx;				ray1->ny = ny;			ray1->nz = nz;
 				// calculate transmittance and reflection rays
@@ -733,7 +733,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			y = ymin;	r = (y-y0)/my;
 			x = r*mx+x0;	 z = r*mz+z0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = -1.0; nz = 0.0;
@@ -746,7 +746,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			y = ymax;	r = (y-y0)/my;
 			x = r*mx+x0;	 z = r*mz+z0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 0.0; ny = 1.0; nz = 0.0;
@@ -759,7 +759,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			x = xmin;	r = (x-x0)/mx;
 			z = r*mz+z0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = -1.0; ny = 0.0; nz = 0.0;
@@ -772,7 +772,7 @@ void trace_one_ray_single_thread(ray_trace1 *ray1, dot_position *dpos, opt_recor
 		{
 			x = xmax;	r = (x-x0)/mx;
 			z = r*mz+z0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				nx = 1.0; ny = 0.0; nz = 0.0;
@@ -803,13 +803,13 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 	mz=cos(rayT->thar*pi/180.0);
 
 	t1=acos(mx*rayT->nx+my*rayT->ny+mz*rayT->nz)*180.0/pi;		// incident angle: theta_1 !! normrla director of boundary surface must be normalized to 1, i.e. sqrt(nx^2+ny^2+nz^2)=1
-	
+
 
 	// calclate reflection and transmittance coefficient
 	if(t1<90.0)
 	{
 		// find the total-reflection angle
-		if(rayT->n2 < rayT->n1) {tc = asin(rayT->n2/rayT->n1)*180.0/pi;}		
+		if(rayT->n2 < rayT->n1) {tc = asin(rayT->n2/rayT->n1)*180.0/pi;}
 		else{ tc=90.0; }
 		if(t1<tc)
 		{
@@ -827,7 +827,7 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 	else
 	{
 		// find the total-reflection angle
-		if(rayT->n2 < rayT->n1) {tc = asin(rayT->n2/rayT->n1)*180.0/pi;}		
+		if(rayT->n2 < rayT->n1) {tc = asin(rayT->n2/rayT->n1)*180.0/pi;}
 		else{ tc=90.0; }
 		if((180.0-t1)<tc)
 		{
@@ -853,7 +853,7 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 	vecrot[0]= vecrot[0]/lng;
 	vecrot[1]= vecrot[1]/lng;
 	vecrot[2]= vecrot[2]/lng;
-	
+
 	// calculate rotation matrix for reflection, the formula refer to google: roation matrix wiki
 	angrot=(180.0-2.0*t1)*pi/180.0;
 	rotm[0][0]=cos(angrot)+pow(vecrot[0],2)*(1.0-cos(angrot));
@@ -869,10 +869,10 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 	vecf[1]=rotm[1][0]*veci[0]+rotm[1][1]*veci[1]+rotm[1][2]*veci[2];
 	vecf[2]=rotm[2][0]*veci[0]+rotm[2][1]*veci[1]+rotm[2][2]*veci[2];
 	// update variables of reflection
-	rayR->ngaus = rayT->ngaus;	rayR->inty = R*rayT->inty; 
+	rayR->ngaus = rayT->ngaus;	rayR->inty = R*rayT->inty;
 	rayR->n1 = rayT->n1;		rayR->n2 = rayT->n2;
-	rayR->xr = rayT->xr;		rayR->yr = rayT->yr;	rayR->zr = rayT->zr; 
-	rayR->thar = acos(vecf[2])*180.0/pi;			
+	rayR->xr = rayT->xr;		rayR->yr = rayT->yr;	rayR->zr = rayT->zr;
+	rayR->thar = acos(vecf[2])*180.0/pi;
 	rayR->phir = atan2(vecf[1],vecf[0])*180.0/pi;
 	rayR->nx = rayT->nx;		rayR->ny = rayT->ny;	rayR->nz = rayT->nz;
 
@@ -891,10 +891,10 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 	vecf[1]=rotm[1][0]*veci[0]+rotm[1][1]*veci[1]+rotm[1][2]*veci[2];
 	vecf[2]=rotm[2][0]*veci[0]+rotm[2][1]*veci[1]+rotm[2][2]*veci[2];
 	// upate variables of transmittance
-	rayT->ngaus = rayT->ngaus;	rayT->inty = T*rayT->inty; 
+	rayT->ngaus = rayT->ngaus;	rayT->inty = T*rayT->inty;
 	rayT->n1 = rayR->n2;		rayT->n2 = rayR->n1;
-	rayT->xr = rayT->xr;		rayT->yr = rayT->yr;	rayT->zr = rayT->zr; 
-	rayT->thar = acos(vecf[2])*180.0/pi;			
+	rayT->xr = rayT->xr;		rayT->yr = rayT->yr;	rayT->zr = rayT->zr;
+	rayT->thar = acos(vecf[2])*180.0/pi;
 	rayT->phir = atan2(vecf[1],vecf[0])*180.0/pi;
 	rayT->nx = rayT->nx;		rayT->ny = rayT->ny;	rayT->nz = rayT->nz;
 

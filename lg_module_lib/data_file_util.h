@@ -90,6 +90,8 @@ bool load_opt_record_dat_file(
 	opt_record *opr
 );
 
+
+
 void test_ray_source_file();
 void dump_ray_traces(struct ray_traces *rays);
 void dump_opt_record_data(opt_record_data *opr);

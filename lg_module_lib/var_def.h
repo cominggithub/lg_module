@@ -48,7 +48,7 @@ extern double xden_rng, yden_rng;								// dimensions along x, y, and z directi
 extern long int n_dots;											// total dots
 extern long int partn_x, partn_y;
 extern char hex_bl;													// define whether fit to hexagon 
-extern double hex_lng;		
+extern double hex_lng;
 
 // local variables for Module IV
 extern double ThetaOne;               // The variable for saving ThetaOne.
@@ -66,4 +66,10 @@ extern unsigned long gaussScatteredRaycount;
 // output file name
 extern char output_opt_record_dat[];
 extern char output_opt_record_txt[];
+extern char output_dir[];
+extern char input_script[];
+extern char output_data2d_txt[];
+extern char output_data3d_txt[];
+extern char output_data3dm_txt[];
+extern char output_data3dv_txt[];
 #endif

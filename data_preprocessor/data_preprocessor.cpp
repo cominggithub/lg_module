@@ -17,11 +17,11 @@
 #include "var_def.h"			// define parameters and structe variables
 #include "plt_figure.h"			// call gnuplot for ploting figure
 #include "ini_var.h"			// initialize variables
-#include "mem_func.h"			// allocate/deallocate memory 
+#include "mem_func.h"			// allocate/deallocate memory
 #include "microstr.h"			// local microstructure profile
 #include "gen_source_ray.h"		// generate light-source rays
 #include "globalstr.h"
-#include "den_to_pos.h"			// module for transferring dot_density to dot_position 
+#include "den_to_pos.h"			// module for transferring dot_density to dot_position
 #include "debug_fun.h"			// just for debugging individual module.
 #include "Module_IV.h"
 #include "dbg_log.h"
@@ -38,7 +38,7 @@ ray_traces *get_ray_traces_by_offset(ray_traces* rays, long int offset, long int
 
 	if (rays->nray < offset+count)
 		return NULL;
-	
+
 	tmpRays = new ray_traces;
 	allocmem_ray_traces(count, tmpRays);
 
@@ -50,7 +50,7 @@ ray_traces *get_ray_traces_by_offset(ray_traces* rays, long int offset, long int
 		tmpRays->thar[i] 	= rays->thar[offset+i];
 		tmpRays->phir[i] 	= rays->phir[offset+i];
 	}
-	
+
 	tmpRays->nray = count;
 	return tmpRays;
 }
@@ -85,7 +85,7 @@ void split_ray(const char* prefix, ray_traces *rays, int count)
 
 		RETURN_ON_ZERO(blockCount);
 		tmpRays = get_ray_traces_by_offset(rays, offset, blockCount);
-		
+
 		sprintf(fname, "%s/ray_source_%d.dat", prefix, i);
 		sprintf(dfh.prefix, "%s", fname);
 		printf("%s\n", fname);
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 	int i;
 	int count;
 	char prefix[256];
-	
+
 	// define variables
 	opt_source ops;					// for optic source
 	ray_traces rays;				// for samplings of ray tracing
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 	now 	= localtime(&t);
 	count 	= 1;
 
-	sprintf(prefix, "_lg_module_%d_%d_%d_%d_%d_%d\n", 
+	sprintf(prefix, "_lg_module_%d_%d_%d_%d_%d_%d\n",
 			now->tm_year+1900,
 			now->tm_mon+1,
 			now->tm_mday,
@@ -133,20 +133,20 @@ int main(int argc, char** argv)
 	}
 	if (argc > 2)
 	{
-		strcpy(prefix, argv[2]);	
+		strcpy(prefix, argv[2]);
 	}
-	
-	srand((unsigned)time(NULL));	// initiate rand seed 
+
+	srand((unsigned)time(NULL));	// initiate rand seed
 
 	// read in setup-parameters
 	strcpy(fpname, "parameters.txt");
 
-	read_setup(fpname);
+	read_setup(fpname, prefix);
 
 
 	// allocate memory
-	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);				
-	allocmem_ray_traces(n_ray, &rays);	
+	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);
+	allocmem_ray_traces(n_ray, &rays);
 	gen_source_ray(&ops, &rays);
 	split_ray(prefix, &rays, count);
 

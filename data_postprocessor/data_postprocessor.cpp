@@ -17,11 +17,11 @@
 #include "var_def.h"			// define parameters and structe variables
 #include "plt_figure.h"			// call gnuplot for ploting figure
 #include "ini_var.h"			// initialize variables
-#include "mem_func.h"			// allocate/deallocate memory 
+#include "mem_func.h"			// allocate/deallocate memory
 #include "microstr.h"			// local microstructure profile
 #include "gen_source_ray.h"		// generate light-source rays
 #include "globalstr.h"
-#include "den_to_pos.h"			// module for transferring dot_density to dot_position 
+#include "den_to_pos.h"			// module for transferring dot_density to dot_position
 #include "debug_fun.h"			// just for debugging individual module.
 #include "Module_IV.h"
 #include "dbg_log.h"
@@ -34,7 +34,7 @@ int main(int argc, const char** argv)
 	int i;
 	int count;
 	char prefix[256];
-	
+
 	char dst_file[256];
 	char *opt_record_name[256];
 
@@ -53,15 +53,15 @@ int main(int argc, const char** argv)
 		return 1;
 
 	count = atoi(argv[1]);
-	strcpy(prefix, argv[2]);	
-	
+	strcpy(prefix, argv[2]);
+
 	// printf("    prefix: %s\n", prefix);
 	// printf("proc count: %d\n", count);
 
-	srand((unsigned)time(NULL));	// initiate rand seed 
+	srand((unsigned)time(NULL));	// initiate rand seed
 	// read in setup-parameters
 	strcpy(fpname, "parameters.txt");
-	read_setup(fpname);
+	read_setup(fpname, prefix);
 
 	for(i=0; i<count; i++)
 	{
@@ -71,6 +71,6 @@ int main(int argc, const char** argv)
 
 	sprintf(dst_file, "%s/opt_record.dat", prefix);
 	merge_opt_record_files(prefix, dst_file, count, (const char**)opt_record_name);
-	
+
 	return 0;
 }
