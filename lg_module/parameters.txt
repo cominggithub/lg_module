@@ -65,6 +65,8 @@ output_opt_record_dat=output.opt_record.dat
 output_opt_record_txt=output.opt_record.txt
 
 input_script=script
+input_dot_density_txt=dot_density.txt
+input_microstr_txt=microstr.txt
 output_data2d_txt=data2d.txt
 output_data3d_txt=data3d.txt
 output_data3dm_txt=data3dm.txt

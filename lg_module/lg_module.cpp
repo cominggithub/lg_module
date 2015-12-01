@@ -87,7 +87,7 @@ int single_proc_main()
 	set_end_time("gen_source_ray");
 
 	set_start_time("read_microstr");
-	read_microstr(str_file, &lstr);
+	read_microstr(input_microstr_txt, &lstr);
 	set_end_time("read_microstr");
 
 	// moduel 2...

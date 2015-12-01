@@ -1,5 +1,7 @@
 // all length-unit is mm, and all angle-unit is degree (0-180)
 #include <math.h>
+#include <string.h>
+#include <stdio.h>
 // general constants
 double pi = 3.141592653589793;
 double delta = pow(10.0,-10.0);
@@ -58,7 +60,7 @@ double IntensityThreshold = 0.001;   // The threshold for determine the intensit
 
 
 // debug config
-bool enable_gnu_plot = true;
+bool enable_gnu_plot = false;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name
@@ -69,5 +71,20 @@ char output_data2d_txt[256] 	= "data2d.txt";
 char output_data3d_txt[256] 	= "data3d.txt";
 char output_data3dm_txt[256] 	= "data3dm.txt";
 char output_data3dv_txt[256]	= "data3dv.txt";
-char input_script[256]			= "script";
+
+char input_script[256]				= "script";
+char input_dot_density_txt[256]		= "dot_density.txt";
+char input_microstr_txt[256]		= "microstr.txt";
+
+void getFileFullPath(char *fullPath, const char* fname)
+{
+	if (output_dir != NULL && strlen(output_dir) > 0)
+	{
+		sprintf(fullPath, "%s/%s", output_dir, fname);
+	}
+	else
+	{
+		sprintf(fullPath, "%s", fname);
+	}
+}
 

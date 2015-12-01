@@ -111,6 +111,7 @@ int main(int argc, char** argv)
 	opt_source ops;					// for optic source
 	ray_traces rays;				// for samplings of ray tracing
 	char fpname[256];					// for reading parameters
+	char paramFName[256];
 	time_t t;
 	struct tm *now;
 
@@ -139,9 +140,8 @@ int main(int argc, char** argv)
 	srand((unsigned)time(NULL));	// initiate rand seed
 
 	// read in setup-parameters
-	strcpy(fpname, "parameters.txt");
-
-	read_setup(fpname, prefix);
+	sprintf(paramFName, "%s/parameters.txt", prefix);
+	read_setup(paramFName, prefix);
 
 
 	// allocate memory

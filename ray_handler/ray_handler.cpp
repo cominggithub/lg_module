@@ -92,15 +92,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	data_file_header opr_data_file_header;
 	char child_prefix[256];
 
-	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed
-
-	// read in setup-parameters
-	strcpy(fpname, "parameters.txt");
-	
-	read_setup(fpname, output_dir);
-	pStr(output_data2d_txt);
-
 	// allocate memory
 	allocmem_opm(n_wl, n_mat, &opm);
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);
@@ -119,7 +111,8 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	set_end_time("gen_source_ray");
 
 	set_start_time("read_microstr");
-	read_microstr(str_file, &lstr);
+	pStr(input_microstr_txt);
+	read_microstr(input_microstr_txt, &lstr);
 	set_end_time("read_microstr");
 
 	// moduel 2...
@@ -321,6 +314,7 @@ int main(int argc, char** argv)
 {
 	int num;
 	char fname[256];
+	char paramFName[256];
 	char opt_fname[256];
 	char prefix[256];
 	opt_record_head *opr_head;
@@ -332,12 +326,16 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	set_start_time("Total");
+
 	strcpy(prefix, argv[1]);
 	strcpy(name, argv[2]);
 	strcpy(fname, argv[4]);
 	num = atoi(argv[3]);
 
-	set_start_time("Total");
+	
+	sprintf(paramFName, "%s/parameters.txt", prefix);
+	read_setup(paramFName, prefix);
 
 	opr_head = new opt_record_head();
 	strcpy(output_dir, prefix);

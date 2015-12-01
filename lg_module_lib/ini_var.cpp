@@ -93,10 +93,15 @@ void read_setup(const char *fpname, const char *output_dir)
 	strcpy(output_data3d_txt, conf_getVarStr("output_data3d_txt"));
 	strcpy(output_data3dm_txt, conf_getVarStr("output_data3dm_txt"));
 	strcpy(output_data3dv_txt, conf_getVarStr("output_data3dv_txt"));
-	strcpy(output_data3dv_txt, conf_getVarStr("input_script"));
+	strcpy(input_script, conf_getVarStr("input_script"));
+	strcpy(input_dot_density_txt, conf_getVarStr("input_dot_density_txt"));
+	strcpy(input_microstr_txt, conf_getVarStr("input_microstr_txt"));
+	
 	if (output_dir != NULL)
 	{
 		sprintf(input_script, "%s/%s", output_dir, conf_getVarStr("input_script"));
+		sprintf(input_dot_density_txt, "%s/%s", output_dir, conf_getVarStr("input_dot_density_txt"));
+		sprintf(input_microstr_txt, "%s/%s", output_dir, conf_getVarStr("input_microstr_txt"));
 		sprintf(output_data2d_txt, "%s/%s", output_dir, conf_getVarStr("output_data2d_txt"));
 		sprintf(output_data3d_txt, "%s/%s", output_dir, conf_getVarStr("output_data3d_txt"));
 		sprintf(output_data3dm_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dm_txt"));
