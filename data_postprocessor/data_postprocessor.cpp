@@ -62,7 +62,8 @@ int main(int argc, const char** argv)
 	srand((unsigned)time(NULL));	// initiate rand seed
 	// read in setup-parameters
 	sprintf(paramFName, "%s/parameters.txt", prefix);
-	read_setup(paramFName, prefix);
+	if (!read_setup(paramFName, prefix))
+		return 1;
 
 	for(i=0; i<count; i++)
 	{

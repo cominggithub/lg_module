@@ -23,6 +23,7 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	xrng = dden->xrng;	yrng = dden->yrng;
 	nx = dden->nx;	ny = dden->ny;
 	dx = xrng/nx;	dy = yrng/ny;
+	char fname[256];
 	
 	// simulate a gaussin dot_density for test
 	/*
@@ -36,8 +37,9 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	}
 	*/
 	data = new double[nx*ny];
-	pStr(input_dot_density_txt);
-	load_matrix(input_dot_density_txt, nx, ny, data);
+	
+	getFileFullPath(fname, "dot_density.txt");
+	load_matrix(fname, nx, ny, data);
 	for(i=0; i<ny; i++)
 	{
 	  for(j=0; j<nx; j++)

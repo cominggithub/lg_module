@@ -14,6 +14,11 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	double dx, dy, x0, y0, xrng, yrng, den_tot, scl_factor, zbuf;
 	double *nden;
 	FILE *smesh, *mtr, *node;
+	char smesh_fname[256];
+	char mrt_fname[256];
+	char node_fname[256];
+	char cmd[256];
+
 
 	// read parameters from dot_density setup
 	x0 = dden->x0;	y0 = dden->y0;
@@ -36,8 +41,10 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	*/
 	// generate .smesh and .mtr for tegen
 	scl_factor = dden->scale;
-	smesh = fopen("P.smesh","w");
-	mtr = fopen("P.mtr","w");
+	getFileFullPath(smesh_fname, "P.smesh");
+	getFileFullPath(mrt_fname, "P.mtr");
+	smesh = fopen(smesh_fname,"w");
+	mtr = fopen(mrt_fname,"w");
 	zbuf = nden[0];								// !!! better to refer to the average density around edge, instead of that of a original point.
 	fprintf(smesh,"%ld\t%d\t%d\t%d\n", 2*nx*ny, 3, 0, 0);
 	fprintf(mtr,"%ld\t%d\n", 2*nx*ny, 1);
@@ -83,11 +90,16 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	fclose(mtr);
 
 	// generate mesh by tetgen
-	system("tetgen -qpmQ P.smesh");
+	// system("tetgen -qpmQ P.smesh");
+	sprintf(cmd, "tetgen -qpmQ %s", smesh_fname);
+	system(cmd);
 	
 	// read number of valid dot_position
 	ndot = 0;
-	node = fopen("P.1.node","r");
+	
+	// node = fopen("P.1.node","r");
+	getFileFullPath(node_fname, "P.1.node");
+	node = fopen(node_fname, "r");
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{
@@ -101,7 +113,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	n_dots = ndot;
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, dpos);	
 	ndot = 0;
-	node = fopen("P.1.node","r");
+	node = fopen(node_fname,"r");
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{

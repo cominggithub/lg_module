@@ -140,8 +140,10 @@ int main(int argc, char** argv)
 	srand((unsigned)time(NULL));	// initiate rand seed
 
 	// read in setup-parameters
-	sprintf(paramFName, "%s/parameters.txt", prefix);
-	read_setup(paramFName, prefix);
+	sprintf(paramFName, "./%s/parameters.txt", prefix);
+	if (!read_setup(paramFName, prefix))
+		return 1;
+
 
 
 	// allocate memory

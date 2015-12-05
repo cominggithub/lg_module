@@ -91,6 +91,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	struct ray_trace1 source_ray[2];
 	data_file_header opr_data_file_header;
 	char child_prefix[256];
+	char microstr_fname[256];
 
 	srand((unsigned)time(NULL));	// initiate rand seed
 	// allocate memory
@@ -111,8 +112,9 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	set_end_time("gen_source_ray");
 
 	set_start_time("read_microstr");
-	pStr(input_microstr_txt);
-	read_microstr(input_microstr_txt, &lstr);
+	getFileFullPath(microstr_fname, str_file);
+	pStr(microstr_fname);
+	read_microstr(microstr_fname, &lstr);
 	set_end_time("read_microstr");
 
 	// moduel 2...
@@ -335,7 +337,8 @@ int main(int argc, char** argv)
 
 	
 	sprintf(paramFName, "%s/parameters.txt", prefix);
-	read_setup(paramFName, prefix);
+	if (!read_setup(paramFName, prefix))
+		return 1;
 
 	opr_head = new opt_record_head();
 	strcpy(output_dir, prefix);

@@ -2,6 +2,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
+#include "dbg_log.h"
 // general constants
 double pi = 3.141592653589793;
 double delta = pow(10.0,-10.0);
@@ -60,7 +61,7 @@ double IntensityThreshold = 0.001;   // The threshold for determine the intensit
 
 
 // debug config
-bool enable_gnu_plot = false;
+bool enable_gnu_plot = true;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name
@@ -76,9 +77,10 @@ char input_script[256]				= "script";
 char input_dot_density_txt[256]		= "dot_density.txt";
 char input_microstr_txt[256]		= "microstr.txt";
 
+
 void getFileFullPath(char *fullPath, const char* fname)
 {
-	if (output_dir != NULL && strlen(output_dir) > 0)
+	if (strlen(output_dir) > 0)
 	{
 		sprintf(fullPath, "%s/%s", output_dir, fname);
 	}

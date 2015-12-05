@@ -59,6 +59,7 @@ int single_proc_main()
 	opt_record_head *opr_head;
 	data_file_header opr_data_file_header;
 	char child_prefix[256];
+	char microstr_fname[256];
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed
@@ -67,7 +68,7 @@ int single_proc_main()
 	strcpy(fpname, "parameters.txt");
 
 	read_setup(fpname, NULL);
-	pStr(output_data2d_txt);
+	getFileFullPath(microstr_fname, str_file);
 	
 	// allocate memory
 	allocmem_opm(n_wl, n_mat, &opm);
@@ -81,13 +82,14 @@ int single_proc_main()
 	// program body
 
 
+
 	set_start_time("gen_source_ray");
 	// generate light source rays & initialize microstructure
 	gen_source_ray(&ops, &rays);
 	set_end_time("gen_source_ray");
 
 	set_start_time("read_microstr");
-	read_microstr(input_microstr_txt, &lstr);
+	read_microstr(microstr_fname, &lstr);
 	set_end_time("read_microstr");
 
 	// moduel 2...

@@ -67,11 +67,13 @@ extern unsigned long gaussScatteredRaycount;
 extern char output_opt_record_dat[];
 extern char output_opt_record_txt[];
 extern char output_dir[];
-extern char input_script[];
-extern char input_dot_density_txt[];
-extern char input_microstr_txt[];
-extern char output_data2d_txt[];
-extern char output_data3d_txt[];
-extern char output_data3dm_txt[];
-extern char output_data3dv_txt[];
+// extern char input_script[];
+// extern char input_dot_density_txt[];
+// extern char input_microstr_txt[];
+// extern char output_data2d_txt[];
+// extern char output_data3d_txt[];
+// extern char output_data3dm_txt[];
+// extern char output_data3dv_txt[];
+
+void getFileFullPath(char *src, const char* fname);
 #endif

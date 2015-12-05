@@ -60,7 +60,11 @@ cd output
 mkdir $date_str
 
 START=$(date +%s)
-ps aux | grep ray_handler | awk '{print $1}' | xargs kill -9 > /dev/null
+ps aux | grep ray_handler | awk '{print $2}' | xargs kill -9 &> /dev/null
+
+cp parameters.txt "${OUTPUT_FOLDER}/parameters.txt"
+cp microstr.txt "${OUTPUT_FOLDER}/microstr.txt"
+cp dot_density.txt "${OUTPUT_FOLDER}/dot_density.txt"
 
 
 if [ ${is_verbose} == "1" ]; then 
@@ -74,9 +78,6 @@ i=0
 while [ $i -lt $PROCESS_COUNT ]
 do
     echo "./ray_handler ${OUTPUT_FOLDER} ray_handler_${i} ${i} ${OUTPUT_FOLDER}/ray_source_${i}.dat"
-    cp parameters.txt "${OUTPUT_FOLDER}/parameters.txt"
-    cp microstr.txt "${OUTPUT_FOLDER}/microstr.txt"
-    cp dot_density.txt "${OUTPUT_FOLDER}/dot_density.txt"
     if [ ${is_parallel} == "1" ]; then
         if [ ${is_verbose} == "1" ]; then
             ./ray_handler ${OUTPUT_FOLDER} "ray_handler_${i}" ${i} "${OUTPUT_FOLDER}/ray_source_${i}.dat" &

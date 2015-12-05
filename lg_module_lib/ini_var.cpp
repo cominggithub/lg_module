@@ -8,15 +8,15 @@
 #include "dbg_log.h"
 
 
-void read_setup(const char *fpname, const char *output_dir)
+bool read_setup(const char *fpname, const char *out_dir)
 {
 	int err;
 
 	err = conf_load(fpname);
 	if(err == 0)
 	{
-		printf("parameter file <%s> is not found!\n",fpname);
-		exit(0);
+		printf("parameter file %s is not found!\n",fpname);
+		return false;
 	}
 	// for light-guid geometry
 	xdim = conf_getVarDouble("xdim");
@@ -84,29 +84,39 @@ void read_setup(const char *fpname, const char *output_dir)
 	hex_bl = *conf_getVarStr("hex_bl");
 	hex_lng = conf_getVarDouble("hex_lng");
 
+
+	enable_gnu_plot = conf_getVarInt("enable_gnu_plot")>0;
+
 	// read output file name
 
 	strcpy(output_opt_record_dat, conf_getVarStr("output_opt_record_dat"));
 	strcpy(output_opt_record_txt, conf_getVarStr("output_opt_record_txt"));
 
-	strcpy(output_data2d_txt, conf_getVarStr("output_data2d_txt"));
-	strcpy(output_data3d_txt, conf_getVarStr("output_data3d_txt"));
-	strcpy(output_data3dm_txt, conf_getVarStr("output_data3dm_txt"));
-	strcpy(output_data3dv_txt, conf_getVarStr("output_data3dv_txt"));
-	strcpy(input_script, conf_getVarStr("input_script"));
-	strcpy(input_dot_density_txt, conf_getVarStr("input_dot_density_txt"));
-	strcpy(input_microstr_txt, conf_getVarStr("input_microstr_txt"));
+	// strcpy(output_data2d_txt, conf_getVarStr("output_data2d_txt"));
+	// strcpy(output_data3d_txt, conf_getVarStr("output_data3d_txt"));
+	// strcpy(output_data3dm_txt, conf_getVarStr("output_data3dm_txt"));
+	// strcpy(output_data3dv_txt, conf_getVarStr("output_data3dv_txt"));
+	// strcpy(input_script, conf_getVarStr("input_script"));
+	// strcpy(input_dot_density_txt, conf_getVarStr("input_dot_density_txt"));
+	// strcpy(input_microstr_txt, conf_getVarStr("input_microstr_txt"));
 	
-	if (output_dir != NULL)
+	if (out_dir != NULL && strlen(out_dir) > 0)
 	{
-		sprintf(input_script, "%s/%s", output_dir, conf_getVarStr("input_script"));
-		sprintf(input_dot_density_txt, "%s/%s", output_dir, conf_getVarStr("input_dot_density_txt"));
-		sprintf(input_microstr_txt, "%s/%s", output_dir, conf_getVarStr("input_microstr_txt"));
-		sprintf(output_data2d_txt, "%s/%s", output_dir, conf_getVarStr("output_data2d_txt"));
-		sprintf(output_data3d_txt, "%s/%s", output_dir, conf_getVarStr("output_data3d_txt"));
-		sprintf(output_data3dm_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dm_txt"));
-		sprintf(output_data3dv_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dv_txt"));
+		strcpy(output_dir, out_dir);
 	}
+
+	// if (output_dir != NULL)
+	// {
+	// 	sprintf(input_script, "%s/%s", output_dir, conf_getVarStr("input_script"));
+	// 	sprintf(input_dot_density_txt, "%s/%s", output_dir, conf_getVarStr("input_dot_density_txt"));
+	// 	sprintf(input_microstr_txt, "%s/%s", output_dir, conf_getVarStr("input_microstr_txt"));
+	// 	sprintf(output_data2d_txt, "%s/%s", output_dir, conf_getVarStr("output_data2d_txt"));
+	// 	sprintf(output_data3d_txt, "%s/%s", output_dir, conf_getVarStr("output_data3d_txt"));
+	// 	sprintf(output_data3dm_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dm_txt"));
+	// 	sprintf(output_data3dv_txt, "%s/%s", output_dir, conf_getVarStr("output_data3dv_txt"));
+	// }
+
+	return true;
 }
 
 
