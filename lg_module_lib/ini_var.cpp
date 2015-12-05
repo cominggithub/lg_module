@@ -119,4 +119,12 @@ bool read_setup(const char *fpname, const char *out_dir)
 	return true;
 }
 
+void setTmpOutputFolder(const char* folder)
+{
+	if (folder != NULL && strlen(folder) > 0)
+	{
+		strcpy(tmp_output_dir, folder);
+	}
+}
+
 

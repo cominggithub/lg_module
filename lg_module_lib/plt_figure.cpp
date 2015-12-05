@@ -15,8 +15,8 @@ void gnuplot_2d(plot_2d *plt2d)
 	FILE *script, *data;
 	long int i;
 
-	getFileFullPath(output_name, "data2d.txt");
-	getFileFullPath(script_name, "script");
+	getTmpFileFullPath(output_name, "data2d.txt");
+	getTmpFileFullPath(script_name, "script");
 	// save data
 	// data = fopen("data2d.txt","w");
 	data = fopen(output_name,"w");
@@ -47,8 +47,8 @@ void gnuplot_3d(plot_3d *plt3d)
 	FILE *script, *data;
 	long int i;
 
-	getFileFullPath(output_name, "data3d.txt");
-	getFileFullPath(script_name, "script");
+	getTmpFileFullPath(output_name, "data3d.txt");
+	getTmpFileFullPath(script_name, "script");
 
 	// save data
 	// data = fopen("data3d.txt","w");
@@ -81,8 +81,8 @@ void gnuplot_3d_matrix(plot_3d_matrix *plt3dm)
 	FILE *script, *data;
 	long int i, j, nx, ny;
 
-	getFileFullPath(output_name, "data3dm.txt");
-	getFileFullPath(script_name, "script");
+	getTmpFileFullPath(output_name, "data3dm.txt");
+	getTmpFileFullPath(script_name, "script");
 
 	// save data
 	// data = fopen("data3dm.txt","w");
@@ -121,8 +121,8 @@ void gnuplot_3d_vector(plot_3d_vector *plt3dv)
 	FILE *script, *data;
 	long int j, npnt;
 
-	getFileFullPath(output_name, "data3dv.txt");
-	getFileFullPath(script_name, "script");
+	getTmpFileFullPath(output_name, "data3dv.txt");
+	getTmpFileFullPath(script_name, "script");
 
 	// save data
 	// data = fopen("data3dv.txt","w");

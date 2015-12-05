@@ -168,6 +168,7 @@ int single_proc_main()
 	set_end_time("Total");
 	print_all_execution_time();
 
+	system("pause");
 	return 0;
 
 }

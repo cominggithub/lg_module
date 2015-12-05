@@ -65,7 +65,8 @@ bool enable_gnu_plot = true;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name
-char output_dir[256] = "";
+char output_dir[256] 			= "";
+char tmp_output_dir[256] 		= "";
 char output_opt_record_dat[256];
 char output_opt_record_txt[256];
 char output_data2d_txt[256] 	= "data2d.txt";
@@ -89,4 +90,17 @@ void getFileFullPath(char *fullPath, const char* fname)
 		sprintf(fullPath, "%s", fname);
 	}
 }
+
+void getTmpFileFullPath(char *fullPath, const char* fname)
+{
+	if (strlen(tmp_output_dir) > 0)
+	{
+		sprintf(fullPath, "%s/%s", tmp_output_dir, fname);
+	}
+	else
+	{
+		sprintf(fullPath, "%s", fname);
+	}
+}
+
 

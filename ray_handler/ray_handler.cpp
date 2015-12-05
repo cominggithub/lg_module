@@ -113,7 +113,6 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 
 	set_start_time("read_microstr");
 	getFileFullPath(microstr_fname, str_file);
-	pStr(microstr_fname);
 	read_microstr(microstr_fname, &lstr);
 	set_end_time("read_microstr");
 
@@ -319,6 +318,7 @@ int main(int argc, char** argv)
 	char paramFName[256];
 	char opt_fname[256];
 	char prefix[256];
+	char tmp_output[256];
 	opt_record_head *opr_head;
 	data_file_header opr_data_file_header;
 
@@ -339,6 +339,10 @@ int main(int argc, char** argv)
 	sprintf(paramFName, "%s/parameters.txt", prefix);
 	if (!read_setup(paramFName, prefix))
 		return 1;
+
+	sprintf(tmp_output, "%s/%d",prefix, num);
+	setTmpOutputFolder(tmp_output);
+	pStr(tmp_output_dir);
 
 	opr_head = new opt_record_head();
 	strcpy(output_dir, prefix);

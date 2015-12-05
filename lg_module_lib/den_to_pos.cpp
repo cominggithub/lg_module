@@ -41,8 +41,8 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	*/
 	// generate .smesh and .mtr for tegen
 	scl_factor = dden->scale;
-	getFileFullPath(smesh_fname, "P.smesh");
-	getFileFullPath(mrt_fname, "P.mtr");
+	getTmpFileFullPath(smesh_fname, "P.smesh");
+	getTmpFileFullPath(mrt_fname, "P.mtr");
 	smesh = fopen(smesh_fname,"w");
 	mtr = fopen(mrt_fname,"w");
 	zbuf = nden[0];								// !!! better to refer to the average density around edge, instead of that of a original point.
@@ -98,7 +98,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	ndot = 0;
 	
 	// node = fopen("P.1.node","r");
-	getFileFullPath(node_fname, "P.1.node");
+	getTmpFileFullPath(node_fname, "P.1.node");
 	node = fopen(node_fname, "r");
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)

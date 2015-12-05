@@ -56,8 +56,24 @@ fi
 
 echo "process count: ${PROCESS_COUNT}"
 
+if [ $PROCESS_COUNT -lt 1 ]; then
+    exit 0;
+fi
 cd output
 mkdir $date_str
+
+# create process temporary folders by process count
+# for i in $(seq 1 $PROCESS_COUNT); do 
+for (( i=0; i<$PROCESS_COUNT; i++ ))
+do
+    echo "$date_str/$i"
+    mkdir -p "$date_str/$i"
+done
+
+# create preprocess and post-process temporary folders
+mkdir -p "$date_str/pre"
+mkdir -p "$date_str/post"
+
 
 START=$(date +%s)
 ps aux | grep ray_handler | awk '{print $2}' | xargs kill -9 &> /dev/null

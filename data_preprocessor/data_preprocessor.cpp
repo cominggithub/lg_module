@@ -112,6 +112,7 @@ int main(int argc, char** argv)
 	ray_traces rays;				// for samplings of ray tracing
 	char fpname[256];					// for reading parameters
 	char paramFName[256];
+	char tmp_output[256];
 	time_t t;
 	struct tm *now;
 
@@ -143,6 +144,7 @@ int main(int argc, char** argv)
 	sprintf(paramFName, "./%s/parameters.txt", prefix);
 	if (!read_setup(paramFName, prefix))
 		return 1;
+	sprintf(tmp_output, "%s/pre",prefix);
 
 
 
