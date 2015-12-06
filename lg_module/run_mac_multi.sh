@@ -12,12 +12,18 @@ function help_msg {
     echo "-v                    verbose mode";
     echo "-p                    parallel mode, default sequential mode"
     echo "-n=<PROCESS_COUNT>    process count, default 1 process"
+    echo "-D<name>=<value>      user defined key value pair in paramerters.txt"
     echo "e.g., "
     echo "$0 -v     run in verbose mode"
     echo "$0 -p     run in parallel mode"
     echo "$0 -n=5   run in parallel mode, and the process count is 5"
     exit 0;
 }
+
+# setup parameters in parameters.tmp.txt
+# keep parameters.txt unchanged
+cd output
+cp -f parameters.txt parameters.tmp.txt
 
 while [[ $# > 0 ]]
 do
@@ -33,6 +39,13 @@ case $key in
         PROCESS_COUNT="${key#*=}"
         # shift # past argument
         ;;
+    # user defined parameters values
+    -D)
+        shift
+        key=$(echo $1 | cut -f1 -d=)
+        value=$(echo $1 | cut -f2 -d=)
+        sed -i '' "s/\($key *= *\).*/\1$value/" parameters.tmp.txt
+        ;;
     -h)
         help_msg
         ;;
@@ -43,6 +56,7 @@ case $key in
 esac
 shift # past argument or value
 done
+
 
 if [ ${is_parallel} == "1" ]; then
     echo "parallel"
@@ -59,7 +73,8 @@ echo "process count: ${PROCESS_COUNT}"
 if [ $PROCESS_COUNT -lt 1 ]; then
     exit 0;
 fi
-cd output
+
+
 mkdir $date_str
 
 # create process temporary folders by process count
@@ -70,6 +85,7 @@ do
     mkdir -p "$date_str/$i"
 done
 
+
 # create preprocess and post-process temporary folders
 mkdir -p "$date_str/pre"
 mkdir -p "$date_str/post"
@@ -78,7 +94,7 @@ mkdir -p "$date_str/post"
 START=$(date +%s)
 ps aux | grep ray_handler | awk '{print $2}' | xargs kill -9 &> /dev/null
 
-cp parameters.txt "${OUTPUT_FOLDER}/parameters.txt"
+cp parameters.tmp.txt "${OUTPUT_FOLDER}/parameters.txt"
 cp microstr.txt "${OUTPUT_FOLDER}/microstr.txt"
 cp dot_density.txt "${OUTPUT_FOLDER}/dot_density.txt"
 
@@ -113,7 +129,9 @@ do
 done
 
 
-sleep 3
+if [ ${is_parallel} == "1" ]; then
+    sleep 3
+fi
 i=0
 
 while [ $i -lt $PROCESS_COUNT ]
@@ -123,6 +141,7 @@ do
     let i++ 1
 done
 
+echo "Post Processing....."
 ./data_postprocessor ${PROCESS_COUNT} ${OUTPUT_FOLDER}
 
 END=$(date +%s)
