@@ -32,7 +32,7 @@ void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 		sprintf(child_prefix, "%s-%d", prefix, child_num);
 	}
 
-	// printf("%s\n", child_prefix);
+	printf("%s\n", child_prefix);
 }
 
 void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
@@ -214,27 +214,37 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 		{
 			case 1:
 				// just skip it, and go to next round
+				// printf("type 1\n");
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				break;
 			case 2:
+				// printf("type 2\n");
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				break;
 			case 3:
+				// printf("type 3\n");
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				trace_ray_type3(prefix, ray, dpos, opr, lstr);
 				break;
 			case 4:
+				// printf("type 4\n");
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				trace_ray_type4(prefix, ray, dpos, opr, lstr);
 				break;
 			case 5:
+				// printf("type 5\n");
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				trace_ray_type5(prefix, ray, dpos, opr, lstr);
 				break;
 			case 6:
+				// printf("type 6\n");
 				append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				trace_one_ray(prefix, ray, dpos, opr, lstr);
 		}
+	}
+	else
+	{
+		// printf("has no result\n");
 	}
 }
 

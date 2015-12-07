@@ -81,6 +81,8 @@ char input_microstr_txt[256]		= "microstr.txt";
 
 void getFileFullPath(char *fullPath, const char* fname)
 {
+	// sprintf(fullPath, "%s", fname);
+	// return;
 	if (strlen(output_dir) > 0)
 	{
 		sprintf(fullPath, "%s/%s", output_dir, fname);
@@ -93,6 +95,8 @@ void getFileFullPath(char *fullPath, const char* fname)
 
 void getTmpFileFullPath(char *fullPath, const char* fname)
 {
+	// sprintf(fullPath, "%s", fname);
+	// return;
 	if (strlen(tmp_output_dir) > 0)
 	{
 		sprintf(fullPath, "%s/%s", tmp_output_dir, fname);

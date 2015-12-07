@@ -92,6 +92,109 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	data_file_header opr_data_file_header;
 	char child_prefix[256];
 	char microstr_fname[256];
+	char ray_log_fname[256];
+	
+
+	srand((unsigned)time(NULL));	// initiate rand seed
+	// allocate memory
+	allocmem_opm(n_wl, n_mat, &opm);
+	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);
+	allocmem_rays(n_ray, n_gaus, &rays, &ray1);
+	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr);
+	allocmem_local_str(nx_str, ny_str, center_x, center_y, xstr_rng, ystr_rng, &lstr);
+	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
+	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
+
+	// program body
+
+
+	set_start_time("gen_source_ray");
+	// generate light source rays & initialize microstructure
+	gen_source_ray(&ops, &rays);
+	set_end_time("gen_source_ray");
+
+	set_start_time("read_microstr");
+	getFileFullPath(microstr_fname, str_file);
+	read_microstr(microstr_fname, &lstr);
+	set_end_time("read_microstr");
+
+	// moduel 2...
+	//debug test
+	set_start_time("debug_den_to_pos");
+	debug_den_to_pos(&dden, &dpos);	// generate dot pattern for test;
+	set_end_time("debug_den_to_pos");
+
+	set_start_time("part_dots");
+	part_dots(&dpos);
+	set_end_time("part_dots");
+
+	set_start_time("ray tracing");
+
+	getTmpFileFullPath(ray_log_fname, "ray_log.csv");
+	open_ray_csv(ray_log_fname);
+	for(i=0; i<n_ray; i++)
+	// for(i=0; i<1; i++)
+	{
+
+		ray1.ngaus 	= 0;
+		ray1.n1 	= 1.0;
+		ray1.n2 	= 1.58;
+
+
+		ray1.xr 	= rays.xr[i];
+
+		// ray1.yr 	= 0.0;
+		ray1.yr 	= rays.yr[i];
+
+		ray1.zr 	= rays.zr[i];
+
+		// ray1.thar 	= 100;
+		ray1.thar 	= rays.thar[i];
+
+		// ray1.phir 	= 0;
+		ray1.phir 	= rays.phir[i];
+		ray1.inty   = 10.0*rays.inty[i];
+		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
+		//dumpRay1(&ray1);
+		dumpRay1toFile(&ray1);
+		get_child_prefix("", child_prefix, i);
+		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
+	}
+
+	close_ray_csv();
+	set_end_time("ray tracing");
+
+	//deallocate memory
+	deallocmem_opm(&opm);
+	deallocmem_ops(&ops);
+	deallocmem_rays(&rays, &ray1);
+	deallocmem_record(&opr);
+	deallocmem_local_str(&lstr);
+	deallocmem_dot_density(&dden);
+	deallocmem_dot_position(&dpos);
+
+	return 0;
+
+}
+
+
+int ray_handler_old_1207(const char *ray_source_file, opt_record_head *opr_head, const char* output_dir)
+{
+	int i;
+	// define variables
+	opt_mat opm;					// for optic materials
+	opt_source ops;					// for optic source
+	opt_record opr;					// for recording rays emitted from light guides
+	ray_traces rays;				// for samplings of ray tracing
+	ray_trace1 ray1;
+	local_str lstr;					// for local microstructure
+	dot_density dden;				// for global dot density
+	dot_position dpos;				// for global dot potision
+	char fpname[256];					// for reading parameters
+	struct ray_trace1 source_ray[2];
+	data_file_header opr_data_file_header;
+	char child_prefix[256];
+	char microstr_fname[256];
 
 	srand((unsigned)time(NULL));	// initiate rand seed
 	// allocate memory
@@ -342,8 +445,7 @@ int main(int argc, char** argv)
 
 	sprintf(tmp_output, "%s/%d",prefix, num);
 	setTmpOutputFolder(tmp_output);
-	pStr(tmp_output_dir);
-
+	
 	opr_head = new opt_record_head();
 	strcpy(output_dir, prefix);
 	ray_handler(fname, opr_head, output_dir);
