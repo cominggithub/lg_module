@@ -89,6 +89,7 @@ void split_ray(const char* prefix, ray_traces *rays, int count)
 		sprintf(fname, "%s/ray_source_%d.dat", prefix, i);
 		sprintf(dfh.prefix, "%s", fname);
 		printf("%s\n", fname);
+		printf("process %d, ray count: %d (%ld-%ld)\n", i, blockCount, offset, offset+blockCount-1);
 		dfh.count 		= blockCount;
 		dfh.offset 		= offset;
 		dfh.entry_size 	= sizeof(ray_traces_data);

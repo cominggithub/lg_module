@@ -12,7 +12,7 @@ function help_msg {
     echo "-v                    verbose mode";
     echo "-p                    parallel mode, default sequential mode"
     echo "-n=<PROCESS_COUNT>    process count, default 1 process"
-    echo "-D<name>=<value>      user defined key value pair in paramerters.txt"
+    echo "-D <name>=<value>      user defined key value pair in paramerters.txt"
     echo "e.g., "
     echo "$0 -v     run in verbose mode"
     echo "$0 -p     run in parallel mode"
@@ -29,10 +29,10 @@ while [[ $# > 0 ]]
 do
 key="$1"
 case $key in
-    -v)
+    -v|-V)
         is_verbose=1
         ;;
-    -p)
+    -p|-P)
         is_parallel=1
         ;;
     -n=*)

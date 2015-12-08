@@ -61,7 +61,9 @@ extern double IntensityThreshold;     // The threshold for determine the intensi
 
 // debug variable
 extern bool enable_gnu_plot;
+extern bool enable_ray_index_log;
 extern unsigned long gaussScatteredRaycount;
+
 
 // output file name
 extern char output_opt_record_dat[];

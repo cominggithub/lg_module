@@ -32,7 +32,10 @@ void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 		sprintf(child_prefix, "%s-%d", prefix, child_num);
 	}
 
-	printf("%s\n", child_prefix);
+	if (enable_ray_index_log)
+	{
+		printf("%s\n", child_prefix);
+	}
 }
 
 void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
