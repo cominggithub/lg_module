@@ -12,7 +12,6 @@ void read_microstr(char *fname, local_str *lstr)
 	double cbuf;
 	FILE *fp;
 	fp=fopen(fname,"r");
-	printf("lstr->nx = %d, lstr->ny = %d\n", lstr->nx, lstr->ny);
 	if (fp!=NULL)
 	{
 		zdim_out = pow(10.0,5.0);

@@ -42,6 +42,7 @@ bool save_ray_source_file(
 		data.zr 	= rays->zr[i];
 		data.thar 	= rays->thar[i];
 		data.phir 	= rays->phir[i];
+		data.inty 	= rays->inty[i];
 		if (!fwrite(&data, sizeof(ray_traces_data), 1, fp))
 		{
 			return false;
@@ -110,6 +111,7 @@ bool load_ray_source_file(
 		rays->zr[i] 	= data.zr;
 		rays->thar[i] 	= data.thar;
 		rays->phir[i] 	= data.phir;
+		rays->inty[i] 	= data.inty;
 	}
 
 	rays->nray = dfh.count;

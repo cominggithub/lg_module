@@ -59,7 +59,7 @@ static unsigned long hit_local_error_count = 0;
 static unsigned long iteration_count = 0;
 static char name[256];
 
-bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long int *nray)
+bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long int *offset, long int *nray)
 {
 	data_file_header dfh;
 
@@ -67,10 +67,9 @@ bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long in
 		return false;
 
 	allocmem_ray_traces(dfh.count, rays);
-	printf("%s handles ray source offset: %d, ray count: %ld\n", name, dfh.offset, dfh.count);
-
 	load_ray_source_file(ray_source_file, rays);
-	*nray = dfh.count;
+	*nray 	= dfh.count;
+	*offset = dfh.offset;
 
 	return true;
 }
@@ -93,6 +92,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	char child_prefix[256];
 	char microstr_fname[256];
 	char ray_log_fname[256];
+	long int offset;
 	
 
 	srand((unsigned)time(NULL));	// initiate rand seed
@@ -105,13 +105,12 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
+	
+
+	set_start_time("read_source_ray");
 	// program body
-
-
-	set_start_time("gen_source_ray");
-	// generate light source rays & initialize microstructure
-	gen_source_ray(&ops, &rays);
-	set_end_time("gen_source_ray");
+	read_ray_source_file(ray_source_file, &rays, &offset, &n_ray);
+	set_end_time("read_source_ray");
 
 	set_start_time("read_microstr");
 	getFileFullPath(microstr_fname, str_file);
@@ -135,8 +134,7 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
-
-		ray1.ngaus 	= 0;
+		ray1.ngaus 	= rays.xr[i];
 		ray1.n1 	= 1.0;
 		ray1.n2 	= 1.58;
 
@@ -154,10 +152,12 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
 		ray1.inty   = 10.0*rays.inty[i];
-		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
-		//dumpRay1(&ray1);
-		dumpRay1toFile(&ray1);
-		get_child_prefix("", child_prefix, i);
+		ray1.nx 	= 0.0;  
+		ray1.ny 	= 0.0;  
+		ray1.nz 	= 0.0;
+
+		// dumpRay1(&ray1);
+		get_child_prefix("", child_prefix, offset+i);
 		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
 	}
 
@@ -443,15 +443,16 @@ int main(int argc, char** argv)
 	if (!read_setup(paramFName, prefix))
 		return 1;
 
-	sprintf(tmp_output, "%s/%d",prefix, num);
+	sprintf(tmp_output, "%s/process_%d",prefix, num);
 	setTmpOutputFolder(tmp_output);
+	
+
 	
 	opr_head = new opt_record_head();
 	strcpy(output_dir, prefix);
 	ray_handler(fname, opr_head, output_dir);
 
-	dump_opt_record_head(opr_head);
-
+	
 	strcpy(opr_data_file_header.prefix, prefix);
 	opr_data_file_header.offset 		= 0;
 	opr_data_file_header.entry_size 	= ACTUAL_OPT_RECORD_SIZE;

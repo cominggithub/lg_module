@@ -22,6 +22,12 @@ function help_msg {
 
 # setup parameters in parameters.tmp.txt
 # keep parameters.txt unchanged
+
+if [ ! -d "output" ]; then
+    echo "output folder not found"
+    exit 1;
+fi
+
 cd output
 cp -f parameters.txt parameters.tmp.txt
 
@@ -81,15 +87,8 @@ mkdir $date_str
 # for i in $(seq 1 $PROCESS_COUNT); do 
 for (( i=0; i<$PROCESS_COUNT; i++ ))
 do
-    echo "$date_str/$i"
-    mkdir -p "$date_str/$i"
+    mkdir -p "$date_str/process_$i"
 done
-
-
-# create preprocess and post-process temporary folders
-mkdir -p "$date_str/pre"
-mkdir -p "$date_str/post"
-
 
 START=$(date +%s)
 ps aux | grep ray_handler | awk '{print $2}' | xargs kill -9 &> /dev/null
@@ -109,7 +108,8 @@ fi
 i=0
 while [ $i -lt $PROCESS_COUNT ]
 do
-    echo "./ray_handler ${OUTPUT_FOLDER} ray_handler_${i} ${i} ${OUTPUT_FOLDER}/ray_source_${i}.dat"
+    # echo "./ray_handler ${OUTPUT_FOLDER} ray_handler_${i} ${i} ${OUTPUT_FOLDER}/ray_source_${i}.dat"
+    echo -e "\nprocess $i started...."
     if [ ${is_parallel} == "1" ]; then
         if [ ${is_verbose} == "1" ]; then
             ./ray_handler ${OUTPUT_FOLDER} "ray_handler_${i}" ${i} "${OUTPUT_FOLDER}/ray_source_${i}.dat" &

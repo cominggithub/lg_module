@@ -14,7 +14,7 @@ typedef struct _data_file_header
 
 typedef struct _ray_traces_data
 {
-	double xr, yr, zr, thar, phir;
+	double xr, yr, zr, thar, phir, inty;
 }ray_traces_data;
 
 typedef struct _opt_record_data

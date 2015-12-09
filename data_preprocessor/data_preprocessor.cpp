@@ -30,7 +30,6 @@
 #include "checker.h"
 
 
-
 ray_traces *get_ray_traces_by_offset(ray_traces* rays, long int offset, long int count)
 {
 	long int i;
@@ -49,7 +48,9 @@ ray_traces *get_ray_traces_by_offset(ray_traces* rays, long int offset, long int
 		tmpRays->zr[i] 		= rays->zr[offset+i];
 		tmpRays->thar[i] 	= rays->thar[offset+i];
 		tmpRays->phir[i] 	= rays->phir[offset+i];
+		tmpRays->inty[i] 	= rays->inty[offset+i];
 	}
+
 
 	tmpRays->nray = count;
 	return tmpRays;
@@ -88,7 +89,6 @@ void split_ray(const char* prefix, ray_traces *rays, int count)
 
 		sprintf(fname, "%s/ray_source_%d.dat", prefix, i);
 		sprintf(dfh.prefix, "%s", fname);
-		printf("%s\n", fname);
 		printf("process %d, ray count: %d (%ld-%ld)\n", i, blockCount, offset, offset+blockCount-1);
 		dfh.count 		= blockCount;
 		dfh.offset 		= offset;
@@ -111,6 +111,7 @@ int main(int argc, char** argv)
 	// define variables
 	opt_source ops;					// for optic source
 	ray_traces rays;				// for samplings of ray tracing
+	ray_trace1 ray1;
 	char fpname[256];					// for reading parameters
 	char paramFName[256];
 	char tmp_output[256];
@@ -145,14 +146,29 @@ int main(int argc, char** argv)
 	sprintf(paramFName, "./%s/parameters.txt", prefix);
 	if (!read_setup(paramFName, prefix))
 		return 1;
-	sprintf(tmp_output, "%s/pre",prefix);
-
-
 
 	// allocate memory
 	allocmem_ops(n_x, n_y, n_z, n_tha, n_phi, xl_or, yl_or, zl_or, xl_rng, yl_rng, zl_rng, &ops);
 	allocmem_ray_traces(n_ray, &rays);
 	gen_source_ray(&ops, &rays);
+
+	for(i=0; i<n_ray; i++)
+	// for(i=0; i<1; i++)
+	{
+
+		ray1.ngaus 	= 0;
+		ray1.n1 	= 1.0;
+		ray1.n2 	= 1.58;
+		ray1.xr 	= rays.xr[i];
+		ray1.yr 	= rays.yr[i];
+		ray1.zr 	= rays.zr[i];
+		ray1.thar 	= rays.thar[i];
+		ray1.phir 	= rays.phir[i];
+		ray1.inty   = 10.0*rays.inty[i];
+		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
+		// dumpRay1(&ray1);
+	}
+
 	split_ray(prefix, &rays, count);
 
 	deallocmem_ops(&ops);

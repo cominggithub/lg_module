@@ -65,7 +65,7 @@ int main(int argc, const char** argv)
 	sprintf(paramFName, "%s/parameters.txt", prefix);
 	if (!read_setup(paramFName, prefix))
 		return 1;
-	sprintf(tmp_output, "%s/post",prefix);
+	
 	setTmpOutputFolder(tmp_output);
 
 	for(i=0; i<count; i++)

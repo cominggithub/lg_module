@@ -91,7 +91,11 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 
 	// generate mesh by tetgen
 	// system("tetgen -qpmQ P.smesh");
+#if defined(__linux__) || defined(__APPLE__)
+	sprintf(cmd, "tetgen -qpmQ %s >/dev/null", smesh_fname);
+#else
 	sprintf(cmd, "tetgen -qpmQ %s", smesh_fname);
+#endif
 	system(cmd);
 	
 	// read number of valid dot_position
