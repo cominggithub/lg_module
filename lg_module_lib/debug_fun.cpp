@@ -37,9 +37,9 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	}
 	*/
 	data = new double[nx*ny];
-	
 	getFileFullPath(fname, "dot_density.txt");
 	load_matrix(fname, nx, ny, data);
+
 	for(i=0; i<ny; i++)
 	{
 	  for(j=0; j<nx; j++)

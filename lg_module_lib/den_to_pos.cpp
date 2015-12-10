@@ -122,7 +122,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	for(i=1; i<=n1; i++)
 	{
 		fscanf(node,"%ld %lf %lf %lf\n", &n2, &c1, &c2, &c3);
-		if( c3 == 0.0 ){ dpos->xd[ndot] = c1; dpos->yd[ndot] = c2; ndot = ndot+1;}
+		if( c3 == 0.0 ){ dpos->xd[ndot] = c1+x0; dpos->yd[ndot] = c2+y0; ndot = ndot+1;}
 	}
 	fclose(node);
 

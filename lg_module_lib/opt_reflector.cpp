@@ -12,7 +12,7 @@ void RayFromReflector (struct ray_trace1 *rayintoref)
 	double thartemp;
 	double mx, my, mz;
 		 
-    // rayflag=opt_refl;
+    rayflag=1;
 	mx = sin(rayintoref->thar*pi/180.0)*cos(rayintoref->phir*pi/180.0); my = sin(rayintoref->thar*pi/180.0)*sin(rayintoref->phir*pi/180.0);
 	mz = cos(rayintoref->thar*pi/180.0);
 	thartemp=rayintoref->thar;

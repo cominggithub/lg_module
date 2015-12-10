@@ -452,7 +452,8 @@ void open_ray_csv(const char* fname)
 				"thar, phir, "
 				"nx, ny, nz, "
 				"opt_index, opt_inty, "
-				"type"
+				"type, "
+				"xc, yc"
 				"\n"
 			);
 		}
@@ -551,7 +552,6 @@ void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, 
 			ray->thar, ray->phir,
 			ray->nx, ray->ny, ray->nz,
 			opr->r_index, opr->r_inty, type
-			
 		);
 	}
 	else
@@ -566,12 +566,53 @@ void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, 
 			ray->xr, ray->yr, ray->zr,
 			ray->thar, ray->phir,
 			ray->nx, ray->ny, ray->nz, type
-	);
+		);
 	}
 
 	fflush(rayCsvFp);
 }
 
+void append_ray_and_opt_record_to_csv_lstr(const char *prefix, ray_trace1 *ray, local_str *lstr)
+{
+	RETURN_ON_NULL(rayCsvFp);
+	/*
+	if (opr != NULL)
+	{
+	*/
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, "
+			"%f, %f"
+			"\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz,
+			lstr->x0, lstr->y0
+    
+		);
+	/*
+    }
+	else
+	{
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, %ld\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz
+	);
+	}
+	*/
+	fflush(rayCsvFp);
+}
 bool load_matrix(const char *filename, int nx, int ny, double *data)
 {
 	int i;
@@ -645,7 +686,6 @@ void save_dot_position_file(dot_position *dpos)
 		return;
 	}
 
-
 	fprintf(fp, "ndot: %ld\n", dpos->ndot);
 	fprintf(fp, "partnx: %ld\n", dpos->partnx);
 	fprintf(fp, "partny: %ld\n", dpos->partny);
@@ -675,6 +715,7 @@ void save_dot_position_file(dot_position *dpos)
 	fprintf(fp, "\n\npartindx:\n");
 	for(i=0; i<dpos->ndot; i++)
 	{
+
 		fprintf(fp, "%ld ", dpos->partindx[i]);
 	}
 
@@ -703,6 +744,7 @@ void save_opt_record_txt_file(
 	}
 
 	fprintf(fp, "nx: %ld, ny = %ld, ntha = %ld, nphi = %ld\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+
 	for (i=0; i<opr->nx; i++)
 	{
 		for (j=0; j<opr->ny; j++)
@@ -713,6 +755,8 @@ void save_opt_record_txt_file(
 				for(l=0; l<opr->nphi; l++)
 				{
 					long index = i*opr->ny + j*opr->ntha + k*opr->nphi + l;
+					// should check with simon
+					// long index = i*opr->ny + j;
 					fprintf(fp, "%f ", opr->inty[index]);
 				}
 				fprintf(fp, "\n");
@@ -771,52 +815,129 @@ bool save_opt_record_dat_file(
 	return true;
 }
 
-bool load_opt_record_dat_file(
+void save_opt_record_txt_file_pos(
 	const char *fname,
 	opt_record *opr
 )
 {
+	int i, j, k, l;
+	double intensity;
 	FILE *fp;
-	size_t inty_size = 0;
 
-	
-	
-	RETURNV_ON_NULL(fname, false);
-	RETURNV_ON_NULL(opr, false);
-	
-	
-	fp = fopen(fname, "rb");
+	if (opr == NULL)
+	{
+		return;
+	}
+
+	fp = fopen(fname, "w");
 	if (fp == NULL)
 	{
-		fclose(fp);
-		return false;	
+		return;
 	}
 
-
-	if(!fread(opr, sizeof(opt_record) - sizeof(double*), 1, fp))
+	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (i=0; i<opr->nx; i++)
 	{
-		fclose(fp);
-		return false;
+		for (j=0; j<opr->ny; j++)
+		{
+			intensity = 0.0;
+			fprintf(fp, "\nnx = %d, ny = %d\n", i, j);
+			for (k=0; k<opr->ntha; k++)
+			{
+				for(l=0; l<opr->nphi; l++)
+				{
+					long index = k*opr->nphi*opr->nx*opr->ny + l*opr->nx*opr->ny + i*opr->ny + j;
+					intensity = intensity + opr->inty[index];
+					//fprintf(fp, "%f ", opr->inty[index]);
+				}
+				//fprintf(fp, "\n");
+			}
+			fprintf(fp, "%f ", intensity);
+		}
+		
 	}
+	
+}
+bool load_opt_record_dat_file(
+{
+	int i, j, k, l;
+	double intensity;
+	FILE *fp;
 
-	inty_size = sizeof(double)*opr->nx*opr->ny*opr->ntha*opr->nphi;
-	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
-	if( opr->inty == nullptr ) 
-	{ 
-		printf("allocmem_record: light recording error\n");
-		fclose(fp);
-		return false;
-	}
-
-	if (!fread(opr->inty, inty_size, 1, fp))
+	if (opr == NULL)
 	{
-		fclose(fp);
-		return false;
+		return;
 	}
 
-	dump_opt_record(opr);
+	fp = fopen(fname, "w");
+	if (fp == NULL)
+	{
+		return;
+	}
 
-	fclose(fp);
-	return true;
+	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (i=0; i<opr->nx; i++)
+	{
+		for (j=0; j<opr->ny; j++)
+		{
+			intensity = 0.0;
+			fprintf(fp, "\nnx = %d, ny = %d\n", i, j);
+			for (k=0; k<opr->ntha; k++)
+			{
+				for(l=0; l<opr->nphi; l++)
+				{
+					long index = k*opr->nphi*opr->nx*opr->ny + l*opr->nx*opr->ny + i*opr->ny + j;
+					intensity = intensity + opr->inty[index];
+					//fprintf(fp, "%f ", opr->inty[index]);
+				}
+				//fprintf(fp, "\n");
+			}
+			fprintf(fp, "%f ", intensity);
+		}
+		
+	}
+	
+}
 
+void save_opt_record_txt_file_ang(
+	const char *fname,
+	opt_record *opr
+)
+{
+	int i, j, k, l;
+	double intensity;
+	FILE *fp;
+
+	if (opr == NULL)
+	{
+		return;
+	}
+
+	fp = fopen(fname, "w");
+	if (fp == NULL)
+	{
+		return;
+	}
+
+	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (k=0; k<opr->ntha; k++)
+	{
+		for (l=0; l<opr->nphi; l++)
+		{
+			intensity = 0.0;
+			fprintf(fp, "\nntha = %d, nphi = %d\n", k, l);
+			for (i=0; i<opr->nx; i++)
+			{
+				for(j=0; j<opr->ny; j++)
+				{
+					long index = k*opr->nphi*opr->nx*opr->ny + l*opr->nx*opr->ny + i*opr->ny + j;
+					intensity = intensity + opr->inty[index];
+					//fprintf(fp, "%f ", opr->inty[index]);
+				}
+				//fprintf(fp, "\n");
+			}
+			fprintf(fp, "%f ", intensity);
+		}
+		
+	}
 }

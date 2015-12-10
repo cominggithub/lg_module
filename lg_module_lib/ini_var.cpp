@@ -74,8 +74,8 @@ bool read_setup(const char *fpname, const char *out_dir)
 	xden_or = conf_getVarDouble("xden_or");
 	yden_or = conf_getVarDouble("yden_or");
 	den_2_pos_scale = conf_getVarDouble("den_2_pos_scale");
-	xden_rng = xdim;
-	yden_rng = ydim;
+	xden_rng = conf_getVarDouble("xden_rng");;
+	yden_rng = conf_getVarDouble("yden_rng");;
 
 	// for dot spatial pattern
 	n_dots = conf_getVarInt("n_dots");
@@ -83,7 +83,6 @@ bool read_setup(const char *fpname, const char *out_dir)
 	partn_y = conf_getVarInt("partn_y");
 	hex_bl = *conf_getVarStr("hex_bl");
 	hex_lng = conf_getVarDouble("hex_lng");
-
 
 	enable_gnu_plot = conf_getVarInt("enable_gnu_plot")>0;
 	enable_ray_index_log = conf_getVarInt("enable_ray_index_log")>0;
@@ -127,5 +126,3 @@ void setTmpOutputFolder(const char* folder)
 		strcpy(tmp_output_dir, folder);
 	}
 }
-
-

@@ -17,11 +17,10 @@ void read_microstr(char *fname, local_str *lstr)
 		zdim_out = pow(10.0,5.0);
 		for(i=0;i<lstr->nx*lstr->ny;i++) 
 		{
-			// printf("i: %d\n", i);
-			// fscanf(fp,"%lf",&cbuf);
+
+			fscanf(fp,"%lf",&cbuf);
 			//cbuf = cbuf*10.0;					// debug only! magnetify the height of microstructure for easy-debug
-			// lstr->thz[i] = cbuf/pow(10.0,3.0);  // Note! in unit of mm; In this case, transform nm to mm
-			lstr->thz[i] = 99999;
+			lstr->thz[i] = cbuf/pow(10.0,3.0);  // Note! in unit of mm; In this case, transform nm to mm
 			if(zdim_out>cbuf/pow(10.0,3.0)) {zdim_out = cbuf/pow(10.0,3.0);}
 		}
 	}
@@ -168,14 +167,17 @@ bool find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate
 			signf = (lstr->thz[midi])-delta-(zf);
 			if(sign0>0){sign0 = 1.0;}	else{sign0 = -1.0;}
 			if(signf>0){signf = 1.0;}	else{signf = -1.0;}
-			if ( sign0*signf>0 ){ begr = midr; endr = endr; midr = 0.5*(endr+begr); }
-			else if( sign0*signf<0 ) { begr = begr; endr = midr; midr = 0.5*(endr+begr); }
+			if ( sign0*signf>0 ){ begr = midr; endr = endr; midr = 0.5*(endr+begr); if(abs(midr)<=delta){ray1->inty=0.0;return true;} }
+			else if( sign0*signf<0 ) { begr = begr; endr = midr; midr = 0.5*(endr+begr);if(abs(midr)<=delta){ray1->inty=0.0;return true;} }
 			else {printf("find_str_intersection: error on find solution on microstructure surface!\n"); return false;}
 			// check wheterh the solution is found
 			if( begi==midi ){ nonfound = false; }
 		}
-		//return to global coordinate
-		ray1->xr = int(begi/lstr->ny)*dx+xmin+lstr->x0; ray1->yr = (begi%lstr->ny)*dy+ymin+lstr->y0; ray1->zr = lstr->thz[begi]-zdim_in;
+
+		//return to global coordinate  //and judge if on the same position
+		x= int(begi/lstr->ny)*dx+xmin+lstr->x0; y= (begi%lstr->ny)*dy+ymin+lstr->y0; z= lstr->thz[begi]-zdim_in;
+		if (pow(pow((ray1->xr-x),2.0)+pow((ray1->yr-y),2.0)+pow((ray1->zr-z),2.0),0.5)<=delta	){ray1->inty = 0.0;return true;}
+		else {ray1->xr=x; ray1->yr=y; ray1->zr=z;}
 		
 		// calculate normalized normal vector (toward the outside of light-guide materials)
 		yp = begi+1;

@@ -97,7 +97,7 @@ void CalcMainReflectiveRay (struct ray_trace1 *IncidentRay, struct ray_trace1 *M
 	
 	// (xr, yr, zr) and (nx, ny, nz) don't be calculated here. but need to indicated
 	MainReflectiveRay->xr=IncidentRay->xr ; MainReflectiveRay->yr=IncidentRay->yr ; MainReflectiveRay->zr=IncidentRay->zr ;
-	MainReflectiveRay->nx=0.0 ; MainReflectiveRay->ny=0.0 ; MainReflectiveRay->nz=0.0 ;
+	MainReflectiveRay->nx=IncidentRay->nx ; MainReflectiveRay->ny=IncidentRay->ny ; MainReflectiveRay->nz=IncidentRay->nz ;
 }
 
 
@@ -155,7 +155,7 @@ void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1
 	
 	// (xr, yr, zr) and (nx, ny, nz) don't be calculated here but need to be indicated
 	MainTransmittanceRay->xr=IncidentRay->xr ; MainTransmittanceRay->yr=IncidentRay->yr ; MainTransmittanceRay->zr=IncidentRay->zr ;
-	MainTransmittanceRay->nx=0.0 ; MainTransmittanceRay->ny=0.0 ; MainTransmittanceRay->nz=0.0 ;
+	MainTransmittanceRay->nx=IncidentRay->nx ; MainTransmittanceRay->ny=IncidentRay->ny ; MainTransmittanceRay->nz=IncidentRay->nz ;
 }
 
 

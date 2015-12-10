@@ -40,7 +40,7 @@ void allocmem_ops(long int n_x, long int n_y, long int n_z, long int n_tha, long
 void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long int nphi_rcd,double xrcd_or,\
 		double yrcd_or, double zrcd_or, double xrcd_rng, double yrcd_rng, opt_record *opr)
 {
-	long int i;
+	long int i, j;
 	// allocate memory for recording emitted light from light-guide
 	opr->nx = nx_rcd;
 	opr->ny = ny_rcd;
@@ -56,7 +56,11 @@ void allocmem_record(long int nx_rcd, long int ny_rcd, long int ntha_rcd, long i
 	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
 	
 	if( opr->inty == nullptr ) { printf("allocmem_record: light recording error\n"); exit(0); }
-	for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ ){ opr->inty[i]=666.0; }
+
+	for(i=0; i<opr->nx*opr->ny*opr->ntha*opr->nphi; i++ )
+	{
+		opr->inty[i]=0.0;
+	}
 	return;
 }
 

@@ -255,7 +255,6 @@ int ray_handler_old_1207(const char *ray_source_file, opt_record_head *opr_head,
 		ray1.phir 	= rays.phir[i];
 
 		get_child_prefix(NULL, child_prefix, i);
-
 	}
 
 	set_end_time("ray tracing");

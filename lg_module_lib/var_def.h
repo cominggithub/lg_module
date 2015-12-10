@@ -64,7 +64,6 @@ extern bool enable_gnu_plot;
 extern bool enable_ray_index_log;
 extern unsigned long gaussScatteredRaycount;
 
-
 // output file name
 extern char output_opt_record_dat[];
 extern char output_opt_record_txt[];
@@ -80,4 +79,5 @@ extern char tmp_output_dir[];
 
 void getFileFullPath(char *fullPath, const char* fname);
 void getTmpFileFullPath(char *fullPath, const char* fname);
+
 #endif
