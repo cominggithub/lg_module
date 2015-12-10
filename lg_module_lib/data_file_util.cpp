@@ -449,7 +449,9 @@ void open_ray_csv(const char* fname)
 				"xr, yr, zr, "
 				"thar, phir, "
 				"nx, ny, nz, "
-				"opt_index, opt_inty"
+				"opt_index, opt_inty, "
+				"type, "
+				"xc, yc"
 				"\n"
 			);
 		}
@@ -524,7 +526,86 @@ void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_r
 	fflush(rayCsvFp);
 }
 
+void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, opt_record *opr, int type)
+{
+	RETURN_ON_NULL(rayCsvFp);
 
+	if (opr != NULL)
+	{
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, "
+			"%ld, %f, %ld"
+			"\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz,
+			opr->r_index, opr->r_inty, type
+
+		);
+	}
+	else
+	{
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, %ld\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz, type
+	);
+	}
+
+	fflush(rayCsvFp);
+}
+void append_ray_and_opt_record_to_csv_lstr(const char *prefix, ray_trace1 *ray, local_str *lstr)
+{
+	RETURN_ON_NULL(rayCsvFp);
+	/*
+	if (opr != NULL)
+	{
+	*/
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, "
+			"%f, %f"
+			"\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz,
+			lstr->x0, lstr->y0
+    
+		);
+	/*
+    }
+	else
+	{
+		fprintf(rayCsvFp, 
+			"[%s], %ld, %f, %f, %f, "
+			"%f, %f, %f, "
+			"%f, %f, "
+			"%f, %f, %f, %ld\n",
+			prefix,
+			ray->ngaus, ray->inty, ray->n1, ray->n2,
+			ray->xr, ray->yr, ray->zr,
+			ray->thar, ray->phir,
+			ray->nx, ray->ny, ray->nz
+	);
+	}
+	*/
+	fflush(rayCsvFp);
+}
 bool load_matrix(const char *filename, int nx, int ny, double *data)
 {
 	int i;
@@ -563,3 +644,205 @@ bool load_matrix(const char *filename, int nx, int ny, double *data)
 
   	return true;
 }
+
+
+// struct dot_position
+// {
+// 	long int ndot;
+// 	long int partnx, partny;									// partition all dots into grids=npartnx*npartny
+// 	long int *partaccni, *partindx;								// partaccni is for accumlate dots for each grid, and partindx is the responsible array index of xd/yd;
+// 	double *xd, *yd;											// positions of dots
+// };
+
+// 	// allocate memory for global dot position
+// 	dpos->ndot = n_dots;
+// 	dpos->partnx = partn_x;
+// 	dpos->partny = partn_y;
+// 	dpos->xd = new double[dpos->ndot];
+// 	if( dpos->xd == nullptr ) { printf("allocmem_dot_position: dot potision error\n"); exit(0); }
+// 	dpos->yd = new double[dpos->ndot];
+// 	if( dpos->xd == nullptr ) { printf("allocmem_dot_position: dot potision error\n"); exit(0); }
+// 	dpos->partaccni = new long int[dpos->partnx*dpos->partny];
+// 	if( dpos->partaccni == nullptr ) { printf("allocmem_dot_position: accumulate-dot-number matrix error\n"); exit(0); }
+// 	dpos->partindx = new long int[dpos->ndot];
+// 	if( dpos->partindx == nullptr ) { printf("allocmem_dot_position: dot-index matrix error\n"); exit(0); }
+// 	return;
+
+
+void save_dot_position_file(dot_position *dpos)
+{
+	FILE *fp;
+	int i,j;
+	fp = fopen("dot_position.txt", "w");
+	if (fp == NULL)
+	{
+		return;
+	}
+
+
+	fprintf(fp, "ndot: %d\n", dpos->ndot);
+	fprintf(fp, "partnx: %d\n", dpos->partnx);
+	fprintf(fp, "partny: %d\n", dpos->partny);
+
+	fprintf(fp, "\n\nxd:\n");
+	for(i=0; i<dpos->ndot; i++)
+	{
+		fprintf(fp, "%f ", dpos->xd[i]);
+	}
+
+	fprintf(fp, "\n\nyd:\n");
+	for(i=0; i<dpos->ndot; i++)
+	{
+		fprintf(fp, "%f ", dpos->yd[i]);
+	}
+
+	fprintf(fp, "\n\npartaccni:\n");
+	for(i=0; i<dpos->partny; i++)
+	{
+		for(j=0; j<dpos->partnx; j++)
+		{
+			fprintf(fp, "%ld ", dpos->partaccni[i*dpos->partnx+j]);
+		}
+		fprintf(fp, "\n");
+	}
+
+	fprintf(fp, "\n\npartindx:\n");
+	for(i=0; i<dpos->ndot; i++)
+	{
+		fprintf(fp, "%f ", dpos->partindx[i]);
+	}
+
+	fflush(fp);
+	fclose(fp);
+}
+
+
+void save_opt_record_txt_file(
+	const char *fname,
+	opt_record *opr
+)
+{
+	int i, j, k, l;
+	FILE *fp;
+
+	if (opr == NULL)
+	{
+		return;
+	}
+
+	fp = fopen(fname, "w");
+	if (fp == NULL)
+	{
+		return;
+	}
+
+	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (i=0; i<opr->nx; i++)
+	{
+		for (j=0; j<opr->ny; j++)
+		{
+			fprintf(fp, "\nnx = %d, ny = %d\n", i, j);
+			for (k=0; k<opr->ntha; k++)
+			{
+				for(l=0; l<opr->nphi; l++)
+				{
+					//long index = i*opr->ny + j*opr->ntha + k*opr->nphi + l;
+					long index = i*opr->ny + j;
+					fprintf(fp, "%f ", opr->inty[index]);
+				}
+				fprintf(fp, "\n");
+			}
+		}
+		
+	}
+	
+}
+
+void save_opt_record_txt_file_pos(
+	const char *fname,
+	opt_record *opr
+)
+{
+	int i, j, k, l;
+	double intensity;
+	FILE *fp;
+
+	if (opr == NULL)
+	{
+		return;
+	}
+
+	fp = fopen(fname, "w");
+	if (fp == NULL)
+	{
+		return;
+	}
+
+	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (i=0; i<opr->nx; i++)
+	{
+		for (j=0; j<opr->ny; j++)
+		{
+			intensity = 0.0;
+			fprintf(fp, "\nnx = %d, ny = %d\n", i, j);
+			for (k=0; k<opr->ntha; k++)
+			{
+				for(l=0; l<opr->nphi; l++)
+				{
+					long index = k*opr->nphi*opr->nx*opr->ny + l*opr->nx*opr->ny + i*opr->ny + j;
+					intensity = intensity + opr->inty[index];
+					//fprintf(fp, "%f ", opr->inty[index]);
+				}
+				//fprintf(fp, "\n");
+			}
+			fprintf(fp, "%f ", intensity);
+		}
+		
+	}
+	
+}
+
+void save_opt_record_txt_file_ang(
+	const char *fname,
+	opt_record *opr
+)
+{
+	int i, j, k, l;
+	double intensity;
+	FILE *fp;
+
+	if (opr == NULL)
+	{
+		return;
+	}
+
+	fp = fopen(fname, "w");
+	if (fp == NULL)
+	{
+		return;
+	}
+
+	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
+	for (k=0; k<opr->ntha; k++)
+	{
+		for (l=0; l<opr->nphi; l++)
+		{
+			intensity = 0.0;
+			fprintf(fp, "\nntha = %d, nphi = %d\n", k, l);
+			for (i=0; i<opr->nx; i++)
+			{
+				for(j=0; j<opr->ny; j++)
+				{
+					long index = k*opr->nphi*opr->nx*opr->ny + l*opr->nx*opr->ny + i*opr->ny + j;
+					intensity = intensity + opr->inty[index];
+					//fprintf(fp, "%f ", opr->inty[index]);
+				}
+				//fprintf(fp, "\n");
+			}
+			fprintf(fp, "%f ", intensity);
+		}
+		
+	}
+	
+}
+	

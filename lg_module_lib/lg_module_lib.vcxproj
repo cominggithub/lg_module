@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="box_check.h" />
     <ClInclude Include="checker.h" />
     <ClInclude Include="conf_util.h" />
     <ClInclude Include="data_file_util.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="var_type.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="box_check.cpp" />
     <ClCompile Include="conf_util.cpp" />
     <ClCompile Include="data_file_util.cpp" />
     <ClCompile Include="dbg_log.cpp" />

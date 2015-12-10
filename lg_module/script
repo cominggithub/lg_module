@@ -1,2 +1,4 @@
-plot "data2d.txt" with points pointtype 7 pointsize 0.2 
+set pm3d 
+unset surface 
+splot "data3dm.txt" matrix 
 pause -1 "press RETURN to continue"

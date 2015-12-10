@@ -74,8 +74,8 @@ void read_setup(char *fpname)
 	xden_or = conf_getVarDouble("xden_or");
 	yden_or = conf_getVarDouble("yden_or");
 	den_2_pos_scale = conf_getVarDouble("den_2_pos_scale");
-	xden_rng = xdim;
-	yden_rng = ydim;
+	xden_rng = conf_getVarDouble("xden_rng");;
+	yden_rng = conf_getVarDouble("yden_rng");;
 
 	// for dot spatial pattern
 	n_dots = conf_getVarInt("n_dots");
@@ -83,5 +83,10 @@ void read_setup(char *fpname)
 	partn_y = conf_getVarInt("partn_y");
 	hex_bl = *conf_getVarStr("hex_bl");
 	hex_lng = conf_getVarDouble("hex_lng");
+
+	// read output file name
+
+	strcpy(output_opt_record_data, conf_getVarStr("output_opt_record_data"));
+	strcpy(output_opt_record_txt, conf_getVarStr("output_opt_record_txt"));
 
 }

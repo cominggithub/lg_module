@@ -19,7 +19,8 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	x0 = dden->x0;	y0 = dden->y0;
 	xrng = dden->xrng;	yrng = dden->yrng;
 	nx = dden->nx;	ny = dden->ny;
-	dx = xrng/(nx-1);	dy = yrng/(ny-1);			// coordinates for vertes; not for grid-face now
+	//dx = xrng/(nx-1);	dy = yrng/(ny-1);			// coordinates for vertes; not for grid-face now
+	dx = xrng/(nx);	dy = yrng/(ny);
 	// read parameters from dot_position	setup
 	ndot = dpos->ndot; 
 
@@ -28,10 +29,11 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	if(nden == nullptr) {printf("den2pos_tetgen: nden initiation error!"); exit(0);}
 
 	// normalize the cumulative distribution function for dot_density
+	/*
 	den_tot = 0.0;
 	for(i=0; i<nx*ny; i++){ den_tot = den_tot+dden->den[i]; }
 	for(i=0; i<nx*ny; i++){ nden[i] = dden->den[i]/den_tot; }
-
+	*/
 	// generate .smesh and .mtr for tegen
 	scl_factor = dden->scale;
 	smesh = fopen("P.smesh","w");
@@ -43,13 +45,16 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	{
 		yi = i%ny;	xi = int((i-yi)/ny);
 		fprintf(smesh,"%ld\t%12.7f\t%12.7f\t%12.7f\n", i+1, dx*xi, dy*yi, 0.0);
-		fprintf(mtr,"%12.7f\n", 1.0/sqrt(scl_factor*nden[i]+delta) );
+		fprintf(mtr,"%12.7f\n", sqrt(0.9/dden->den[i])*xstr_rng ) ;
+		//fprintf(mtr,"%12.7f\n", 1.0/sqrt(scl_factor*nden[i]+delta) );
 	}
 	for(i = 0; i<nx*ny; i++)					// for vertex on upper plane
 	{
 		yi = i%ny;	xi = int((i-yi)/ny);
-		fprintf(smesh,"%ld\t%12.7f\t%12.7f\t%12.7f\n", i+nx*ny+1, dx*xi, dy*yi, 1.0/sqrt(scl_factor*zbuf+delta));
-		fprintf(mtr,"%12.7f\n", 1.0/sqrt(scl_factor*nden[i]+delta) );
+		fprintf(smesh,"%ld\t%12.7f\t%12.7f\t%12.7f\n", i+nx*ny+1, dx*xi, dy*yi, 0.6*sqrt(0.9/dden->den[i])*xstr_rng);
+		//fprintf(smesh,"%ld\t%12.7f\t%12.7f\t%12.7f\n", i+nx*ny+1, dx*xi, dy*yi, 1.0/sqrt(scl_factor*zbuf+delta));
+		fprintf(mtr,"%12.7f\n", sqrt(0.9/dden->den[i])*xstr_rng ) ;
+		//fprintf(mtr,"%12.7f\n", 1.0/sqrt(scl_factor*nden[i]+delta) );
 	}
 	fprintf(smesh,"%ld\t%d\n", 2*(nx-1)*(ny-1)+2*(nx-1)+2*(ny-1), 0);
 	for(i = 0; i<nx*ny; i++)					// for face
@@ -101,7 +106,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	for(i=1; i<=n1; i++)
 	{
 		fscanf(node,"%ld %lf %lf %lf\n", &n2, &c1, &c2, &c3);
-		if( c3 == 0.0 ){ dpos->xd[ndot] = c1; dpos->yd[ndot] = c2; ndot = ndot+1;}
+		if( c3 == 0.0 ){ dpos->xd[ndot] = c1+x0; dpos->yd[ndot] = c2+y0; ndot = ndot+1;}
 	}
 	fclose(node);
 

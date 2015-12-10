@@ -25,7 +25,11 @@ double CalcThetaOne(double thetar, double phir, double nx, double ny, double nz)
 
 	theta_1 = acos( (sin(thetar*pi/180)*cos(phir*pi/180)*nx + sin(thetar*pi/180)*sin(phir*pi/180)*ny + cos(thetar*pi/180)*nz) /
 		pow( pow(nx,2) + pow(ny,2) + pow(nz,2), 0.5) /
-		pow( (pow(sin(thetar*pi/180)*cos(phir*pi/180),2) +  pow(sin(thetar*pi/180)*sin(phir*pi/180),2) + pow(cos(thetar*pi/180),2)),0.5) * pi/180);
+		pow( (pow(sin(thetar*pi/180)*cos(phir*pi/180),2) +  pow(sin(thetar*pi/180)*sin(phir*pi/180),2) + pow(cos(thetar*pi/180),2)),0.5)) / pi*180;
+	if (theta_1 >90 )
+	{
+		theta_1=180-theta_1;
+	}
 
 	return theta_1;
 }
@@ -39,8 +43,10 @@ double CalcThetaOne(double thetar, double phir, double nx, double ny, double nz)
 //
 double CalcThetaTwo(double ThetaOne, double n1, double n2)
 {
-	double theta_2;
-	theta_2 = asin(sin(ThetaOne*pi/180)*n2/n1);
+	double theta_2, tempValue;
+	tempValue= sin(ThetaOne*pi/180)*n1/n2;
+	if (tempValue < 1) { theta_2 = asin(tempValue)*180/pi;}
+	else {theta_2=100.0;}
 
 	return theta_2;
 }
@@ -57,9 +63,8 @@ void CalcMainReflectiveRay (struct ray_trace1 *IncidentRay, struct ray_trace1 *M
 
 	// Calculate ThetaOne and ThetaTwo (Shown in Fig. 7.a)
 	// These two will be used in CalcMainTransmittanceRay() as well.
-	ThetaOne = CalcThetaOne(IncidentRay->thar, IncidentRay->phir, IncidentRay->xr, IncidentRay->yr, IncidentRay->zr);
+	ThetaOne = CalcThetaOne(IncidentRay->thar, IncidentRay->phir, IncidentRay->nx, IncidentRay->ny, IncidentRay->nz);
 	ThetaTwo = CalcThetaTwo(ThetaOne, IncidentRay->n1, IncidentRay->n2); 
-
 	MainReflectiveRay->ngaus=0;              // 0: Main ray, 1~4: Scattered ray
 	MainReflectiveRay->n1 = IncidentRay->n1; // n1 of ReflectiveRay = n1 of IncidentRay
 	MainReflectiveRay->n2 = IncidentRay->n2; // n2 of ReflectiveRay = n2 of IncidentRay
@@ -82,14 +87,17 @@ void CalcMainReflectiveRay (struct ray_trace1 *IncidentRay, struct ray_trace1 *M
 	MainReflectiveRay->phir   = atan2(Rry, Rrx)*180/pi;		
 
 	// Intensity of Reflective Ray = Intensity of Incident Ray * 0.5 * (Rs + Rp)
-	MainReflectiveRay->inty = IncidentRay->inty * 0.5 *  (
-		pow(tan((ThetaOne-ThetaTwo)*pi/180),2)/pow(tan((ThetaOne+ThetaTwo)*pi/180),2) +
-		pow(sin((ThetaOne-ThetaTwo)*pi/180),2)/pow(sin((ThetaOne+ThetaTwo)*pi/180),2));
-
-	// Set the global variable for the usage in CalcMainTransmittanceRay() to reduce the calculation.
+	if (ThetaTwo ==100.0 ) {  MainReflectiveRay->inty = IncidentRay->inty; }
+	else {  MainReflectiveRay->inty = IncidentRay->inty * 0.5 *  (
+		  pow(tan((ThetaOne-ThetaTwo)*pi/180),2)/pow(tan((ThetaOne+ThetaTwo)*pi/180),2) +
+		  pow(sin((ThetaOne-ThetaTwo)*pi/180),2)/pow(sin((ThetaOne+ThetaTwo)*pi/180),2));
+	}
+		// Set the global variable for the usage in CalcMainTransmittanceRay() to reduce the calculation.
 	ReflectiveRayIntensity = MainReflectiveRay->inty; 
 	
-	// (xr, yr, zr) and (nx, ny, nz) don't need to be calculated here. 
+	// (xr, yr, zr) and (nx, ny, nz) don't be calculated here. but need to indicated
+	MainReflectiveRay->xr=IncidentRay->xr ; MainReflectiveRay->yr=IncidentRay->yr ; MainReflectiveRay->zr=IncidentRay->zr ;
+	MainReflectiveRay->nx=IncidentRay->nx ; MainReflectiveRay->ny=IncidentRay->ny ; MainReflectiveRay->nz=IncidentRay->nz ;
 }
 
 
@@ -111,14 +119,15 @@ void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1
 	MainTransmittanceRay->n2 = IncidentRay->n1; // n2 of TransmittanceRay = n1 of IncidentRay. Is this correct? 
 
 	// Following items are calculated according to formulas provided by Simon.	
-	b = sin(IncidentRay->thar*pi/180)*cos(IncidentRay->phir*pi/180)*IncidentRay->nx+
+	b = (sin(IncidentRay->thar*pi/180)*cos(IncidentRay->phir*pi/180)*IncidentRay->nx+
 		sin(IncidentRay->thar*pi/180)*sin(IncidentRay->phir*pi/180)*IncidentRay->ny+
-		cos(IncidentRay->thar*pi/180)                      *IncidentRay->nz;
+		cos(IncidentRay->thar*pi/180)                      *IncidentRay->nz)*2*IncidentRay->n1;
 	c = pow(IncidentRay->n1,2) - pow(IncidentRay->n2,2);
-	p = (-b+ pow((pow(b,2) - 4*c),0.5))/2;
-
+	
 	if ((pow(b,2)-4*c) >= 0)
 	{
+		if (b >= 0) {p = (-b+ pow((pow(b,2) - 4*c),0.5))/2;} else {p = (-b- pow((pow(b,2) - 4*c),0.5))/2;}
+
 		Rtx = 1/IncidentRay->n2 * (IncidentRay->n1*sin(IncidentRay->thar*pi/180)*cos(IncidentRay->phir*pi/180)+p*IncidentRay->nx);
 		Rty = 1/IncidentRay->n2 * (IncidentRay->n1*sin(IncidentRay->thar*pi/180)*sin(IncidentRay->phir*pi/180)+p*IncidentRay->ny);
 		Rtz = 1/IncidentRay->n2 * (IncidentRay->n1*cos(IncidentRay->thar*pi/180)                             +p*IncidentRay->nz);
@@ -134,7 +143,8 @@ void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1
 
 		// Intensity of Transmittance Ray = Intensity of Incident Ray - Intensity of Reflective Ray;
 		// Intensity of Reflective Ray (gReflectiveRayIntensity) has been calculated in in CalcMainReflectiveRay().
-		MainTransmittanceRay->inty = IncidentRay->inty - ReflectiveRayIntensity;
+        MainTransmittanceRay->inty = IncidentRay->inty - ReflectiveRayIntensity;
+		
 	}
 	else // This case means no refractive/transmittance ray. 
 	{
@@ -143,7 +153,9 @@ void CalcMainTransmittanceRay (struct ray_trace1 *IncidentRay, struct ray_trace1
 		MainTransmittanceRay->inty = 0;
 	}
 	
-	// (xr, yr, zr) and (nx, ny, nz) don't need to be calculated here.
+	// (xr, yr, zr) and (nx, ny, nz) don't be calculated here but need to be indicated
+	MainTransmittanceRay->xr=IncidentRay->xr ; MainTransmittanceRay->yr=IncidentRay->yr ; MainTransmittanceRay->zr=IncidentRay->zr ;
+	MainTransmittanceRay->nx=IncidentRay->nx ; MainTransmittanceRay->ny=IncidentRay->ny ; MainTransmittanceRay->nz=IncidentRay->nz ;
 }
 
 

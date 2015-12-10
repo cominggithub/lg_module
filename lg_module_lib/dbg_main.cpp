@@ -53,12 +53,14 @@ void hanldOneRay(ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str
 	ray->phir 	= 0.0;
 
 	iteration_count++;
+	/*
 	find_str_hit_global(ray, dpos, opr, &type);
 	if (!find_str_hit_local(ray, lstr))
 	{
 		hit_local_error_count++;
 		return;
 	}
+	*/
 	CalcMainReflectiveRay(ray, &src_ray[0]);
 	CalcMainTransmittanceRay(ray, &src_ray[1]);
 

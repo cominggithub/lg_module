@@ -60,3 +60,7 @@ double IntensityThreshold = 0.001;   // The threshold for determine the intensit
 // debug config
 bool enable_gnu_plot = true;
 unsigned long gaussScatteredRaycount = 0;
+
+// output file name
+char output_opt_record_data[256];
+char output_opt_record_txt[256];

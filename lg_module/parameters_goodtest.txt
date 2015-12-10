@@ -1,9 +1,9 @@
 // for defintions of vars, please see var_def.h
 
 // for light-guide plate (all length units are mm)
-xdim=177.7
-ydim=130.8
-zdim_in=0.6
+xdim=10.0
+ydim=10.0
+zdim_in=1.0
 
 // for optical materials
 n_wl=1
@@ -14,19 +14,19 @@ refl_indx=0.0
 
 // for light source (all length units are mm)
 n_x=1
-n_y=20
+n_y=3
 n_z=1
 n_tha=10
 n_phi=20
 xl_or=-0.01
-yl_or=6.228
-zl_or=-0.3
+yl_or=2.5
+zl_or=-0.5
 xl_rng=0.0
-yl_rng=118.332
+yl_rng=7.5
 zl_rng=0.0
 
 // for ray tracing
-n_ray=1000000
+n_ray=360
 n_gauss=1
 ray_threshold=0.001
 
@@ -38,22 +38,20 @@ nphi_rcd=2
 
 
 // for local structure (all length units are mm)
-nx_str=120
-ny_str=120
+nx_str=100
+ny_str=100
 center_x=0.0
 center_y=0.0
-xstr_rng=0.022
-ystr_rng=0.022
+xstr_rng=0.1
+ystr_rng=0.1
 str_file=microstr.txt
 
 // for global dot density
 nx_den=10
 ny_den=10
-xden_or=14.7
-yden_or=4.15
+xden_or=0.0
+yden_or=0.0
 den_2_pos_scale=10000.0
-xden_rng=163.0
-yden_rng=122.5
 
 // for dot spatial pattern
 n_dots=50

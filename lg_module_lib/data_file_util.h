@@ -75,6 +75,21 @@ void copy_opr_data_to_opr(
 	int array_size
 );
 
+void save_opt_record_txt_file(
+	const char *fname,
+	opt_record *opr
+);
+
+void save_opt_record_txt_file_pos(
+	const char *fname,
+	opt_record *opr
+);
+
+void save_opt_record_txt_file_ang(
+	const char *fname,
+	opt_record *opr
+);
+
 void test_ray_source_file();
 void dump_ray_traces(struct ray_traces *rays);
 void dump_opt_record_data(opt_record_data *opr);
@@ -83,6 +98,12 @@ void open_ray_csv(const char* fname);
 void close_ray_csv();
 void append_ray_to_csv(const char *prefix, ray_trace1 *ray);
 void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_record *opr);
-
+void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, opt_record *opr, int type);
+void append_ray_and_opt_record_to_csv_lstr(const char *prefix, ray_trace1 *ray, local_str *lstr);
 bool load_matrix(const char *filename, int nx, int ny, double *data);
+
+
+void save_dot_position_file(dot_position *dpos);
+
+
 #endif

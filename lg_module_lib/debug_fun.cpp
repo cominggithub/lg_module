@@ -9,13 +9,15 @@
 #include "plt_figure.h"
 #include "den_to_pos.h"
 #include "dbg_log.h"
+#include "data_file_util.h"
 
 void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 {
 	plot_3d_matrix plt3m;
 	plot_2d plt2;
-	long int i, xi, yi, nx, ny, ndot;
+	long int i, j, xi, yi, nx, ny, ndot;
 	double x, y, dx, dy, x0, y0, xrng, yrng;
+	double *data;
 
 	x0 = dden->x0;	y0 = dden->y0;
 	xrng = dden->xrng;	yrng = dden->yrng;
@@ -23,6 +25,7 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	dx = xrng/nx;	dy = yrng/ny;
 	
 	// simulate a gaussin dot_density for test
+	/*
 	for (i=0; i<nx*ny; i++)
 	{
 		yi = int(i%ny);	xi = int(1.0*(i-yi)/ny);
@@ -31,7 +34,17 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 		dden->den[i] = dden->den[i]+5.0*exp( -(pow(x-0.7*xrng,2.0)+pow(y-0.3*yrng,2.0))/pow(0.1*xrng,2.0) );
 		dden->den[i] = dden->den[i]+25.0*exp( -(pow(x-0.8*xrng,2.0)+pow(y-0.8*yrng,2.0))/pow(0.05*xrng,2.0) );
 	}
-	
+	*/
+	data = new double[nx*ny];
+	load_matrix("dot_density.txt", nx, ny, data);
+	for(i=0; i<ny; i++)
+	{
+	  for(j=0; j<nx; j++)
+	  {
+		//matrix[i][j] = data[i*ny+j];
+		dden->den[ny-1+j*ny-i] = data[i*ny+j];
+	  }
+	}
 	// plot dot_density
 	
 	allocmem_gnuplot_3d_matrix(nx, ny, &plt3m);
@@ -47,13 +60,13 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	ndot = dpos->ndot;
 	
 	// plot dot_position
-	
+	/*
 	allocmem_gnuplot_2d(ndot, &plt2);
 	for (i=0; i<ndot; i++){ plt2.x[i] = dpos->xd[i]; plt2.y[i] = dpos->yd[i]; }
 	gnuplot_2d(&plt2);											// plot
 	
 	deallocmem_gnuplot_2d(&plt2);
-	
+	*/
 
 	return;
 }

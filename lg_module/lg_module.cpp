@@ -31,6 +31,7 @@
 #include "ray_tracer.h"
 #include "opt_record.h"
 #include "data_file_util.h"
+#include "box_check.h"
 // // function for memory arrangement
 // void read_setup(char *fpname);
 
@@ -56,7 +57,7 @@
 
 
 int single_proc_main();
-int old_main();
+//int old_main();
 
 #define MAX_OUTPUT_RAY 5
 
@@ -80,7 +81,7 @@ int single_proc_main()
 	struct ray_trace1 source_ray[2];
 	opt_record_head *opr_head;
 	data_file_header opr_data_file_header;
-	char child_prefix[256];
+	char child_prefix[1024];
 
 	set_start_time("Total");
 	srand((unsigned)time(NULL));	// initiate rand seed 
@@ -118,7 +119,9 @@ int single_proc_main()
 	set_end_time("debug_den_to_pos");
 
 	set_start_time("part_dots");
+
 	part_dots(&dpos);
+	//save_dot_position_file(&dpos);
 	set_end_time("part_dots");
 
 	set_start_time("ray tracing");
@@ -126,13 +129,14 @@ int single_proc_main()
 	opr_head = new_opt_record_head();
 
 	open_ray_csv("ray_log.csv");
+	
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
 		
-		ray1.ngaus 	= 1; 
+		ray1.ngaus 	= 0; 
 		ray1.n1 	= 1.0; 
-		ray1.n2 	= 1.49;
+		ray1.n2 	= 1.58;
 		
 
 		ray1.xr 	= rays.xr[i]; 
@@ -156,17 +160,9 @@ int single_proc_main()
 		// ray1.thar = 100; ray1.phir =0.0;
 
 		get_child_prefix("", child_prefix, i);
-		trace_one_ray(child_prefix, &ray1, &dpos, opr_head, &lstr);
+		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
 
-		// find_str_hit_global(&ray1, &dpos, &opr);
-		// if (!find_str_hit_local(&ray1, &lstr))
-		// {
-		// 	dumpRay1(&ray1);
-		// 	continue;	
-		// }
-		// CalcMainReflectiveRay(&ray1, &source_ray[0]);
-		// CalcMainTransmittanceRay(&ray1, &source_ray[1]);
-		// call_CalcGaussScatteredRay(&source_ray[0]);
+		
 	}
 
 	close_ray_csv();
@@ -178,39 +174,22 @@ int single_proc_main()
 	opr_data_file_header.count 			= ((glist_head_t*)opr_head)->len;
 
 	
-	set_start_time("save opt file");
-	save_opt_record_file("aaa.opt_recoder", &opr_data_file_header, opr_head);
-	set_end_time("save opt file");
+	save_opt_record_txt_file_pos(output_opt_record_txt, &opr);
+	// set_start_time("save opt file");
+	// save_opt_record_file(output_opt_record, &opr_data_file_header, opr_head);
+	// set_end_time("save opt file");
 
 	// dump_opt_record_head(opr_head);
-	free_opt_record_head(&opr_head);
+	// free_opt_record_head(&opr_head);
 
-	opr_head = new_opt_record_head();
+	// opr_head = new_opt_record_head();
 
-	memset(&opr_data_file_header, 0, sizeof(data_file_header));
-	set_start_time("load opt file");
-	load_opt_record_file("aaa.opt_recoder", &opr_data_file_header, opr_head);
-	set_end_time("load opt file");
+	// memset(&opr_data_file_header, 0, sizeof(data_file_header));
+	// set_start_time("load opt file");
+	// load_opt_record_file(output_opt_record, &opr_data_file_header, opr_head);
+	// set_end_time("load opt file");
 	// dump_opt_record_head(opr_head);
-	free_opt_record_head(&opr_head);
-
-
-	// for(i=0; i<1; i++)
-	// {
-	// 	// CalcMainReflectiveRay(&incident_ray[i], &source_ray[i]);
-	// 	// CalcMainTransmittanceRay(&incident_ray[i], &source_ray[i+100]);
-
-	// 	CalcMainReflectiveRay(&ray1, &source_ray[i]);
-	// 	CalcMainTransmittanceRay(&ray1, &source_ray[i+100]);
-	// }
-
-	// for(i=0; i<200; i++)
-	// {
-	// 	call_CalcGaussScatteredRay(&source_ray[i]);
-	// }
-
-	pLU(hit_local_error_count);
-	pLU(iteration_count);
+	// free_opt_record_head(&opr_head);
 
 	// module 5...	
 
@@ -289,7 +268,7 @@ int old_main()
 	set_start_time("find_str_hit_global");
 	// input: ray1, dpos, opr
 	// output: ray1, opr
-	find_str_hit_global(&ray1, &dpos, &opr, &type);
+	//find_str_hit_global(&ray1, &dpos, &opr, &type);
 	set_end_time("find_str_hit_global");
 
 	// moduel 3...
@@ -579,8 +558,8 @@ int load_matrix()
 int main(int argc, char** argv)
 {
 
-	return load_matrix();
-	// return single_proc_main();
+	//return load_matrix();
+	 return single_proc_main();
 	//return test_main();
 	// return test_opt_main();
 	//return old_main();

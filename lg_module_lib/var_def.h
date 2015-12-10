@@ -7,7 +7,7 @@ extern double pi;
 extern double delta;
 
 // light-guide geometry (mm)
-extern double xdim, ydim, zdim_in, zdim_out;					// zdim_out is decided by zdim_in + heightness of microstructure
+extern double xdim, ydim, zdim_in, zdim_out, z_reflector;					// zdim_out is decided by zdim_in + heightness of microstructure
 
 
 // optical material
@@ -62,4 +62,8 @@ extern double IntensityThreshold;     // The threshold for determine the intensi
 // debug variable
 extern bool enable_gnu_plot;
 extern unsigned long gaussScatteredRaycount;
+
+// output file name
+extern char output_opt_record_data[];
+extern char output_opt_record_txt[];
 #endif
