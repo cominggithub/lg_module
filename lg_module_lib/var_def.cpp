@@ -62,7 +62,6 @@ double IntensityThreshold = 0.001;   // The threshold for determine the intensit
 
 // debug config
 bool enable_gnu_plot = true;
-<<<<<<< HEAD
 bool enable_ray_index_log = false;
 unsigned long gaussScatteredRaycount = 0;
 
@@ -79,8 +78,6 @@ char output_data3dv_txt[256]	= "data3dv.txt";
 char input_script[256]				= "script";
 char input_dot_density_txt[256]		= "dot_density.txt";
 char input_microstr_txt[256]		= "microstr.txt";
-
-unsigned long gaussScatteredRaycount = 0;
 
 
 void getFileFullPath(char *fullPath, const char* fname)

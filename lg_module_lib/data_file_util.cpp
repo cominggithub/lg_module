@@ -858,45 +858,55 @@ void save_opt_record_txt_file_pos(
 	}
 	
 }
+
 bool load_opt_record_dat_file(
+	const char *fname,
+	opt_record *opr
+)
 {
-	int i, j, k, l;
-	double intensity;
 	FILE *fp;
+	size_t inty_size = 0;
 
-	if (opr == NULL)
-	{
-		return;
-	}
-
-	fp = fopen(fname, "w");
+	
+	
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(opr, false);
+	
+	
+	fp = fopen(fname, "rb");
 	if (fp == NULL)
 	{
-		return;
+		fclose(fp);
+		return false;	
 	}
 
-	fprintf(fp, "nx %d ny %d ntha %d nphi %d\n", opr->nx, opr->ny, opr->ntha, opr->nphi);
-	for (i=0; i<opr->nx; i++)
+
+	if(!fread(opr, sizeof(opt_record) - sizeof(double*), 1, fp))
 	{
-		for (j=0; j<opr->ny; j++)
-		{
-			intensity = 0.0;
-			fprintf(fp, "\nnx = %d, ny = %d\n", i, j);
-			for (k=0; k<opr->ntha; k++)
-			{
-				for(l=0; l<opr->nphi; l++)
-				{
-					long index = k*opr->nphi*opr->nx*opr->ny + l*opr->nx*opr->ny + i*opr->ny + j;
-					intensity = intensity + opr->inty[index];
-					//fprintf(fp, "%f ", opr->inty[index]);
-				}
-				//fprintf(fp, "\n");
-			}
-			fprintf(fp, "%f ", intensity);
-		}
-		
+		fclose(fp);
+		return false;
 	}
-	
+
+	inty_size = sizeof(double)*opr->nx*opr->ny*opr->ntha*opr->nphi;
+	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
+	if( opr->inty == nullptr ) 
+	{ 
+		printf("allocmem_record: light recording error\n");
+		fclose(fp);
+		return false;
+	}
+
+	if (!fread(opr->inty, inty_size, 1, fp))
+	{
+		fclose(fp);
+		return false;
+	}
+
+	dump_opt_record(opr);
+
+	fclose(fp);
+	return true;
+
 }
 
 void save_opt_record_txt_file_ang(
