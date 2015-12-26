@@ -5,6 +5,7 @@
 #include "den_to_pos.h"
 #include "var_def.h"
 #include "mem_func.h"
+#include "dbg_log.h"
 
 void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
 {
@@ -122,8 +123,16 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	for(i=1; i<=n1; i++)
 	{
 		fscanf(node,"%ld %lf %lf %lf\n", &n2, &c1, &c2, &c3);
-		if( c3 == 0.0 ){ dpos->xd[ndot] = c1+x0; dpos->yd[ndot] = c2+y0; ndot = ndot+1;}
+		if( c3 == 0.0 )
+		{ 
+			
+			dpos->xd[ndot] = c1+x0; 
+			dpos->yd[ndot] = c2+y0; 
+			ndot = ndot+1;
+			printf("\r%ld/%ld (%ld)", i+1, n1, ndot);
+		}
 	}
+	printf("\n");
 	fclose(node);
 
 	if (hexbl=='T' || hexbl=='t') hex_fit(dpos, hexlng);	// put dots onto hexagon lattice
@@ -237,12 +246,15 @@ void den2pos(dot_density *dden, dot_position *dpos, char hexbl, double hexlng)
 
 void hex_fit(dot_position *dpos, double hexlng)
 {
+
+
 	long int i, j, ibuf, jbuf, ntot, ntotbuf;
 	long int *chkrep;
 	double *xbuf, *ybuf;
 	double dbuf1, dbuf2;
 	double a1[2]={1.0*hexlng, 0.0*hexlng}, a2[2]={-cos(pi/3.0)*hexlng, sin(pi/3.0)*hexlng};
-	
+	int duplicated_node = 0;
+	printf("hex_fit\n");
 	
 	// basis for hexagon lattice
 	for(i=0; i<dpos->ndot; i++)
@@ -263,25 +275,43 @@ void hex_fit(dot_position *dpos, double hexlng)
 	ybuf = new double[dpos->ndot];
 	if( ybuf == nullptr ) { printf("hex_fit: ybuf matrix setup error\n"); exit(0); }
 	for(i=0; i<dpos->ndot; i++){ chkrep[i]=1; xbuf[i]=dpos->xd[i]; ybuf[i]=dpos->yd[i]; }
+	
 	for(i=0; i<dpos->ndot; i++)
 	{
+		printf("\r %ld/%ld (%d)", i+1, dpos->ndot, duplicated_node);
 		for(j=i+1; j<dpos->ndot; j++)
 		{
-			if( abs(dpos->xd[i]-dpos->xd[j])<delta && abs(dpos->yd[i]-dpos->yd[j])<delta)
+
+
+			if( chkrep[j] == 1 &&
+				abs(dpos->xd[i]-dpos->xd[j])<delta && abs(dpos->yd[i]-dpos->yd[j])<delta)
 			{
 				chkrep[j] = 0;
+				duplicated_node++;
 			}
 		}
 	}
+	printf("\n");
 	for(i=0; i<dpos->ndot; i++)		// remove points being exactly on borders
 	{
-		if( dpos->xd[i]<xstr_rng || dpos->xd[i]>(xdim-xstr_rng) || dpos->yd[i]<ystr_rng || dpos->yd[i]>(ydim-ystr_rng) ) chkrep[i] = 0;
+		if (chkrep[i] == 0)
+		{
+			continue;
+		}
+		if( dpos->xd[i]<xstr_rng || dpos->xd[i]>(xdim-xstr_rng) || dpos->yd[i]<ystr_rng || dpos->yd[i]>(ydim-ystr_rng) )
+		{
+			chkrep[i] = 0;
+			duplicated_node++;
+		}
 	}
 	ntot = 0;
+	pI(duplicated_node);
 	for(i=0; i<dpos->ndot; i++)
 	{ 
 		if( chkrep[i]==1 ) ntot = ntot+1;  
 	}
+
+	pI(ntot);
 	ntotbuf = dpos->ndot;
 	dpos->ndot = ntot;
 	delete [] dpos->xd;

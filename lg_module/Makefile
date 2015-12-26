@@ -1,6 +1,6 @@
 
 
-CPPFLAGS= -I. -I../lg_module_lib -I/usr/include/malloc -std=c++0x -ggdb
+CPPFLAGS= -I. -I../lg_module_lib -I/usr/include/malloc -std=c++0x -ggdb -O3
 LDFLAGS= -lstdc++
 OUTPUT_DATA = \
 	data2d.txt \

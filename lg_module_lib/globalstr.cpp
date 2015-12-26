@@ -149,7 +149,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			        zmin = -zdim_out;		zmax = -zdim_in;
 
 					bcheck = box_hitcheck_w_bottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
-					if (bcheck = true){lstr->x0 = xc; lstr->y0 = yc; *type = 3;return true;}
+					if (bcheck == true){lstr->x0 = xc; lstr->y0 = yc; *type = 3;return true;}
 				}
 			}
 		}
@@ -179,6 +179,7 @@ void part_dots(dot_position *dpos)
 	long int i, j, nx, ny, indi, indbuf, indxvalue, indxnum;
 	double dx, dy, xbuf, ybuf;
 
+	printf("part_dots\n");
 	nx = dpos->partnx;
 	ny =  dpos->partny;
 	dx = 1.0*xdim/nx+delta;
@@ -192,6 +193,7 @@ void part_dots(dot_position *dpos)
 	//sort xd/yd by partindx
 	for(i=0; i<dpos->ndot; i++)
 	{
+		printf("\r %ld/%ld", i+1, dpos->ndot);
 		for(j=i+1; j<dpos->ndot; j++)
 		{
 			if(dpos->partindx[i]>dpos->partindx[j])
@@ -210,6 +212,7 @@ void part_dots(dot_position *dpos)
 			}
 		}
 	}
+	printf("\n");
 	for(i=0; i<nx*ny; i++){ dpos->partaccni[i]=0; }
 	indxnum=1;
 	indxvalue = dpos->partindx[0];
