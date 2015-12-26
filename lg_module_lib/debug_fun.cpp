@@ -42,11 +42,11 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 
 	for(i=0; i<ny; i++)
 	{
-	  for(j=0; j<nx; j++)
-	  {
-		//matrix[i][j] = data[i*ny+j];
-		dden->den[ny-1+j*ny-i] = data[i*ny+j];
-	  }
+	  	for(j=0; j<nx; j++)
+	  	{
+			// dden->den[ny-1+j*ny-i] = data[i*ny+j];
+			dden->den[ny-1+j*ny-i] = 0.001;
+	  	}
 	}
 	// plot dot_density
 	
