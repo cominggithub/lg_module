@@ -867,8 +867,6 @@ bool load_opt_record_dat_file(
 	FILE *fp;
 	size_t inty_size = 0;
 
-	
-	
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(opr, false);
 	
@@ -951,3 +949,52 @@ void save_opt_record_txt_file_ang(
 		
 	}
 }
+
+bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
+{
+	FILE *fp;
+	size_t inty_size = 0;
+	long int i;
+
+	// fp = fopen(fname, "wb");
+	
+
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(dpos, false);
+
+	fp = fopen(fname, "w");
+	
+	if (fp == NULL)
+	{
+		return false;
+	}
+
+	// fprintf(fp, "%ld\n", dpos->ndot);
+	// fprintf(fp, "%ld\n", dpos->partnx);
+	// fprintf(fp, "%ld\n", dpos->partny);
+
+	
+	// for(i=0; i<dpos->ndot; i++)
+	// {
+	// 	fprintf(fp, "%ld\n", dpos->partaccni[i]);
+	// }
+
+	// for(i=0; i<dpos->ndot; i++)
+	// {
+	// 	fprintf(fp, "%ld\n", dpos->partindx[i]);
+	// }
+
+	for(i=0; i<dpos->ndot; i++)
+	{
+		fprintf(fp, "%lf, %lf\n", dpos->xd[i], dpos->yd[i]);
+	}
+	
+	// for(i=0; i<dpos->ndot; i++)
+	// {
+	// 	fprintf(fp, "%.5f\n", dpos->yd[i]);
+	// }
+
+	fclose(fp);
+	return true;
+}
+

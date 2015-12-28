@@ -102,6 +102,8 @@ void save_opt_record_txt_file_ang(
 	opt_record *opr
 );
 
+bool save_dot_position_txt_file(const char *fname, dot_position *dpos);
+
 void test_ray_source_file();
 void dump_ray_traces(struct ray_traces *rays);
 void dump_opt_record_data(opt_record_data *opr);

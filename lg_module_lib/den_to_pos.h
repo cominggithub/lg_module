@@ -4,6 +4,8 @@
 #include "var_type.h"
 
 // local function
+void hex_fit_sorted(dot_position *dpos, double hexlng);				// put dots onto hexagon lattice
+void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, double hexlng); // preferred! due to its efficiency and uniformity
 void hex_fit(dot_position *dpos, double hexlng);				// put dots onto hexagon lattice
 void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double hexlng); // preferred! due to its efficiency and uniformity
 void den2pos(dot_density *dden, dot_position *dpos, char hexbl, double hexlng);

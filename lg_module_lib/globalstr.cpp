@@ -190,6 +190,7 @@ void part_dots(dot_position *dpos)
 		indi =	int(dpos->xd[i]/dx)*ny+int(dpos->yd[i]/dy);			// the index corresponding to partition array
 		dpos->partindx[i] = indi;
 	}
+	
 	//sort xd/yd by partindx
 	for(i=0; i<dpos->ndot; i++)
 	{

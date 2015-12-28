@@ -88,4 +88,5 @@ clean:
 	rm -f ../data_preprocessor/*.o
 	rm -f ../data_postprocessor/*.o
 	rm -f ../ray_handler/*.o
+	rm -f ../tetgen_node/*.o
 
