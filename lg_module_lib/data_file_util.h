@@ -75,33 +75,20 @@ void copy_opr_data_to_opr(
 	int array_size
 );
 
-void save_opt_record_txt_file(
-	const char *fname,
-	opt_record *opr
-);
+void save_opt_record_txt_file(const char *fname, opt_record *opr);
 
 
-bool save_opt_record_dat_file(
-	const char *fname,
-	opt_record *opr
-);
+bool save_opt_record_dat_file(const char *fname, opt_record *opr);
 
-void save_opt_record_txt_file_pos(
-	const char *fname,
-	opt_record *opr
-);
+void save_opt_record_txt_file_pos(const char *fname, opt_record *opr);
 
 
-bool load_opt_record_dat_file(
-	const char *fname,
-	opt_record *opr
-);
+bool load_opt_record_dat_file(const char *fname, opt_record *opr);
 
-void save_opt_record_txt_file_ang(
-	const char *fname,
-	opt_record *opr
-);
+void save_opt_record_txt_file_ang(const char *fname, opt_record *opr);
 
+bool save_dot_position_dat_file(const char *fname, dot_position *dpos);
+bool load_dot_position_dat_file(const char *fname, dot_position *dpos);
 bool save_dot_position_txt_file(const char *fname, dot_position *dpos);
 
 void test_ray_source_file();

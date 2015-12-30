@@ -12,6 +12,25 @@
 #include "time_util.h"
 
 
+bool set_dot_density(dot_density *dden, double density)
+{
+	long int i, j, nx, ny;
+
+	nx = dden->nx;
+	ny = dden->ny;
+
+	for(i=0; i<ny; i++)
+	{
+		for(j=0; j<nx; j++)
+		{
+			dden->den[ny-1+j*ny-i] = density;
+	  	}
+	}
+
+	return true;
+}
+
+
 void sort_dot_position(dot_position *dpos)
 {
 	int i, j;
@@ -426,7 +445,7 @@ void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, do
 	return;
 }
 
-void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
+void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
 {
 	long int i, nx, ny, ndot, xi, yi;
 	long int n1, n2, n3, n4;
@@ -438,6 +457,7 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	char mrt_fname[256];
 	char node_fname[256];
 	char cmd[256];
+	char fname[256];
 
 
 	// read parameters from dot_density setup
@@ -461,8 +481,12 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	*/
 	// generate .smesh and .mtr for tegen
 	scl_factor = dden->scale;
-	getTmpFileFullPath(smesh_fname, "P.smesh");
-	getTmpFileFullPath(mrt_fname, "P.mtr");
+	
+	sprintf(fname, "%s.smesh", file_prefix);
+	getTmpFileFullPath(smesh_fname, fname);
+	
+	sprintf(fname, "%s.mtr", file_prefix);
+	getTmpFileFullPath(mrt_fname, fname);
 	smesh = fopen(smesh_fname,"w");
 	mtr = fopen(mrt_fname,"w");
 	zbuf = nden[0];								// !!! better to refer to the average density around edge, instead of that of a original point.
@@ -522,7 +546,8 @@ void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double he
 	ndot = 0;
 
 	// node = fopen("P.1.node","r");
-	getTmpFileFullPath(node_fname, "P.1.node");
+	sprintf(fname, "%s.1.node", file_prefix);
+	getTmpFileFullPath(node_fname, fname);
 	node = fopen(node_fname, "r");
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
@@ -705,7 +730,7 @@ void hex_fit(dot_position *dpos, double hexlng)
 
 
 			if( chkrep[j] == 1 &&
-				abs(dpos->xd[i]-dpos->xd[j])<delta && abs(dpos->yd[i]-dpos->yd[j])<delta)
+				fabs(dpos->xd[i]-dpos->xd[j])<delta && fabs(dpos->yd[i]-dpos->yd[j])<delta)
 			{
 				chkrep[j] = 0;
 				duplicated_node++;

@@ -7,8 +7,8 @@
 void hex_fit_sorted(dot_position *dpos, double hexlng);				// put dots onto hexagon lattice
 void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, double hexlng); // preferred! due to its efficiency and uniformity
 void hex_fit(dot_position *dpos, double hexlng);				// put dots onto hexagon lattice
-void den2pos_tetgen(dot_density *dden, dot_position *dpos, char hexbl, double hexlng); // preferred! due to its efficiency and uniformity
+void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dpos, char hexbl, double hexlng); // preferred! due to its efficiency and uniformity
 void den2pos(dot_density *dden, dot_position *dpos, char hexbl, double hexlng);
 void hex_fit(dot_position *dpos, double hexlng);
-
+bool set_dot_density(dot_density *dden, double density);
 #endif

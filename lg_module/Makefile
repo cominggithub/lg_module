@@ -45,10 +45,11 @@ OBJ_FILES := \
 	../lg_module_lib/opt_record.o \
 	../lg_module_lib/mem_alloc.o \
 	../lg_module_lib/box_check.o \
+	../lg_module_lib/dot_pos.o \
 	../lg_module_lib/var_def.o
 
 
-all: prepare lg_module data_preprocessor ray_handler data_postprocessor
+all: prepare lg_module data_preprocessor ray_handler data_postprocessor dot_pos_generator
 
 
 prepare:
@@ -74,6 +75,9 @@ data_postprocessor: $(OBJ_FILES) ../data_postprocessor/data_postprocessor.o
 ray_handler: $(OBJ_FILES) ../ray_handler/ray_handler.o
 	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
 
+dot_pos_generator: $(OBJ_FILES) ../dot_pos_generator/dot_pos_generator.o
+	g++ $(LD_FLAGS) -o ${OUTPUT_DIR}/$@ $^
+
 ${OBJ_DIR}/%.o: %.cpp
 	g++ $(CPPFLAGS) -c -o $@ $<
 
@@ -88,5 +92,5 @@ clean:
 	rm -f ../data_preprocessor/*.o
 	rm -f ../data_postprocessor/*.o
 	rm -f ../ray_handler/*.o
-	rm -f ../tetgen_node/*.o
+	rm -f ../dot_pos_generator/*.o
 

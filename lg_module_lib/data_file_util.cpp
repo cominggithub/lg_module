@@ -5,6 +5,8 @@
 #include "dbg_log.h"
 #include "glist.h"
 #include <string.h>
+#include "mem_func.h"
+#include "var_def.h"
 
 static FILE* rayCsvFp = NULL;
 
@@ -675,55 +677,6 @@ bool load_matrix(const char *filename, int nx, int ny, double *data)
 // 	if( dpos->partindx == nullptr ) { printf("allocmem_dot_position: dot-index matrix error\n"); exit(0); }
 // 	return;
 
-
-void save_dot_position_file(dot_position *dpos)
-{
-	FILE *fp;
-	int i,j;
-	fp = fopen("dot_position.txt", "w");
-	if (fp == NULL)
-	{
-		return;
-	}
-
-	fprintf(fp, "ndot: %ld\n", dpos->ndot);
-	fprintf(fp, "partnx: %ld\n", dpos->partnx);
-	fprintf(fp, "partny: %ld\n", dpos->partny);
-
-	fprintf(fp, "\n\nxd:\n");
-	for(i=0; i<dpos->ndot; i++)
-	{
-		fprintf(fp, "%f ", dpos->xd[i]);
-	}
-
-	fprintf(fp, "\n\nyd:\n");
-	for(i=0; i<dpos->ndot; i++)
-	{
-		fprintf(fp, "%f ", dpos->yd[i]);
-	}
-
-	fprintf(fp, "\n\npartaccni:\n");
-	for(i=0; i<dpos->partny; i++)
-	{
-		for(j=0; j<dpos->partnx; j++)
-		{
-			fprintf(fp, "%ld ", dpos->partaccni[i*dpos->partnx+j]);
-		}
-		fprintf(fp, "\n");
-	}
-
-	fprintf(fp, "\n\npartindx:\n");
-	for(i=0; i<dpos->ndot; i++)
-	{
-
-		fprintf(fp, "%ld ", dpos->partindx[i]);
-	}
-
-	fflush(fp);
-	fclose(fp);
-}
-
-
 void save_opt_record_txt_file(
 	const char *fname,
 	opt_record *opr
@@ -998,3 +951,129 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 	return true;
 }
 
+
+bool save_dot_position_dat_file(const char *fname, dot_position *dpos)
+{
+	FILE *fp;
+	size_t inty_size = 0;
+
+	// fp = fopen(fname, "wb");
+	
+
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(dpos, false);
+
+	fp = fopen(fname, "wb");
+	
+	if (fp == NULL)
+	{
+		return false;
+	}
+
+	if (!fwrite(&dpos->ndot, sizeof(long int), 1, fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fwrite(&dpos->partnx, sizeof(long int), 1, fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fwrite(&dpos->partny, sizeof(long int), 1, fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fwrite(dpos->partaccni, sizeof(long int), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fwrite(dpos->partindx, sizeof(long int), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fwrite(dpos->xd, sizeof(double), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fwrite(dpos->yd, sizeof(double), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+
+	fflush(fp);
+	fclose(fp);
+	return true;
+FAIL:
+	fclose(fp);
+	return false;
+}
+
+bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
+{
+	FILE *fp;
+	size_t inty_size = 0;
+	
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(dpos, false);
+	
+	long int ndot;
+	
+	fp = fopen(fname, "rb");
+	if (fp == NULL)
+	{
+		fclose(fp);
+		return false;	
+	}
+
+
+	if(!fread(&ndot, sizeof(long int), 1, fp))
+	{
+		goto FAIL;
+	}
+
+	deallocmem_dot_position(dpos);
+	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);	
+
+	if (!fread(&dpos->partnx, sizeof(long int), 1, fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fread(&dpos->partny, sizeof(long int), 1, fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fread(dpos->partaccni, sizeof(long int), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fread(dpos->partindx, sizeof(long int), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fread(dpos->xd, sizeof(double), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	if (!fread(dpos->yd, sizeof(double), dpos->ndot , fp))
+	{
+		goto FAIL;
+	}
+
+	fclose(fp);
+	return true;
+
+FAIL:
+	fclose(fp);
+	return false;	
+}
