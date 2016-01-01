@@ -278,7 +278,7 @@ void hex_fit_sorted(dot_position *dpos, double hexlng)
 
 }
 
-void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
+bool den2pos_tetgen_sorted(const char* file_prefix, dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
 {
 	long int i, nx, ny, ndot, xi, yi;
 	long int n1, n2, n3, n4;
@@ -290,11 +290,13 @@ void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, do
 	char mrt_fname[256];
 	char node_fname[256];
 	char cmd[256];
+	char fname[256];
 	double xd;
 	double yd;
 	long int k;
 	size_t size;
 
+	printf("sorted\n");
 
 	// read parameters from dot_density setup
 	x0 = dden->x0;	y0 = dden->y0;
@@ -317,10 +319,15 @@ void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, do
 	*/
 	// generate .smesh and .mtr for tegen
 	scl_factor = dden->scale;
-	getTmpFileFullPath(smesh_fname, "P.smesh");
-	getTmpFileFullPath(mrt_fname, "P.mtr");
+
+	sprintf(fname, "%s.smesh", file_prefix);
+	getTmpFileFullPath(smesh_fname, fname);
+	
+	sprintf(fname, "%s.mtr", file_prefix);
+	getTmpFileFullPath(mrt_fname, fname);
 	smesh = fopen(smesh_fname,"w");
 	mtr = fopen(mrt_fname,"w");
+
 	zbuf = nden[0];								// !!! better to refer to the average density around edge, instead of that of a original point.
 	fprintf(smesh,"%ld\t%d\t%d\t%d\n", 2*nx*ny, 3, 0, 0);
 	fprintf(mtr,"%ld\t%d\n", 2*nx*ny, 1);
@@ -382,8 +389,16 @@ void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, do
 	ndot = 0;
 
 	// node = fopen("P.1.node","r");
-	getTmpFileFullPath(node_fname, "P.1.node");
+	sprintf(fname, "%s.1.node", file_prefix);
+	getTmpFileFullPath(node_fname, fname);
+
 	node = fopen(node_fname, "r");
+	if (node == NULL)
+	{
+		fprintf(stderr, "cannot open %s\n", node_fname);
+		return false;
+	}
+
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{
@@ -399,6 +414,11 @@ void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, do
 	ndot = 0;
 	size = sizeof(double);
 	node = fopen(node_fname,"r");
+	if (node == NULL)
+	{
+		fprintf(stderr, "cannot open %s\n", node_fname);
+		return false;
+	}
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{
@@ -442,10 +462,10 @@ void den2pos_tetgen_sorted(dot_density *dden, dot_position *dpos, char hexbl, do
 
 	// free memory
 	delete [] nden;
-	return;
+	return true;
 }
 
-void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
+bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dpos, char hexbl, double hexlng) // preferred! due to its efficiency and uniformity
 {
 	long int i, nx, ny, ndot, xi, yi;
 	long int n1, n2, n3, n4;
@@ -460,6 +480,7 @@ void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 	char fname[256];
 
 
+	printf("unsorted\n");
 	// read parameters from dot_density setup
 	x0 = dden->x0;	y0 = dden->y0;
 	xrng = dden->xrng;	yrng = dden->yrng;
@@ -549,6 +570,13 @@ void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 	sprintf(fname, "%s.1.node", file_prefix);
 	getTmpFileFullPath(node_fname, fname);
 	node = fopen(node_fname, "r");
+
+	if (node == NULL)
+	{
+		fprintf(stderr, "cannot open %s\n", node_fname);
+		return false;
+	}
+
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{
@@ -563,6 +591,11 @@ void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, dpos);
 	ndot = 0;
 	node = fopen(node_fname,"r");
+	if (node == NULL)
+	{
+		fprintf(stderr, "cannot open %s\n", node_fname);
+		return false;
+	}
 	fscanf(node,"%ld %ld %ld %ld\n", &n1, &n2, &n3, &n4);
 	for(i=1; i<=n1; i++)
 	{
@@ -583,7 +616,7 @@ void den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 
 	// free memory
 	delete [] nden;
-	return;
+	return false;
 }
 
 

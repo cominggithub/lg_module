@@ -10,91 +10,82 @@
 #include "time_util.h"
 #include "dot_pos.h"
 
-bool tetgen_node()
+bool tetgen_dot_pos(const char* file_prefix, bool sorted, double density)
 {
 	dot_density dden;
 	dot_position dpos;
+	char dot_pos_data_fname[256];
 	
-	if (!read_setup("parameters.txt", NULL))
-	{
-		fprintf(stderr, "cannot read parameters files\n");
-		return 1;
-	}
-
+	
 	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
-	set_dot_density(&dden, 0.001);
-	den2pos_tetgen("KK", &dden, &dpos, hex_bl, hex_lng);
+	set_dot_density(&dden, density);
+	if (sorted)
+	{
+		den2pos_tetgen_sorted(file_prefix, &dden, &dpos, hex_bl, hex_lng);
+	}
+	else
+	{
+		den2pos_tetgen(file_prefix, &dden, &dpos, hex_bl, hex_lng);	
+	}
 	part_dots(&dpos);
+
+	sprintf(dot_pos_data_fname, "%s.dot_pos.dat", file_prefix);
+	save_dot_position_dat_file(dot_pos_data_fname, &dpos);
 
 	return 0;
 }
 
+
+
+// 1 parameters 
+// 2 prefix
+// 3 density
+// 4 unsorted
+// 
+void print_usage()
+{
+	printf("dot_pos_generator <parameters file> <file_preifx> <density> [-t]\n");
+}
+
 int main(int argc, char** argv)
 {
-	char prefix[256];
-	char node_prefix[256];
 	char node_fname[256];
 	char dpos_fname[256];
-	dot_density dden;
-	dot_position dpos;
+	char para_fname[256];
+	char file_prefix[256];
 	double density;
 
-	if (argc == 1)
+	
+	set_start_time("Total");
+	if (argc < 4)
 	{
-		tetgen_node();
+		print_usage();
 		return 0;
 	}
 
-	strcpy(node_prefix, argv[1]);
-	density = atof(argv[2]);
+	strcpy(para_fname, argv[1]);
+	strcpy(file_prefix, argv[2]);
+	density = atof(argv[3]);
 
-	printf("prefix: %s, density: %f(%s)\n", node_prefix, density, argv[2]);
-	
-	if (!read_setup("parameters.txt", NULL))
+	if (!read_setup(para_fname, NULL))
 	{
-		fprintf(stderr, "cannot read parameters files\n");
+		fprintf(stderr, "cannot read parameters files: %s\n", para_fname);
 		return 1;
 	}
 
-	allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
-	allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
-
-	// load dot_density
-	// load_density("dot_density.txt", &dden);
-	set_dot_density(&dden, density);
-
-	// generate smesh and mtr file
-	// use tetgen to generate node file
-	printf("generate dots\n");
-	set_start_time("generate_pos_file");
-	// generate_pos_file(&dden, node_prefix);
-	set_end_time("generate_pos_file");
-
-	sprintf(node_fname, "%s.1.node", node_prefix);
-	sprintf(dpos_fname, "%s.dot_position.dat", node_prefix);
-	printf("load_dpos\n");
-	set_start_time("load_dpos");
-	if (!load_dpos(node_fname, &dpos, hex_bl, hex_lng))
+	if (argc == 5 && strcmp("-t", argv[4]) == 0)
 	{
-		fprintf(stderr, "fload dpos failed");
+		tetgen_dot_pos(file_prefix, false, density);
 	}
-	set_end_time("load_dpos");
-	
-	
-	set_start_time("part dots");
-	printf("part dots\n");
-	part_dots(&dpos);
-	set_end_time("part dots");
+	else
+	{
+		tetgen_dot_pos(file_prefix, true, density);
+	}
 
-	set_start_time("save dots");
-	printf("save dots\n");
-	save_dot_position_dat_file(dpos_fname, &dpos);
-	set_end_time("save dots");
-
-	printf("\n");
+	set_end_time("Total");
 	print_all_execution_time();
-	
+
 	return 0;
 }
