@@ -33,7 +33,7 @@ bool tetgen_dot_pos(const char* file_prefix, bool sorted, double density)
 
 	sprintf(dot_pos_data_fname, "%s.dot_pos.dat", file_prefix);
 	save_dot_position_dat_file(dot_pos_data_fname, &dpos);
-	save_dot_position_txt_file("o.dot_position.txt", &dpos);
+	// save_dot_position_txt_file("o.dot_position.txt", &dpos);
 	return 0;
 }
 
@@ -62,6 +62,7 @@ int main(int argc, char** argv)
 	if (argc < 4)
 	{
 		print_usage();
+		system("pause");
 		return 0;
 	}
 
@@ -85,7 +86,8 @@ int main(int argc, char** argv)
 	}
 
 	set_end_time("Total");
+	
 	print_all_execution_time();
-
+	system("pause");
 	return 0;
 }

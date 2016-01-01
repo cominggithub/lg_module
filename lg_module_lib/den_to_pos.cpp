@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+// #include <math.h>
 
 #include "den_to_pos.h"
 #include "var_def.h"
@@ -33,72 +33,47 @@ bool set_dot_density(dot_density *dden, double density)
 
 void sort_dot_position(dot_position *dpos)
 {
-	int i, j;
-	double xd[dpos->ndot];
-	double yd[dpos->ndot];
-	size_t size;
+	return;
+	// int i, j;
+	// double xd[dpos->ndot];
+	// double yd[dpos->ndot];
+	// size_t size;
 
-	size = sizeof(double);
-	printf("sort\n");
-	set_start_time("sort xd");
+	// size = sizeof(double);
+	// printf("sort\n");
+	// set_start_time("sort xd");
 
-	memset(xd, 0, size*dpos->ndot);
-	memset(yd, 0, size*dpos->ndot);
+	// memset(xd, 0, size*dpos->ndot);
+	// memset(yd, 0, size*dpos->ndot);
 
-	for(i=0; i<dpos->ndot; i++)
-	{
-		printf("\r%d/%d", i+1, dpos->ndot);
-		for (j=0; j<i; j++)
-		{
-			if (xd[j] > dpos->xd[i])
-			{
-				memmove((double*)(&xd)+j+1, (double*)(&xd)+j, size*(i-j));
-				memmove((double*)(&yd)+j+1, (double*)(&yd)+j, size*(i-j));
-				xd[j] = dpos->xd[i];
-				yd[j] = dpos->yd[i];
-				break;
-			}
-		}
-
-		if (j==i)
-		{
-
-			xd[i] = dpos->xd[i];;
-			yd[i] = dpos->yd[i];
-		}
-
-
-		// for(j=0; j<=i; j++)
-		// {
-		// 	printf("%.2f ", xd[j]);
-		// }
-		// printf("\n");
-
-		// if (i==100)
-		// {
-		// 	memcpy(dpos->xd, xd, size*dpos->ndot);
-		// 	for(j=0; j<=i; j++)
-		// 	{
-		// 		printf("%.2f ", dpos->xd[j]);
-		// 	}
-		// 	printf("\n");
-		// 	exit(0);
-		// }
-	}
-
-	printf("\n");
-	memcpy(dpos->xd, xd, size*dpos->ndot);
-	memcpy(dpos->yd, yd, size*dpos->ndot);
-
-	// for(j=0; j<i; j++)
+	// for(i=0; i<dpos->ndot; i++)
 	// {
-	// 	printf("%.2f ", xd[j]);
+	// 	printf("\r%d/%d", i+1, dpos->ndot);
+	// 	for (j=0; j<i; j++)
+	// 	{
+	// 		if (xd[j] > dpos->xd[i])
+	// 		{
+	// 			memmove((double*)(&xd)+j+1, (double*)(&xd)+j, size*(i-j));
+	// 			memmove((double*)(&yd)+j+1, (double*)(&yd)+j, size*(i-j));
+	// 			xd[j] = dpos->xd[i];
+	// 			yd[j] = dpos->yd[i];
+	// 			break;
+	// 		}
+	// 	}
+
+	// 	if (j==i)
+	// 	{
+
+	// 		xd[i] = dpos->xd[i];;
+	// 		yd[i] = dpos->yd[i];
+	// 	}
 	// }
+
 	// printf("\n");
+	// memcpy(dpos->xd, xd, size*dpos->ndot);
+	// memcpy(dpos->yd, yd, size*dpos->ndot);
 
-	// system("ls -lah dpos_sorted.txt dpos_sorted.ori.txt");
-
-	set_end_time("sort xd");
+	// set_end_time("sort xd");
 
 }
 
@@ -481,6 +456,7 @@ bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 
 
 	printf("unsorted\n");
+	pI(dpos->ndot);
 	// read parameters from dot_density setup
 	x0 = dden->x0;	y0 = dden->y0;
 	xrng = dden->xrng;	yrng = dden->yrng;
@@ -589,6 +565,7 @@ bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 	deallocmem_dot_position(dpos);				// !!! need to check whether dpos is allocated or not
 	n_dots = ndot;
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, dpos);
+	pI(dpos->ndot);
 	ndot = 0;
 	node = fopen(node_fname,"r");
 	if (node == NULL)
@@ -790,13 +767,17 @@ void hex_fit(dot_position *dpos, double hexlng)
 
 	pI(ntot);
 	ntotbuf = dpos->ndot;
+	deallocmem_dot_position(dpos);				// !!! need to check whether dpos is allocated or not
 	dpos->ndot = ntot;
-	delete [] dpos->xd;
-	delete [] dpos->yd;
-	dpos->xd = new double[dpos->ndot];
-	if( dpos->xd == nullptr ) { printf("hex_fit: xd matrix setup error\n"); exit(0); }
-	dpos->yd = new double[dpos->ndot];
-	if( dpos->yd == nullptr ) { printf("hex_fit: yd matrix setup error\n"); exit(0); }
+	allocmem_dot_position(ntot, hex_bl, hex_lng, dpos);
+
+	// simon, partaccni/partindx should be reallocate
+	// delete [] dpos->xd;
+	// delete [] dpos->yd;
+	// dpos->xd = new double[dpos->ndot];
+	// if( dpos->xd == nullptr ) { printf("hex_fit: xd matrix setup error\n"); exit(0); }
+	// dpos->yd = new double[dpos->ndot];
+	// if( dpos->yd == nullptr ) { printf("hex_fit: yd matrix setup error\n"); exit(0); }
 	j=0;
 	for(i=0; i<ntotbuf; i++)
 	{

@@ -267,6 +267,9 @@ void deallocmem_dot_position(dot_position *dpos)
 	// deallocate memory for global dot position
 	delete [] dpos->xd;
 	delete [] dpos->yd;
+	delete [] dpos->partaccni;
+	delete [] dpos->partindx;
+
 	return;
 }
 

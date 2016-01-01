@@ -23,6 +23,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data_postprocessor", "data_
 		{F899A216-1287-4B1F-8712-10A7115653B8} = {F899A216-1287-4B1F-8712-10A7115653B8}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dot_pos_generator", "dot_pos_generator\dot_pos_generator.vcxproj", "{AF9FE93C-6E28-46EA-9161-108112806D3E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F899A216-1287-4B1F-8712-10A7115653B8} = {F899A216-1287-4B1F-8712-10A7115653B8}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +54,10 @@ Global
 		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Debug|Win32.Build.0 = Debug|Win32
 		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Release|Win32.ActiveCfg = Release|Win32
 		{EB457F82-DEB9-4907-91F7-ECEF1BC556E6}.Release|Win32.Build.0 = Release|Win32
+		{AF9FE93C-6E28-46EA-9161-108112806D3E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF9FE93C-6E28-46EA-9161-108112806D3E}.Debug|Win32.Build.0 = Debug|Win32
+		{AF9FE93C-6E28-46EA-9161-108112806D3E}.Release|Win32.ActiveCfg = Release|Win32
+		{AF9FE93C-6E28-46EA-9161-108112806D3E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

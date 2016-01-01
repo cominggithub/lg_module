@@ -909,9 +909,6 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 	size_t inty_size = 0;
 	long int i;
 
-	// fp = fopen(fname, "wb");
-	
-
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(dpos, false);
 
@@ -922,30 +919,26 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 		return false;
 	}
 
-	// fprintf(fp, "%ld\n", dpos->ndot);
-	// fprintf(fp, "%ld\n", dpos->partnx);
-	// fprintf(fp, "%ld\n", dpos->partny);
+	fprintf(fp, "%ld\n", dpos->ndot);
+	fprintf(fp, "%ld\n", dpos->partnx);
+	fprintf(fp, "%ld\n", dpos->partny);
 
-	
-	// for(i=0; i<dpos->ndot; i++)
-	// {
-	// 	fprintf(fp, "%ld\n", dpos->partaccni[i]);
-	// }
-
-	// for(i=0; i<dpos->ndot; i++)
-	// {
-	// 	fprintf(fp, "%ld\n", dpos->partindx[i]);
-	// }
-
+	for(i=0; i<dpos->partnx*dpos->partny; i++)
+	{
+		fprintf(fp, "%ld\n", dpos->partaccni[i]);
+	}
+	for(i=0; i<dpos->ndot; i++)
+	{
+		fprintf(fp, "%ld\n", dpos->partindx[i]);
+	}
 	for(i=0; i<dpos->ndot; i++)
 	{
 		fprintf(fp, "%lf, %lf\n", dpos->xd[i], dpos->yd[i]);
 	}
-	
-	// for(i=0; i<dpos->ndot; i++)
-	// {
-	// 	fprintf(fp, "%.5f\n", dpos->yd[i]);
-	// }
+	for(i=0; i<dpos->ndot; i++)
+	{
+		fprintf(fp, "%.5f\n", dpos->yd[i]);
+	}
 
 	fclose(fp);
 	return true;
@@ -985,7 +978,7 @@ bool save_dot_position_dat_file(const char *fname, dot_position *dpos)
 		goto FAIL;
 	}
 
-	if (!fwrite(dpos->partaccni, sizeof(long int), dpos->ndot , fp))
+	if (!fwrite(dpos->partaccni, sizeof(long int), dpos->partnx*dpos->partny, fp))
 	{
 		goto FAIL;
 	}
@@ -1027,10 +1020,10 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 	fp = fopen(fname, "rb");
 	if (fp == NULL)
 	{
-		fclose(fp);
+		fprintf(stderr, "cannot load dot pos file: %s\n", fname);
+		//fclose(fp);
 		return false;	
 	}
-
 
 	if(!fread(&ndot, sizeof(long int), 1, fp))
 	{
@@ -1039,37 +1032,30 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 
 	deallocmem_dot_position(dpos);
 	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);	
-
 	if (!fread(&dpos->partnx, sizeof(long int), 1, fp))
 	{
 		goto FAIL;
 	}
-
 	if (!fread(&dpos->partny, sizeof(long int), 1, fp))
 	{
 		goto FAIL;
 	}
-
-	if (!fread(dpos->partaccni, sizeof(long int), dpos->ndot , fp))
+	if (!fread(dpos->partaccni, sizeof(long int),dpos->partnx*dpos->partny, fp))
 	{
 		goto FAIL;
 	}
-
 	if (!fread(dpos->partindx, sizeof(long int), dpos->ndot , fp))
 	{
 		goto FAIL;
 	}
-
 	if (!fread(dpos->xd, sizeof(double), dpos->ndot , fp))
 	{
 		goto FAIL;
 	}
-
 	if (!fread(dpos->yd, sizeof(double), dpos->ndot , fp))
 	{
 		goto FAIL;
 	}
-
 	fclose(fp);
 	return true;
 
