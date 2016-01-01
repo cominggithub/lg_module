@@ -59,6 +59,10 @@ extern double ReflectiveRayIntensity; // The variable for saving the intensity o
 extern double IntensityThreshold;     // The threshold for determine the intensity of ray
 									// define the lattice constant of hexagon
 
+// dot position dat file
+extern bool enable_dot_pos_file;
+extern char dot_pos_file[];
+
 // debug variable
 extern bool enable_gnu_plot;
 extern bool enable_ray_index_log;

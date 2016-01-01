@@ -84,6 +84,11 @@ bool read_setup(const char *fpname, const char *out_dir)
 	hex_bl = *conf_getVarStr("hex_bl");
 	hex_lng = conf_getVarDouble("hex_lng");
 
+	// for dot position
+	enable_dot_pos_file = conf_getVarInt("enable_dot_pos_file")>0;
+	strcpy(dot_pos_file, conf_getVarStr("dot_pos_file"));
+	
+
 	enable_gnu_plot = conf_getVarInt("enable_gnu_plot")>0;
 	enable_ray_index_log = conf_getVarInt("enable_ray_index_log")>0;
 

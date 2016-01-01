@@ -63,6 +63,10 @@ partn_y=10
 hex_bl=T
 hex_lng=0.1
 
+// for dot position (* dot_position.dat)
+enable_dot_pos_file=1
+dot_pos_file=0001.dot_pos.dat
+
 // debug
 enable_gnu_plot=0
 enable_ray_index_log=0

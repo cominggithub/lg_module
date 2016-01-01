@@ -744,8 +744,6 @@ void hex_fit(dot_position *dpos, double hexlng)
 		dpos->yd[i] = ibuf*a1[1] + jbuf*a2[1];
 	}
 
-	save_dot_position_txt_file("dpos_unsorted.txt", dpos);
-
 	// !!! remove repeated points and points on the xy border-lines
 	chkrep = new long int[dpos->ndot];
 	if( chkrep == nullptr ) { printf("hex_fit: chkrep matrix setup error\n"); exit(0); }

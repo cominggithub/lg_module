@@ -33,7 +33,7 @@ bool tetgen_dot_pos(const char* file_prefix, bool sorted, double density)
 
 	sprintf(dot_pos_data_fname, "%s.dot_pos.dat", file_prefix);
 	save_dot_position_dat_file(dot_pos_data_fname, &dpos);
-
+	save_dot_position_txt_file("o.dot_position.txt", &dpos);
 	return 0;
 }
 

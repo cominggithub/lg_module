@@ -257,3 +257,4 @@ lg_module/dot_density.txt
 *.xlsx
 lg_module/dot_position.txt
 *.dot_pos.dat
+*.dot_pos.txt

@@ -60,6 +60,10 @@ double ReflectiveRayIntensity = 0; // The global variable for saving the intensi
 double IntensityThreshold = 0.001;   // The threshold for determine the intensity of ray
 
 
+// dot position dat file
+bool enable_dot_pos_file = false;
+char dot_pos_file[256] = "0001.dot_pos.dat";
+
 // debug config
 bool enable_gnu_plot = true;
 bool enable_ray_index_log = false;

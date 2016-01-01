@@ -44,8 +44,8 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	{
 	  	for(j=0; j<nx; j++)
 	  	{
-			// dden->den[ny-1+j*ny-i] = data[i*ny+j];
-			dden->den[ny-1+j*ny-i] = 0.001;
+			dden->den[ny-1+j*ny-i] = data[i*ny+j];
+			// dden->den[ny-1+j*ny-i] = 0.001;
 			// dden->den[ny-1+j*ny-i] = 0.05;
 	  	}
 	}
@@ -60,8 +60,7 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	// call den2pos function to generate dot_position
 	// den2pos(dden, dpos, hex_bl, hex_lng);
 	
-	printf("unsorted\n");
-	den2pos_tetgen("GG", dden, dpos, hex_bl, hex_lng);
+	den2pos_tetgen("P", dden, dpos, hex_bl, hex_lng);
 	
 	// printf("sorted\n");
 	// den2pos_tetgen_sorted(dden, dpos, hex_bl, hex_lng);

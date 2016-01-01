@@ -113,17 +113,31 @@ int single_proc_main()
 	set_end_time("read_microstr");
 
 	// moduel 2...
-	//debug test
-	set_start_time("debug_den_to_pos");
-	debug_den_to_pos(&dden, &dpos);	// generate dot pattern for test;
-	set_end_time("debug_den_to_pos");
 
-	set_start_time("part_dots");
+	if (enable_dot_pos_file)
+	{
+		printf("load from dot pos file: %s\n", dot_pos_file);
+		if(!load_dot_position_dat_file(dot_pos_file, &dpos))
+		{
 
-	part_dots(&dpos);
-	//save_dot_position_file(&dpos);
-	set_end_time("part_dots");
+			return 1;
+		}
+		save_dot_position_txt_file("r.dot_position.txt", &dpos);
+	}
+	else
+	{
+		//debug test
+		set_start_time("debug_den_to_pos");
+		debug_den_to_pos(&dden, &dpos);	// generate dot pattern for test;
+		set_end_time("debug_den_to_pos");
 
+		set_start_time("part_dots");
+
+		part_dots(&dpos);
+		//save_dot_position_file(&dpos);
+		set_end_time("part_dots");
+	}
+	
 	set_start_time("ray tracing");
 
 	opr_head = new_opt_record_head();
@@ -133,7 +147,6 @@ int single_proc_main()
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
-		
 		ray1.ngaus 	= 0; 
 		ray1.n1 	= 1.0; 
 		ray1.n2 	= 1.58;
@@ -158,10 +171,9 @@ int single_proc_main()
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
 		// ray1.thar = 100; ray1.phir =0.0;
-
 		get_child_prefix("", child_prefix, i);
 		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
-
+	
 		
 	}
 
@@ -202,6 +214,7 @@ int single_proc_main()
 	deallocmem_dot_density(&dden);
 	deallocmem_dot_position(&dpos);
 	set_end_time("Total");
+
 	print_all_execution_time();
 
 	system("pause");
