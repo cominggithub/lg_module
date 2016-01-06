@@ -117,11 +117,22 @@ int single_proc_main()
 	if (enable_dot_pos_file)
 	{
 		printf("load dot position from dot pos file: %s\n", dot_pos_file);
-		if(!load_dot_position_dat_file(dot_pos_file, &dpos))
+		if(strlen(dot_pos_file) > 4 && !strcmp(dot_pos_file + strlen(dot_pos_file) - 4, ".txt"))
 		{
-			pl();
-			system("pause");
-			return 1;
+			if(!load_dot_position_txt_file(dot_pos_file, &dpos))
+			{
+				pl();
+				system("pause");
+				return 1;
+			}
+		}
+		else
+		{ 
+			if(!load_dot_position_dat_file(dot_pos_file, &dpos))
+			{
+				system("pause");
+				return 1;
+			}
 		}
 		// save_dot_position_txt_file("r.dot_position.txt", &dpos);
 	}

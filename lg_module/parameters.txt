@@ -65,7 +65,7 @@ hex_lng=0.1
 
 // for dot position (* dot_position.dat)
 enable_dot_pos_file=1
-dot_pos_file=../dot_pos_generator/0001.dot_pos.dat
+dot_pos_file=../../data/151118_43.0um.txt
 
 // debug
 enable_gnu_plot=0

@@ -935,11 +935,7 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 	{
 		fprintf(fp, "%lf, %lf\n", dpos->xd[i], dpos->yd[i]);
 	}
-	for(i=0; i<dpos->ndot; i++)
-	{
-		fprintf(fp, "%.5f\n", dpos->yd[i]);
-	}
-
+	
 	fclose(fp);
 	return true;
 }
@@ -1062,4 +1058,47 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 FAIL:
 	fclose(fp);
 	return false;	
+}
+
+bool load_dot_position_txt_file(const char *fname, dot_position *dpos)
+{
+	FILE *fp;
+	long int ndot;
+	long int i;
+	char ch;
+	
+	RETURNV_ON_NULL(fname, false);
+	RETURNV_ON_NULL(dpos, false);
+	
+	
+	fp = fopen(fname, "r");
+	if (fp == NULL)
+	{
+		fprintf(stderr, "cannot load dot pos file: %s\n", fname);
+		return false;	
+	}
+
+	ndot=0;
+	while(!feof(fp))
+	{
+  		ch = fgetc(fp);
+  		if(ch == '\n')
+  		{
+    		ndot++;
+  		}
+  	}
+	
+	rewind(fp);
+	deallocmem_dot_position(dpos);
+	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);
+
+	pI(ndot);
+  	for(i=0; i<ndot; i++)
+  	{
+  		fscanf(fp, "%lf %lf\n", &dpos->xd[i], &dpos->yd[i]);
+  	}
+
+  	fclose(fp);
+  	// save_dot_position_txt_file("load_dop_pos_from_txt.txt", dpos);
+  	return true;
 }
