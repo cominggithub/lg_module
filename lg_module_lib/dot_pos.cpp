@@ -6,6 +6,135 @@
 #include "dbg_log.h"
 
 
+void dpos_swap_xyd(dot_position *dpos, int pos1, int pos2)
+{
+	double v;
+
+	v = dpos->xd[pos1];
+	dpos->xd[pos1] = dpos->xd[pos2];
+	dpos->xd[pos2] = v;
+
+	v = dpos->yd[pos1];
+	dpos->yd[pos1] = dpos->yd[pos2];
+	dpos->yd[pos2] = v;
+
+}
+
+void dpos_swap_xyd_partindx(dot_position *dpos, int pos1, int pos2)
+{
+	double v;
+	long int indbuf;
+	indbuf = dpos->partindx[pos1];
+	dpos->partindx[pos1] = dpos->partindx[pos2];
+	dpos->partindx[pos2] = indbuf;
+
+	v = dpos->xd[pos1];
+	dpos->xd[pos1] = dpos->xd[pos2];
+	dpos->xd[pos2] = v;
+
+	v = dpos->yd[pos1];
+	dpos->yd[pos1] = dpos->yd[pos2];
+	dpos->yd[pos2] = v;
+}
+
+int dpos_quick_partition_by_xd(dot_position *dpos, int begin, int end)
+{
+	int s_index = begin;
+	// int cur_index = begin;
+	int i;
+	double v;
+	double pivot = dpos->xd[end];
+
+	// printf("partion: %d - %d, pivot: %f\n", begin, end, pivot);
+	for(i=begin; i<end; i++)
+	{
+		if(dpos->xd[i] < pivot)
+		{
+			// v = array[s_index];
+			// array[s_index] = array[i];
+			// array[i] = v;
+			dpos_swap_xyd(dpos, s_index, i);
+			s_index++;
+			
+		}
+	}
+	// swap pivot
+	// v = array[s_index];
+	// array[s_index] = array[end];
+	// array[end] = v;
+
+	dpos_swap_xyd(dpos, s_index, end);
+	
+	return s_index;
+
+}
+
+int dpos_quick_partition_by_partindx(dot_position *dpos, int begin, int end)
+{
+	int s_index = begin;
+	// int cur_index = begin;
+	int i;
+	long int pivot = dpos->partindx[end];
+
+	// printf("partion: %d - %d, pivot: %f\n", begin, end, pivot);
+	for(i=begin; i<end; i++)
+	{
+		if(dpos->partindx[i] < pivot)
+		{
+			// v = array[s_index];
+			// array[s_index] = array[i];
+			// array[i] = v;
+			dpos_swap_xyd_partindx(dpos, s_index, i);
+			s_index++;
+			
+		}
+	}
+	// swap pivot
+	// v = array[s_index];
+	// array[s_index] = array[end];
+	// array[end] = v;
+
+	dpos_swap_xyd_partindx(dpos, s_index, end);
+	
+	return s_index;
+
+}
+
+
+void dpos_quick_sort_by_xd(dot_position *dpos, int begin, int end)
+{
+	int p_index;
+	if (begin == end)
+		return;
+	p_index = dpos_quick_partition_by_xd(dpos, begin, end);
+	// printf("p_index: %d\n", p_index);
+	if (p_index > begin)
+	{
+		dpos_quick_sort_by_xd(dpos, begin, p_index-1);
+	}
+	if (p_index < end)
+	{
+		dpos_quick_sort_by_xd(dpos, p_index+1, end);
+	}
+}
+
+void dpos_quick_sort_by_partindx(dot_position *dpos, int begin, int end)
+{
+	int p_index;
+	if (begin == end)
+		return;
+	p_index = dpos_quick_partition_by_partindx(dpos, begin, end);
+	// printf("p_index: %d\n", p_index);
+	if (p_index > begin)
+	{
+		dpos_quick_sort_by_partindx(dpos, begin, p_index-1);
+	}
+	if (p_index < end)
+	{
+		dpos_quick_sort_by_partindx(dpos, p_index+1, end);
+	}
+}
+
 bool load_dpos(const char* fname, dot_position *dpos, char hexbl, double hexlng)
 {
 	long int i;

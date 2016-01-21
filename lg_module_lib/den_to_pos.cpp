@@ -10,6 +10,7 @@
 #include "dbg_log.h"
 #include <string.h>
 #include "time_util.h"
+#include "dot_pos.h"
 
 
 bool set_dot_density(dot_density *dden, double density)
@@ -33,6 +34,7 @@ bool set_dot_density(dot_density *dden, double density)
 
 void sort_dot_position(dot_position *dpos)
 {
+	dpos_quick_sort_by_xd(dpos, 0, dpos->ndot-1);
 	return;
 	// int i, j;
 	// double xd[dpos->ndot];
@@ -82,7 +84,7 @@ void sort_dot_position(dot_position *dpos)
 void hex_fit_sorted(dot_position *dpos, double hexlng)
 {
 
-	set_start_time("hex_fit_sorted");
+	set_start_time("hex_fit");
 
 	long int i, j, ibuf, jbuf, ntot, ntotbuf;
 	long int *chkrep;
@@ -107,21 +109,11 @@ void hex_fit_sorted(dot_position *dpos, double hexlng)
 		dpos->xd[i] = ibuf*a1[0] + jbuf*a2[0];
 		dpos->yd[i] = ibuf*a1[1] + jbuf*a2[1];
 
-		if (dpos->xd[i] > xd_max)
-		{
-			xd_max = dpos->xd[i];
-		}
-		if (dpos->yd[i] > yd_max)
-		{
-			yd_max = dpos->yd[i];
-		}
 	}
 
-	// printf("xd max: %lf, yd_max:%lf\n", xd_max, yd_max);
-
-	// save_dot_position_txt_file("dpos_sorted.ori.txt", dpos);
+	save_dot_position_txt_file("dpos.before.txt", dpos);
 	sort_dot_position(dpos);
-	// save_dot_position_txt_file("dpos_sorted.sorted.txt", dpos);
+	save_dot_position_txt_file("dpos.after.txt", dpos);
 
 	// !!! remove repeated points and points on the xy border-lines
 	chkrep = new long int[dpos->ndot];
@@ -150,17 +142,12 @@ void hex_fit_sorted(dot_position *dpos, double hexlng)
 		// for(j=i+1; j<dpos->ndot; j++)
 		for(j=i+1; j<dpos->ndot && fabs(dpos->xd[i]-dpos->xd[j])<delta; j++)
 		{
-
-			if (chkrep[j] == 0)
-				continue;
-
 			// if( abs(dpos->xd[i]-dpos->xd[j])<delta && abs(dpos->yd[i]-dpos->yd[j])<delta)
 
 			// if( chkrep[j] == 1 &&
 			// 	abs(dpos->xd[i]-dpos->xd[j])<delta && abs(dpos->yd[i]-dpos->yd[j])<delta)
 
-			if( chkrep[j] == 1 &&
-				fabs(dpos->xd[i]-dpos->xd[j])<delta && fabs(dpos->yd[i]-dpos->yd[j])<delta)
+			if(fabs(dpos->xd[i]-dpos->xd[j])<delta && fabs(dpos->yd[i]-dpos->yd[j])<delta)
 
 			// if (chkrep[j] == 1 &&
 			// 	((dpos->xd[i]-dpos->xd[j]) < delta && (dpos->xd[i]-dpos->xd[j]) > ndelta) &&
@@ -246,7 +233,7 @@ void hex_fit_sorted(dot_position *dpos, double hexlng)
 	delete [] xbuf;
 	delete [] ybuf;
 
-	set_end_time("hex_fit_sorted");
+	set_end_time("hex_fit");
 
 	return;
 
@@ -347,10 +334,12 @@ bool den2pos_tetgen_sorted(const char* file_prefix, dot_density *dden, dot_posit
 	fclose(smesh);
 	fclose(mtr);
 
-	set_start_time("tetgen");
 	printf("tetgen\n");
 	// generate mesh by tetgen
 	// system("tetgen -qpmQ P.smesh");
+
+	set_start_time("tetgen");
+	
 #if defined(__linux__) || defined(__APPLE__)
 	sprintf(cmd, "tetgen -qpmQ %s >/dev/null", smesh_fname);
 #else
@@ -359,6 +348,7 @@ bool den2pos_tetgen_sorted(const char* file_prefix, dot_density *dden, dot_posit
 	system(cmd);
 
 	set_end_time("tetgen");
+	
 
 	// read number of valid dot_position
 	ndot = 0;
@@ -404,29 +394,6 @@ bool den2pos_tetgen_sorted(const char* file_prefix, dot_density *dden, dot_posit
 			dpos->xd[ndot] = c1+x0;
 			dpos->yd[ndot] = c2+y0;
 			ndot = ndot+1;
-
-			// xd = c1+x0;
-			// yd = c2+y0;
-
-			// for(k=0; k<ndot; k++)
-			// {
-			// 	// small < k < larger
-			// 	if (dpos->xd[k] > xd)
-			// 	{
-			// 		memmove(dpos->xd+k+1, dpos->xd+k, size*(ndot-k));
-			// 		dpos->xd[k] = xd;
-			// 		dpos->yd[k] = yd;
-			// 		break;
-			// 	}
-			// }
-
-			// if (k == ndot)
-			// {
-			// 	dpos->xd[k] = xd;
-			// 	dpos->yd[k] = yd;
-			// }
-			// ndot = ndot+1;
-
 			printf("\r%ld/%ld (%ld)", i+1, n1, ndot);
 		}
 	}
@@ -532,6 +499,8 @@ bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 
 	// generate mesh by tetgen
 	// system("tetgen -qpmQ P.smesh");
+	set_start_time("tetgen");
+	printf("tetgen\n");
 #if defined(__linux__) || defined(__APPLE__)
 	sprintf(cmd, "tetgen -qpmQ %s >/dev/null", smesh_fname);
 #else
@@ -539,6 +508,7 @@ bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 #endif
 	system(cmd);
 
+	set_end_time("tetgen");
 	// read number of valid dot_position
 	ndot = 0;
 
@@ -702,6 +672,7 @@ void hex_fit(dot_position *dpos, double hexlng)
 {
 
 
+	set_start_time("hex_fit");
 	long int i, j, ibuf, jbuf, ntot, ntotbuf;
 	long int *chkrep;
 	double *xbuf, *ybuf;
@@ -737,8 +708,7 @@ void hex_fit(dot_position *dpos, double hexlng)
 		{
 
 
-			if( chkrep[j] == 1 &&
-				fabs(dpos->xd[i]-dpos->xd[j])<delta && fabs(dpos->yd[i]-dpos->yd[j])<delta)
+			if(fabs(dpos->xd[i]-dpos->xd[j])<delta && fabs(dpos->yd[i]-dpos->yd[j])<delta)
 			{
 				chkrep[j] = 0;
 				duplicated_node++;
@@ -792,6 +762,8 @@ void hex_fit(dot_position *dpos, double hexlng)
 	delete [] chkrep;
 	delete [] xbuf;
 	delete [] ybuf;
+
+	set_end_time("hex_fit");
 	return;
 }
 

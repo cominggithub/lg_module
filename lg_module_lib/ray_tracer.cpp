@@ -119,7 +119,7 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 	
 	iteration_count++;
 	
-	append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+	// append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
 	
 

@@ -6,6 +6,8 @@
 #include "var_def.h"
 #include "dbg_log.h"
 #include "box_check.h"
+#include "dot_pos.h"
+#include "data_file_util.h"
 
 
 // input: ray1, dpos, opr
@@ -46,7 +48,6 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	}
 	else if(ray1->zr >=0.0 && ray1->thar<90.0)
 	{
-		pl();
 		// light emitted from light-guide plate top surface. record the performance;
 		dx = xdim/opr->nx+delta; dy = ydim/opr->ny+delta;
 		dtha = 90/opr->ntha+delta; dphi = 360/opr->nphi+delta;
@@ -174,12 +175,12 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	return true;
 }
 
-void part_dots(dot_position *dpos)
+void part_dots_unsorted(dot_position *dpos)
 {
 	long int i, j, nx, ny, indi, indbuf, indxvalue, indxnum;
 	double dx, dy, xbuf, ybuf;
 
-	printf("part_dots\n");
+	printf("part_dots (unsorted)\n");
 	nx = dpos->partnx;
 	ny =  dpos->partny;
 	dx = 1.0*xdim/nx+delta;
@@ -213,6 +214,72 @@ void part_dots(dot_position *dpos)
 			}
 		}
 	}
+	printf("\n");
+	for(i=0; i<nx*ny; i++){ dpos->partaccni[i]=0; }
+	indxnum=1;
+	indxvalue = dpos->partindx[0];
+	for(i=1; i<dpos->ndot; i++)
+	{
+		if(indxvalue!=dpos->partindx[i])
+		{
+			dpos->partaccni[indxvalue] = indxnum;
+			indxvalue = dpos->partindx[i];
+			indxnum = 1;
+		}
+		else
+		{
+			indxnum++;
+		}
+	}
+	dpos->partaccni[indxvalue] = indxnum;
+	
+	for(i=1; i<nx*ny; i++){ dpos->partaccni[i]=dpos->partaccni[i]+dpos->partaccni[i-1]; }
+
+}
+
+void part_dots(dot_position *dpos)
+{
+	long int i, j, nx, ny, indi, indbuf, indxvalue, indxnum;
+	double dx, dy, xbuf, ybuf;
+
+	printf("part_dots (sorted)\n");
+	nx = dpos->partnx;
+	ny =  dpos->partny;
+	dx = 1.0*xdim/nx+delta;
+	dy = 1.0*ydim/ny+delta;
+
+	for(i=0; i<dpos->ndot; i++)
+	{
+		indi =	int(dpos->xd[i]/dx)*ny+int(dpos->yd[i]/dy);			// the index corresponding to partition array
+		dpos->partindx[i] = indi;
+	}
+	
+	//sort xd/yd by partindx
+	// for(i=0; i<dpos->ndot; i++)
+	// {
+	// 	printf("\r %ld/%ld", i+1, dpos->ndot);
+	// 	for(j=i+1; j<dpos->ndot; j++)
+	// 	{
+	// 		if(dpos->partindx[i]>dpos->partindx[j])
+	// 		{
+	// 			indbuf = dpos->partindx[i];
+	// 			dpos->partindx[i] = dpos->partindx[j];
+	// 			dpos->partindx[j] = indbuf;
+
+	// 			xbuf = dpos->xd[i];
+	// 			dpos->xd[i] = dpos->xd[j];
+	// 			dpos->xd[j] = xbuf;
+
+	// 			ybuf = dpos->yd[i];
+	// 			dpos->yd[i] = dpos->yd[j];
+	// 			dpos->yd[j] = ybuf;
+	// 		}
+	// 	}
+	// }
+
+	save_dot_position_txt_file("part_dos.sorted.before.txt", dpos);
+	dpos_quick_sort_by_partindx(dpos, 0, dpos->ndot-1);
+	save_dot_position_txt_file("part_dos.sorted.after.txt", dpos);
 	printf("\n");
 	for(i=0; i<nx*ny; i++){ dpos->partaccni[i]=0; }
 	indxnum=1;

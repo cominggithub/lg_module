@@ -10,6 +10,9 @@ static int used_time_index = 0;
 static clock_t start_time[256];
 static clock_t end_time[256];
 
+static time_t start_time_t[256];
+static time_t end_time_t[256];
+
 /* here, do your time-consuming job */
 
 
@@ -31,9 +34,15 @@ void set_start_time(char const *name)
 	strcpy(sname[used_time_index], name);
 	start_time[used_time_index] = clock();
 	end_time[used_time_index] 	= clock();
+
+	start_time_t[used_time_index] = time(NULL);
+	end_time_t[used_time_index] = time(NULL);
 	used_time_index++;
+
 	
+
 }
+
 
 void set_end_time(char const *name)
 {
@@ -44,6 +53,7 @@ void set_end_time(char const *name)
 	if (index == -1)
 		return;
 	end_time[index] = clock();
+	end_time_t[index] = time(NULL);
 }
 
 void print_all_execution_time()
@@ -54,6 +64,23 @@ void print_all_execution_time()
 		print_execution_time(sname[i]);
 	}
 }
+
+char* get_time_str(int seconds)
+{
+
+	char *str;
+	str = new char[30];
+	if (seconds < 60)
+	{
+		sprintf(str, "        %2d seconds", seconds);
+	}
+	else
+	{
+		sprintf(str, "%3d min %2d seconds", seconds/60, seconds%60);
+	}
+	return str;
+}
+
 void print_execution_time(char const *name)
 {
 	int index;
@@ -65,6 +92,12 @@ void print_execution_time(char const *name)
 		return;	
 	}
 
+	// printf("%s\n", get_time_str(59));
+	// printf("%s\n", get_time_str(61));
+	// printf("%s\n", get_time_str(119));
+	// printf("%s\n", get_time_str(12000));
 	time_spent = (double)(end_time[index] - start_time[index]) / CLOCKS_PER_SEC;
-	printf("%d [%30s] execution time: %10.6f second\n", index, name, time_spent);
+	// printf("%d [%30s] execution time: %10.6f(%10.6f) second\n", index, name, time_spent, difftime(end_time_t[index], start_time_t[index]));
+	printf("%d [%20s] execution time: %s\n", index, name, get_time_str(difftime(end_time_t[index], start_time_t[index])));
 }
+

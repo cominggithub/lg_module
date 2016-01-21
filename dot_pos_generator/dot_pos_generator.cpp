@@ -24,12 +24,18 @@ bool tetgen_dot_pos(const char* file_prefix, bool sorted, double density)
 	if (sorted)
 	{
 		den2pos_tetgen_sorted(file_prefix, &dden, &dpos, hex_bl, hex_lng);
+		set_start_time("part_dots");
+		part_dots(&dpos);
+		set_end_time("part_dots");
 	}
 	else
 	{
 		den2pos_tetgen(file_prefix, &dden, &dpos, hex_bl, hex_lng);	
+		set_start_time("part_dots");
+		part_dots_unsorted(&dpos);
+		set_end_time("part_dots");
 	}
-	part_dots(&dpos);
+	
 
 	sprintf(dot_pos_data_fname, "%s.dot_pos.dat", file_prefix);
 	save_dot_position_dat_file(dot_pos_data_fname, &dpos);

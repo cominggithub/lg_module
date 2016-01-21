@@ -60,7 +60,8 @@ void debug_den_to_pos(dot_density *dden, dot_position *dpos)
 	// call den2pos function to generate dot_position
 	// den2pos(dden, dpos, hex_bl, hex_lng);
 	
-	den2pos_tetgen("P", dden, dpos, hex_bl, hex_lng);
+//	den2pos_tetgen("P", dden, dpos, hex_bl, hex_lng);
+	den2pos_tetgen_sorted("P", dden, dpos, hex_bl, hex_lng);
 	
 	// printf("sorted\n");
 	// den2pos_tetgen_sorted(dden, dpos, hex_bl, hex_lng);

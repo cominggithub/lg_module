@@ -167,8 +167,8 @@ bool find_str_hit_local(ray_trace1 *ray1, local_str *lstr)  // change coordinate
 			signf = (lstr->thz[midi])-delta-(zf);
 			if(sign0>0){sign0 = 1.0;}	else{sign0 = -1.0;}
 			if(signf>0){signf = 1.0;}	else{signf = -1.0;}
-			if ( sign0*signf>0 ){ begr = midr; endr = endr; midr = 0.5*(endr+begr); if(abs(midr)<=delta){ray1->inty=0.0;return true;} }
-			else if( sign0*signf<0 ) { begr = begr; endr = midr; midr = 0.5*(endr+begr);if(abs(midr)<=delta){ray1->inty=0.0;return true;} }
+			if ( sign0*signf>0 ){ begr = midr; endr = endr; midr = 0.5*(endr+begr); if(fabs(midr)<=delta){ray1->inty=0.0;return true;} }
+			else if( sign0*signf<0 ) { begr = begr; endr = midr; midr = 0.5*(endr+begr);if(fabs(midr)<=delta){ray1->inty=0.0;return true;} }
 			else {printf("find_str_intersection: error on find solution on microstructure surface!\n"); return false;}
 			// check wheterh the solution is found
 			if( begi==midi ){ nonfound = false; }

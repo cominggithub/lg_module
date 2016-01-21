@@ -155,9 +155,11 @@ int single_proc_main()
 
 	open_ray_csv("ray_log.csv");
 	
+	printf("ray tracing\n");
 	for(i=0; i<n_ray; i++)
 	// for(i=0; i<1; i++)
 	{
+		printf("\r%d/%d", i, n_ray);
 		ray1.ngaus 	= 0; 
 		ray1.n1 	= 1.0; 
 		ray1.n2 	= 1.58;
@@ -175,9 +177,10 @@ int single_proc_main()
 		
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
-		ray1.inty   = 10.0*rays.inty[i];
+		// ray1.inty   = 10.0*rays.inty[i];
+		ray1.inty   = 10;
 		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
-		//dumpRay1(&ray1);
+		// dumpRay1(&ray1);
 		//dumpRay1toFile(&ray1);
 		// ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
 		// ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0; 
@@ -187,6 +190,7 @@ int single_proc_main()
 	
 		
 	}
+	printf("\n");
 
 	close_ray_csv();
 	set_end_time("ray tracing");

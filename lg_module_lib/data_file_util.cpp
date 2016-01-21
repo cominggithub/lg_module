@@ -919,21 +919,22 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 		return false;
 	}
 
-	fprintf(fp, "%ld\n", dpos->ndot);
-	fprintf(fp, "%ld\n", dpos->partnx);
-	fprintf(fp, "%ld\n", dpos->partny);
+	// fprintf(fp, "%ld\n", dpos->ndot);
+	// fprintf(fp, "%ld\n", dpos->partnx);
+	// fprintf(fp, "%ld\n", dpos->partny);
 
-	for(i=0; i<dpos->partnx*dpos->partny; i++)
-	{
-		fprintf(fp, "%ld\n", dpos->partaccni[i]);
-	}
+	// for(i=0; i<dpos->partnx*dpos->partny; i++)
+	// {
+	// 	fprintf(fp, "%ld\n", dpos->partaccni[i]);
+	// }
+	// for(i=0; i<dpos->ndot; i++)
+	// {
+	// 	fprintf(fp, "%ld\n", dpos->partindx[i]);
+	// }
 	for(i=0; i<dpos->ndot; i++)
 	{
-		fprintf(fp, "%ld\n", dpos->partindx[i]);
-	}
-	for(i=0; i<dpos->ndot; i++)
-	{
-		fprintf(fp, "%lf, %lf\n", dpos->xd[i], dpos->yd[i]);
+		fprintf(fp, "%lf, %lf, %ld\n", dpos->xd[i], dpos->yd[i], dpos->partindx[i]);
+		// fprintf(fp, "%lf\n", dpos->xd[i]);
 	}
 	
 	fclose(fp);

@@ -253,8 +253,12 @@ lg_module/data3dv.txt
 lg_module/data3dv.txt
 lg_module/ray_log.csv
 lg_module/dot_density.txt
-lg_module/dot_density.txt
 *.xlsx
 lg_module/dot_position.txt
 *.dot_pos.dat
 *.dot_pos.txt
+lg_module/dpos.after.txt
+lg_module/dpos.before.txt
+lg_module/output.opt_record.txt
+lg_module/part_dos.sorted.after.txt
+lg_module/part_dos.sorted.before.txt
