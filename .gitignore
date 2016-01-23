@@ -262,3 +262,7 @@ lg_module/dpos.before.txt
 lg_module/output.opt_record.txt
 lg_module/part_dos.sorted.after.txt
 lg_module/part_dos.sorted.before.txt
+dot_pos_generator/dpos.after.txt
+dot_pos_generator/dpos.before.txt
+dot_pos_generator/part_dos.sorted.after.txt
+dot_pos_generator/part_dos.sorted.before.txt

@@ -352,14 +352,6 @@ bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_c
 	}
 
 	
-// typedef struct _data_file_header
-// {
-// 	char prefix[256];
-// 	unsigned int offset;
-// 	int entry_size;
-// 	long int count;
-// }data_file_header;
-
 	strcpy(dfh.prefix, prefix);
 	dfh.offset 		= 0;
 	dfh.entry_size 	= sizeof(opt_record);
@@ -954,7 +946,10 @@ bool save_dot_position_dat_file(const char *fname, dot_position *dpos)
 	RETURNV_ON_NULL(dpos, false);
 
 	fp = fopen(fname, "wb");
-	
+	pI(dpos->ndot);
+	pI(dpos->partnx);
+	pI(dpos->partny);
+	pI(sizeof(long int));
 	if (fp == NULL)
 	{
 		return false;
@@ -1024,6 +1019,7 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 
 	if(!fread(&ndot, sizeof(long int), 1, fp))
 	{
+		pl();
 		goto FAIL;
 	}
 
@@ -1031,26 +1027,32 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);	
 	if (!fread(&dpos->partnx, sizeof(long int), 1, fp))
 	{
+		pl();
 		goto FAIL;
 	}
 	if (!fread(&dpos->partny, sizeof(long int), 1, fp))
 	{
+		pl();
 		goto FAIL;
 	}
 	if (!fread(dpos->partaccni, sizeof(long int),dpos->partnx*dpos->partny, fp))
 	{
+		pl();
 		goto FAIL;
 	}
 	if (!fread(dpos->partindx, sizeof(long int), dpos->ndot , fp))
 	{
+		pl();
 		goto FAIL;
 	}
 	if (!fread(dpos->xd, sizeof(double), dpos->ndot , fp))
 	{
+		pl();
 		goto FAIL;
 	}
 	if (!fread(dpos->yd, sizeof(double), dpos->ndot , fp))
 	{
+		pl();
 		goto FAIL;
 	}
 	fclose(fp);
@@ -1078,6 +1080,7 @@ bool load_dot_position_txt_file(const char *fname, dot_position *dpos)
 		fprintf(stderr, "cannot load dot pos file: %s\n", fname);
 		return false;	
 	}
+	pl();
 
 	ndot=0;
 	while(!feof(fp))
@@ -1089,16 +1092,19 @@ bool load_dot_position_txt_file(const char *fname, dot_position *dpos)
   		}
   	}
 	
+	pl();
 	rewind(fp);
 	deallocmem_dot_position(dpos);
+	pl();
 	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);
 
-	pI(ndot);
-  	for(i=0; i<ndot; i++)
+	pl();
+	for(i=0; i<ndot; i++)
   	{
   		fscanf(fp, "%lf %lf\n", &dpos->xd[i], &dpos->yd[i]);
   	}
 
+	pl();
   	fclose(fp);
   	// save_dot_position_txt_file("load_dop_pos_from_txt.txt", dpos);
   	return true;

@@ -97,6 +97,8 @@ cp parameters.tmp.txt "${OUTPUT_FOLDER}/parameters.txt"
 cp microstr.txt "${OUTPUT_FOLDER}/microstr.txt"
 cp dot_density.txt "${OUTPUT_FOLDER}/dot_density.txt"
 
+rm -f last
+ln -s "${OUTPUT_FOLDER}" last
 
 if [ ${is_verbose} == "1" ]; then 
     ./data_preprocessor ${PROCESS_COUNT} ${OUTPUT_FOLDER}

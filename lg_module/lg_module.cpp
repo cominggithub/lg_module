@@ -114,6 +114,7 @@ int single_proc_main()
 
 	// moduel 2...
 
+	pl();
 	if (enable_dot_pos_file)
 	{
 		printf("load dot position from dot pos file: %s\n", dot_pos_file);
@@ -130,9 +131,11 @@ int single_proc_main()
 		{ 
 			if(!load_dot_position_dat_file(dot_pos_file, &dpos))
 			{
+				pl();
 				system("pause");
 				return 1;
 			}
+			part_dots(&dpos);
 		}
 		// save_dot_position_txt_file("r.dot_position.txt", &dpos);
 	}
@@ -149,6 +152,7 @@ int single_proc_main()
 		//save_dot_position_file(&dpos);
 		set_end_time("part_dots");
 	}
+	pl();
 	set_start_time("ray tracing");
 
 	opr_head = new_opt_record_head();

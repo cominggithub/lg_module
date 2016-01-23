@@ -27,7 +27,7 @@ yl_rng=118.332
 zl_rng=0.0
 
 // for ray tracing
-n_ray=1000000
+n_ray=100
 n_gauss=1
 ray_threshold=0.001
 
@@ -65,7 +65,7 @@ hex_lng=0.1
 
 // for dot position (* dot_position.dat)
 enable_dot_pos_file=1
-dot_pos_file=../../data/01.dot_pos.dat
+dot_pos_file=../../../data/01.dot_pos.dat
 
 // debug
 enable_gnu_plot=0

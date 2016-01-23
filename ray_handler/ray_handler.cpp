@@ -74,13 +74,12 @@ bool read_ray_source_file(const char* ray_source_file, ray_traces *rays, long in
 	return true;
 }
 
-int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const char* output_dir)
+int ray_handler(const char *prefix, int num, const char *ray_source_file, const char* output_dir)
 {
 	int i;
 	// define variables
 	opt_mat opm;					// for optic materials
 	opt_source ops;					// for optic source
-	opt_record opr;					// for recording rays emitted from light guides
 	ray_traces rays;				// for samplings of ray tracing
 	ray_trace1 ray1;
 	local_str lstr;					// for local microstructure
@@ -92,7 +91,10 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	char child_prefix[256];
 	char microstr_fname[256];
 	char ray_log_fname[256];
+	char opt_record_txt_fname[256];
+	char opt_fname[256];
 	long int offset;
+	opt_record opr;
 	
 
 	srand((unsigned)time(NULL));	// initiate rand seed
@@ -117,18 +119,14 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 	read_microstr(microstr_fname, &lstr);
 	set_end_time("read_microstr");
 
-	// moduel 2...
-	//debug test
-	set_start_time("debug_den_to_pos");
-	debug_den_to_pos(&dden, &dpos);	// generate dot pattern for test;
-	set_end_time("debug_den_to_pos");
-
-	set_start_time("part_dots");
-	part_dots(&dpos);
-	set_end_time("part_dots");
+	if(!load_dot_position_dat_file(dot_pos_file, &dpos))
+	{
+		return 1;
+	}
 
 	set_start_time("ray tracing");
 
+	printf("ray tracing\n");
 	getTmpFileFullPath(ray_log_fname, "ray_log.csv");
 	open_ray_csv(ray_log_fname);
 	for(i=0; i<n_ray; i++)
@@ -151,7 +149,8 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 
 		// ray1.phir 	= 0;
 		ray1.phir 	= rays.phir[i];
-		ray1.inty   = 10.0*rays.inty[i];
+		// ray1.inty   = 10.0*rays.inty[i];
+		ray1.inty   = 10.0;
 		ray1.nx 	= 0.0;  
 		ray1.ny 	= 0.0;  
 		ray1.nz 	= 0.0;
@@ -161,8 +160,17 @@ int ray_handler(const char *ray_source_file, opt_record_head *opr_head, const ch
 		trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
 	}
 
+	getTmpFileFullPath(opt_record_txt_fname, output_opt_record_txt);
+	save_opt_record_txt_file_pos(opt_record_txt_fname, &opr);
+
 	close_ray_csv();
 	set_end_time("ray tracing");
+
+	getTmpFileFullPath(opt_fname, output_opt_record_dat);
+	
+	set_start_time("save opt file");
+	save_opt_record_dat_file(opt_fname, &opr);
+	set_end_time("save opt file");
 
 	//deallocate memory
 	deallocmem_opm(&opm);
@@ -232,7 +240,6 @@ int ray_handler_old_1207(const char *ray_source_file, opt_record_head *opr_head,
 	set_start_time("ray tracing");
 
 	for(i=0; i<n_ray; i++)
-	// for(i=0; i<1; i++)
 	{
 
 		ray1.ngaus 	= 1;
@@ -416,12 +423,11 @@ int ray_handler_old(const char *ray_source_file)
 int main(int argc, char** argv)
 {
 	int num;
-	char fname[256];
+	char ray_src_fname[256];
 	char paramFName[256];
-	char opt_fname[256];
 	char prefix[256];
 	char tmp_output[256];
-	opt_record_head *opr_head;
+	opt_record opr;
 	data_file_header opr_data_file_header;
 
 	if (argc != 5)
@@ -434,7 +440,7 @@ int main(int argc, char** argv)
 
 	strcpy(prefix, argv[1]);
 	strcpy(name, argv[2]);
-	strcpy(fname, argv[4]);
+	strcpy(ray_src_fname, argv[4]);
 	num = atoi(argv[3]);
 
 	
@@ -445,29 +451,8 @@ int main(int argc, char** argv)
 	sprintf(tmp_output, "%s/process_%d",prefix, num);
 	setTmpOutputFolder(tmp_output);
 	
-
-	
-	opr_head = new opt_record_head();
 	strcpy(output_dir, prefix);
-	ray_handler(fname, opr_head, output_dir);
-
-	
-	strcpy(opr_data_file_header.prefix, prefix);
-	opr_data_file_header.offset 		= 0;
-	opr_data_file_header.entry_size 	= ACTUAL_OPT_RECORD_SIZE;
-	opr_data_file_header.count 			= ((glist_head_t*)opr_head)->len;
-
-
-
-	sprintf(opt_fname, "%s/opt_record_%d.dat", prefix, num);
-
-	set_start_time("save opt file");
-
-	save_opt_record_file(opt_fname, &opr_data_file_header, opr_head);
-	set_end_time("save opt file");
-
-
-	free_opt_record_head(&opr_head);
+	ray_handler(prefix, num, ray_src_fname, output_dir);
 
 	set_end_time("Total");
 	print_all_execution_time();

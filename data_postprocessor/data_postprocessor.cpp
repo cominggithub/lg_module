@@ -46,6 +46,8 @@ int main(int argc, const char** argv)
 	char paramFName[256];
 	time_t t;
 	struct tm *now;
+	opt_record opr_tmp;
+	opt_record opr_merged;
 
 	t 		= time(0);
 	now 	= localtime(&t);
@@ -68,14 +70,28 @@ int main(int argc, const char** argv)
 	
 	setTmpOutputFolder(tmp_output);
 
+	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr_tmp);
+	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr_merged);
+
 	for(i=0; i<count; i++)
 	{
 		opt_record_name[i] = (char*)malloc(100);
-		sprintf(opt_record_name[i], "%s/opt_record_%d.dat", prefix, i);
+		sprintf(opt_record_name[i], "%s/process_%d/%s", prefix, i, output_opt_record_dat);
+		load_opt_record_dat_file(opt_record_name[i], &opr_tmp);
+		merge_opt_record(&opr_merged, &opr_tmp);
 	}
 
-	sprintf(dst_file, "%s/opt_record.dat", prefix);
-	merge_opt_record_files(prefix, dst_file, count, (const char**)opt_record_name);
+
+	sprintf(dst_file, "%s/%s", prefix, output_opt_record_dat);
+	save_opt_record_dat_file(dst_file, &opr_merged);
+	pStr(dst_file);
+
+	sprintf(dst_file, "%s/%s", prefix, output_opt_record_txt);
+	save_opt_record_txt_file_pos(dst_file, &opr_merged);
+	pStr(dst_file);
+
+	deallocmem_record(&opr_tmp);
+	deallocmem_record(&opr_merged);
 
 	return 0;
 }
