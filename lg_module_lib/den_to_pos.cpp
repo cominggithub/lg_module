@@ -203,13 +203,11 @@ void hex_fit_sorted(dot_position *dpos, double hexlng)
 		}
 	}
 	ntot = 0;
-	pI(duplicated_node);
 	for(i=0; i<dpos->ndot; i++)
 	{
 		if( chkrep[i]==1 ) ntot = ntot+1;
 	}
 
-	pI(ntot);
 	ntotbuf = dpos->ndot;
 	dpos->ndot = ntot;
 	delete [] dpos->xd;
@@ -423,7 +421,6 @@ bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 
 
 	printf("unsorted\n");
-	pI(dpos->ndot);
 	// read parameters from dot_density setup
 	x0 = dden->x0;	y0 = dden->y0;
 	xrng = dden->xrng;	yrng = dden->yrng;
@@ -535,7 +532,6 @@ bool den2pos_tetgen(const char* file_prefix, dot_density *dden, dot_position *dp
 	deallocmem_dot_position(dpos);				// !!! need to check whether dpos is allocated or not
 	n_dots = ndot;
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, dpos);
-	pI(dpos->ndot);
 	ndot = 0;
 	node = fopen(node_fname,"r");
 	if (node == NULL)
@@ -729,13 +725,11 @@ void hex_fit(dot_position *dpos, double hexlng)
 		}
 	}
 	ntot = 0;
-	pI(duplicated_node);
 	for(i=0; i<dpos->ndot; i++)
 	{
 		if( chkrep[i]==1 ) ntot = ntot+1;
 	}
 
-	pI(ntot);
 	ntotbuf = dpos->ndot;
 	deallocmem_dot_position(dpos);				// !!! need to check whether dpos is allocated or not
 	dpos->ndot = ntot;

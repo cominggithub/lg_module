@@ -46,6 +46,7 @@ OBJ_FILES := \
 	../lg_module_lib/mem_alloc.o \
 	../lg_module_lib/box_check.o \
 	../lg_module_lib/dot_pos.o \
+	../lg_module_lib/dot_block.o \
 	../lg_module_lib/var_def.o
 
 

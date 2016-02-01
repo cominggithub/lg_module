@@ -27,7 +27,7 @@ yl_rng=118.332
 zl_rng=0.0
 
 // for ray tracing
-n_ray=500
+n_ray=10
 n_gauss=1
 ray_threshold=0.001
 

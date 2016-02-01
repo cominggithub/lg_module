@@ -57,8 +57,6 @@ void print_usage()
 
 int main(int argc, char** argv)
 {
-	char node_fname[256];
-	char dpos_fname[256];
 	char para_fname[256];
 	char file_prefix[256];
 	double density;

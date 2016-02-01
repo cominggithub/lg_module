@@ -946,10 +946,7 @@ bool save_dot_position_dat_file(const char *fname, dot_position *dpos)
 	RETURNV_ON_NULL(dpos, false);
 
 	fp = fopen(fname, "wb");
-	pI(dpos->ndot);
-	pI(dpos->partnx);
-	pI(dpos->partny);
-	pI(sizeof(long int));
+	
 	if (fp == NULL)
 	{
 		return false;

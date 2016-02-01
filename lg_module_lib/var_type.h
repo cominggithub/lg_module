@@ -72,6 +72,21 @@ struct dot_position
 	double *xd, *yd;											// positions of dots
 };
 
+struct dot_node
+{
+	struct dot_node *next;
+	double xd;
+	double yd;
+	long int index;
+};
+
+struct dot_block
+{
+	int count;
+	struct dot_node *head;
+	struct dot_node *tail;
+};
+
 // for gnuplot
 struct plot_2d
 {

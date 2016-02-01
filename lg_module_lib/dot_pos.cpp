@@ -175,7 +175,6 @@ bool load_dpos(const char* fname, dot_position *dpos, char hexbl, double hexlng)
 	// update dpos
 	deallocmem_dot_position(dpos);				// !!! need to check whether dpos is allocated or not
 	n_dots = ndot;
-	pI(n_dots);
 	allocmem_dot_position(n_dots, hex_bl, hex_lng, dpos);
 
 	ndot = 0;

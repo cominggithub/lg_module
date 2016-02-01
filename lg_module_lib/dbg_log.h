@@ -16,11 +16,12 @@
 #define pl()	do{printf("%s:%s(%d)\n", __FILE__, __FUNCTION__, __LINE__);}while(0)
 #define pls(s)	do{printf("%s:%s(%d) %s\n", __FILE__, __FUNCTION__, __LINE__, s);}while(0)
 
-#define pI(v) 	do{printf("%s: %d\n", #v, v);}while(0)
+#define pInt(v) 	do{printf("%s: %d\n", #v, v);}while(0)
+#define pLongInt(v) 	do{printf("%s: %ld\n", #v, v);}while(0)
 #define pU(v) 	do{printf("%s: %u\n", #v, v);}while(0)
 #define pP(v) 	do{printf("%s: %p\n", #v, v);}while(0)
 #define pX(v) 	do{printf("%s: 0x%X\n", #v, v);}while(0)
-#define pD(v) 	do{printf("%s: %f\n", #v, v);}while(0)
+#define pDouble(v) 	do{printf("%s: %f\n", #v, v);}while(0)
 #define pLU(v) 	do{printf("%s: %lu\n", #v, v);}while(0)
 #define pStr(v) 	do{printf("%s: %s\n", #v, v);}while(0)
 

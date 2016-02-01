@@ -32,6 +32,7 @@
 #include "opt_record.h"
 #include "data_file_util.h"
 #include "box_check.h"
+#include "dot_block.h"
 // // function for memory arrangement
 // void read_setup(char *fpname);
 
@@ -61,10 +62,6 @@ int single_proc_main();
 
 #define MAX_OUTPUT_RAY 5
 
-static unsigned long hit_local_error_count = 0;
-static unsigned long iteration_count = 0;
-
-
 int single_proc_main()
 {
     int i;
@@ -77,11 +74,13 @@ int single_proc_main()
     local_str lstr;                 // for local microstructure
     dot_density dden;               // for global dot density
     dot_position dpos;              // for global dot potision
+    dot_block *dot_blk;
     char fpname[256];                   // for reading parameters
-    struct ray_trace1 source_ray[2];
     opt_record_head *opr_head;
     data_file_header opr_data_file_header;
     char child_prefix[1024];
+    int xden_rng_int;
+    int yden_rng_int;
 
     set_start_time("Total");
     srand((unsigned)time(NULL));    // initiate rand seed
@@ -100,6 +99,10 @@ int single_proc_main()
     allocmem_dot_density(nx_den, ny_den, xden_or, yden_or, xden_rng, yden_rng, &dden);
     allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
+
+    xden_rng_int = (int)ceil(xden_rng);
+    yden_rng_int = (int)ceil(yden_rng);
+    dot_blk = new dot_block[xden_rng_int*yden_rng_int];
     // program body
 
 
@@ -149,6 +152,9 @@ int single_proc_main()
         //save_dot_position_file(&dpos);
         set_end_time("part_dots");
     }
+
+    load_dot_block_from_dot_position(dot_blk, &dpos);
+
     set_start_time("ray tracing");
 
     opr_head = new_opt_record_head();
@@ -159,7 +165,7 @@ int single_proc_main()
     for(i=0; i<n_ray; i++)
     // for(i=0; i<1; i++)
     {
-        printf("\r%d/%d", i, n_ray);
+        printf("\r%d/%ld", i, n_ray);
         ray1.ngaus  = 0;
         ray1.n1     = 1.0;
         ray1.n2     = 1.58;
