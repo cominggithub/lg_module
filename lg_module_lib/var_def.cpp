@@ -84,6 +84,14 @@ char input_dot_density_txt[256]		= "dot_density.txt";
 char input_microstr_txt[256]		= "microstr.txt";
 
 
+// counter
+unsigned int trace_one_ray_count = 0;
+unsigned int ray_type1_count = 0;
+unsigned int ray_type2_count = 0;
+unsigned int ray_type3_count = 0;
+unsigned int ray_type4_count = 0;
+unsigned int ray_type5_count = 0;
+
 void getFileFullPath(char *fullPath, const char* fname)
 {
 	if (strlen(output_dir) > 0)

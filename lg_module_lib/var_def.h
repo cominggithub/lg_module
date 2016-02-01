@@ -81,6 +81,14 @@ extern char tmp_output_dir[];
 // extern char output_data3dm_txt[];
 // extern char output_data3dv_txt[];
 
+
+extern unsigned int trace_one_ray_count;
+extern unsigned int ray_type1_count;
+extern unsigned int ray_type2_count;
+extern unsigned int ray_type3_count;
+extern unsigned int ray_type4_count;
+extern unsigned int ray_type5_count;
+
 void getFileFullPath(char *fullPath, const char* fname);
 void getTmpFileFullPath(char *fullPath, const char* fname);
 

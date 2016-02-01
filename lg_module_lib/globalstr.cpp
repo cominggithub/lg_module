@@ -22,8 +22,8 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	double xmin, xmax, ymin, ymax, zmin, zmax, rmin;
 	double mx, my, mz;
 	bool solved, bcheck, c1, c2;
-	
-	
+
+
 	*type = 0;
  	x0 = ray1->xr;	y0 = ray1->yr;	z0 = ray1->zr;
 	xmin = 0.0;		xmax = xdim;
@@ -32,19 +32,22 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 	zf = -z_reflector;
 	mx = sin(ray1->thar*pi/180.0)*cos(ray1->phir*pi/180.0); my = sin(ray1->thar*pi/180.0)*sin(ray1->phir*pi/180.0);
 	mz = cos(ray1->thar*pi/180.0);
+
 	
+	// init r temporaily
+    r = (z-z0)/mz;
 	if(ray1->xr<0.0)
 	{
 		    x = xmin;	r = (x-x0)/mx;
 			z = r*mz+z0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
-				
+
 				ray1->nx = -1.0; ray1->ny = 0.0; ray1->nz = 0.0;
 				ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			}
 			*type = 4;
-			
+
 	}
 	else if(ray1->zr >=0.0 && ray1->thar<90.0)
 	{
@@ -77,12 +80,12 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		{
 			z = zmin;	r = (z-z0)/mz;
 			x = r*mx+x0;	 y = r*my+y0;
-			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax) 
+			if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax && z>=zmin && z<=zmax)
 			{
 				solved = true;
 				ray1->nx = 0.0; ray1->ny = 0.0; ray1->nz = -1.0;
 				ray1->xr = x;   ray1->yr = y;   ray1->zr = z;
-			
+
 			    dx = xdim/dpos->partnx+delta; dy = ydim/dpos->partny+delta;
 		        xi =(long int)(ray1->xr/dx); yi =(long int)(ray1->yr/dy);
 		        indx = xi*dpos->partny + yi;
@@ -109,7 +112,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			}
 		}
 		box_hitcheck_nobottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
-	    *type = 4;	
+	    *type = 4;
 	}
 	else
 	{
@@ -134,7 +137,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		if(indx>0) begi = dpos->partaccni[indx-1];
 		else begi = 0;
 		endi = dpos->partaccni[indx];
-		for(i=begi; i<endi; i++)
+        for(i=begi; i<endi; i++)
 		{
 			xc = dpos->xd[i]; yc = dpos->yd[i];
 			t = -((x0-xc)+(y0-yc))/(pow((mx*r),2.0)+pow((my*r),2.0));
@@ -160,7 +163,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 		if (ray1->thar< 90.0){z = -zdim_in;} else {z = -z_reflector;}
 	    r = (z-z0)/mz;
 		x = r*mx+x0;	 y = r*my+y0;
-		if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax) 
+		if (r>delta && x>=xmin && x<=xmax && y>=ymin && y<=ymax)
 		{
 		    ray1->xr = x; ray1->yr = y; ray1->zr = z;
 			ray1->nx = 0.0; ray1->ny = 0.0;
@@ -191,7 +194,7 @@ void part_dots_unsorted(dot_position *dpos)
 		indi =	int(dpos->xd[i]/dx)*ny+int(dpos->yd[i]/dy);			// the index corresponding to partition array
 		dpos->partindx[i] = indi;
 	}
-	
+
 	//sort xd/yd by partindx
 	for(i=0; i<dpos->ndot; i++)
 	{
@@ -232,7 +235,7 @@ void part_dots_unsorted(dot_position *dpos)
 		}
 	}
 	dpos->partaccni[indxvalue] = indxnum;
-	
+
 	for(i=1; i<nx*ny; i++){ dpos->partaccni[i]=dpos->partaccni[i]+dpos->partaccni[i-1]; }
 
 }
@@ -253,7 +256,7 @@ void part_dots(dot_position *dpos)
 		indi =	int(dpos->xd[i]/dx)*ny+int(dpos->yd[i]/dy);			// the index corresponding to partition array
 		dpos->partindx[i] = indi;
 	}
-	
+
 	//sort xd/yd by partindx
 	// for(i=0; i<dpos->ndot; i++)
 	// {
@@ -298,7 +301,7 @@ void part_dots(dot_position *dpos)
 		}
 	}
 	dpos->partaccni[indxvalue] = indxnum;
-	
+
 	for(i=1; i<nx*ny; i++){ dpos->partaccni[i]=dpos->partaccni[i]+dpos->partaccni[i-1]; }
 
 }

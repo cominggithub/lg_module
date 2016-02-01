@@ -11,7 +11,8 @@
 #include "glist.h"
 #include "dbg_log.h"
 #include "data_file_util.h"
-
+#include <locale.h>
+#include "time_util.h"
 #define MAX_OUTPUT_RAY 5
 
 static unsigned long hit_local_error_count = 0;
@@ -23,6 +24,7 @@ static unsigned long ray_count=0;
 
 void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 {
+	set_start_time("get_child_prefix");
 	if (prefix == NULL || strlen(prefix) == 0)
 	{
 		sprintf(child_prefix, "%d", child_num);
@@ -36,6 +38,8 @@ void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 	{
 		printf("%s\n", child_prefix);
 	}
+
+	set_end_time_and_add_elpased_time("get_child_prefix");
 
 }
 
@@ -53,8 +57,13 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 		return;
 	}
 
+	set_start_time("CalcMainReflectiveRay");
 	CalcMainReflectiveRay(ray, &src_ray[0]);
+	set_end_time("CalcMainReflectiveRay");
+
+	set_start_time("CalcMainTransmittanceRay");
 	CalcMainTransmittanceRay(ray, &src_ray[1]);
+	set_end_time("CalcMainTransmittanceRay");
 
 	for(i=0; i<2; i++)
 	{
@@ -64,8 +73,6 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 		{
 			src_ray[i].inty=0.0;
 		}
-		
-		
 		
 		if (src_ray[i].inty > IntensityThreshold)
 		{
@@ -82,8 +89,13 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 	struct ray_trace1 src_ray[2];
 	char child_prefix[1024];
 
+	set_start_time("CalcMainReflectiveRay");
 	CalcMainReflectiveRay(ray, &src_ray[0]);
+	set_end_time("CalcMainReflectiveRay");
+
+	set_start_time("CalcMainTransmittanceRay");
 	CalcMainTransmittanceRay(ray, &src_ray[1]);
+	set_end_time("CalcMainTransmittanceRay");
 
 	for(i=0; i<2; i++)
 	{
@@ -105,7 +117,9 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 
 void trace_ray_type5(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
+	set_start_time("RayFromReflector");
 	RayFromReflector(ray);
+	set_end_time("RayFromReflector");
 	trace_one_ray(prefix, ray, dpos, opr, lstr);
 }
 
@@ -120,9 +134,11 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 	iteration_count++;
 	
 	// append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+	set_start_time("find_str_hit_global");
 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
+	set_end_time("find_str_hit_global");
 	
-
+	trace_one_ray_count++;
 	if (result)
 	{
 		switch(type)
@@ -130,20 +146,25 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 			case 1:
 				// just skip it, and go to next round
 				//append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+				ray_type1_count++;
 				break;
 			case 2:
+				ray_type2_count++;
 				//append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				break;
 			case 3:
 				//append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				//append_ray_and_opt_record_to_csv_lstr(prefix, ray, lstr);
+				ray_type3_count++;
 				trace_ray_type3(prefix, ray, dpos, opr, lstr);
 				break;
 			case 4:
 				//append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
+				ray_type4_count++;
 				trace_ray_type4(prefix, ray, dpos, opr, lstr);
 				break;
 			case 5:
+				ray_type5_count++;
 				//append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 				trace_ray_type5(prefix, ray, dpos, opr, lstr);
 				break;
@@ -818,5 +839,19 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 	rayT->phir = atan2(vecf[1],vecf[0])*180.0/pi;
 	rayT->nx = rayT->nx;		rayT->ny = rayT->ny;	rayT->nz = rayT->nz;
 
+
+}
+
+
+void dump_counter()
+{
+	setlocale(LC_NUMERIC, "");
+
+	printf("trace one ray count: %'10u\n", trace_one_ray_count);
+	printf("    ray_type1_count: %'10u\n", ray_type1_count);
+	printf("    ray_type2_count: %'10u\n", ray_type2_count);
+	printf("    ray_type3_count: %'10u\n", ray_type3_count);
+	printf("    ray_type4_count: %'10u\n", ray_type4_count);
+	printf("    ray_type5_count: %'10u\n", ray_type5_count);
 
 }
