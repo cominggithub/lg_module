@@ -44,6 +44,7 @@ long int nx_den, ny_den;								// grid number along x and y axes for records;
 double den_2_pos_scale;
 double xden_or, yden_or;								// origin of the coordinate
 double xden_rng, yden_rng;								// dimensions along x, y, and z directions
+int block_scale = 4;
 
 // global dot spatial pattern
 long int n_dots=5000;											// total dots

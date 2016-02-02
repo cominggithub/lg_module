@@ -100,9 +100,10 @@ int single_proc_main()
     allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
 
-    xden_rng_int = (int)ceil(xden_rng);
-    yden_rng_int = (int)ceil(yden_rng);
-    dot_blk = new dot_block[xden_rng_int*yden_rng_int];
+    
+    pInt(BLOCK_X_SIZE);
+    pInt(BLOCK_Y_SIZE);
+    dot_blk = new dot_block[BLOCK_X_SIZE*BLOCK_Y_SIZE];
     // program body
 
 

@@ -43,6 +43,7 @@ extern long int nx_den, ny_den;								// grid number along x and y axes for rec
 extern double den_2_pos_scale;
 extern double xden_or, yden_or;								// origin of the coordinate
 extern double xden_rng, yden_rng;								// dimensions along x, y, and z directions
+extern int block_scale;
 
 // global dot spatial pattern
 extern long int n_dots;											// total dots
