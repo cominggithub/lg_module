@@ -85,6 +85,6 @@ void load_dot_block_from_dot_position(dot_block *dot_blk, dot_position *dpos)
 		add_dot_node(dot_blk, i, dpos->xd[i], dpos->yd[i]);
 	}
 
-	// dump_dot_blk(dot_blk);
-	dump_dot_blK_3dfile("block3d.txt", dot_blk);
+	dump_dot_blk(dot_blk);
+	// dump_dot_blK_3dfile("block3d.txt", dot_blk);
 }
