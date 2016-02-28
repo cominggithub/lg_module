@@ -5,8 +5,7 @@
 #include "var_def.h"
 
 
-static int index=0;
-static int inty=0;
+
 opt_record_head* new_opt_record_head()
 {
 	return (opt_record_head*)glist_newGListHead();
@@ -36,14 +35,14 @@ void add_opt_record(opt_record_head *head, opt_record *r)
 
 void dump_opt_record(struct opt_record *opr)
 {
-	int i;
+	// int i;
 	// int inty_count;
 
 	RETURN_ON_NULL(opr);
 
 	// inty_count = opr->nx*opr->ny*opr->ntha*opr->nphi;
 	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f, index: %d, inty: %.2f\n",
-			opr->nx, 
+			opr->nx,
 			opr->ny,
 			opr->ntha,
 			opr->nphi,
@@ -55,7 +54,7 @@ void dump_opt_record(struct opt_record *opr)
 			opr->r_index,
 			opr->r_inty
 	);
-	
+
 	// for(i=0; i<3 && i < inty_count; i++)
 	// {
 	// 	printf("%.5f, ", opr->inty[i]);
@@ -123,7 +122,7 @@ bool merge_opt_record(opt_record *dst, opt_record *src)
 	RETURNV_ON_NEQ(dst->z0, src->z0, false);
 	RETURNV_ON_NEQ(dst->xrng, src->xrng, false);
 	RETURNV_ON_NEQ(dst->yrng, src->yrng, false);
-	
+
 	int i;
 	for(i=0; i<OPT_RECORD_INTY_SIZE(dst); i++)
 	{

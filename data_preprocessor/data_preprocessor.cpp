@@ -112,9 +112,7 @@ int main(int argc, char** argv)
 	opt_source ops;					// for optic source
 	ray_traces rays;				// for samplings of ray tracing
 	ray_trace1 ray1;
-	char fpname[256];					// for reading parameters
 	char paramFName[256];
-	char tmp_output[256];
 	time_t t;
 	struct tm *now;
 
@@ -152,22 +150,21 @@ int main(int argc, char** argv)
 	allocmem_ray_traces(n_ray, &rays);
 	gen_source_ray(&ops, &rays);
 
-	for(i=0; i<n_ray; i++)
-	// for(i=0; i<1; i++)
-	{
+	// for(i=0; i<n_ray; i++)
+	// {
 
-		ray1.ngaus 	= 0;
-		ray1.n1 	= 1.0;
-		ray1.n2 	= 1.58;
-		ray1.xr 	= rays.xr[i];
-		ray1.yr 	= rays.yr[i];
-		ray1.zr 	= rays.zr[i];
-		ray1.thar 	= rays.thar[i];
-		ray1.phir 	= rays.phir[i];
-		ray1.inty   = 10.0*rays.inty[i];
-		ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
-		// dumpRay1(&ray1);
-	}
+	// 	ray1.ngaus 	= 0;
+	// 	ray1.n1 	= 1.0;
+	// 	ray1.n2 	= 1.58;
+	// 	ray1.xr 	= rays.xr[i];
+	// 	ray1.yr 	= rays.yr[i];
+	// 	ray1.zr 	= rays.zr[i];
+	// 	ray1.thar 	= rays.thar[i];
+	// 	ray1.phir 	= rays.phir[i];
+	// 	ray1.inty   = 10.0*rays.inty[i];
+	// 	ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
+	// 	// dumpRay1(&ray1);
+	// }
 
 	split_ray(prefix, &rays, count);
 

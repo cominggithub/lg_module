@@ -17,8 +17,8 @@
 #define pls(s)	do{printf("%s:%s(%d) %s\n", __FILE__, __FUNCTION__, __LINE__, s);}while(0)
 
 #define pInt(v) 	do{printf("%s: %d\n", #v, v);}while(0)
+#define pUInt(v) 	do{printf("%s: %u\n", #v, v);}while(0)
 #define pLongInt(v) 	do{printf("%s: %ld\n", #v, v);}while(0)
-#define pU(v) 	do{printf("%s: %u\n", #v, v);}while(0)
 #define pP(v) 	do{printf("%s: %p\n", #v, v);}while(0)
 #define pX(v) 	do{printf("%s: 0x%X\n", #v, v);}while(0)
 #define pDouble(v) 	do{printf("%s: %f\n", #v, v);}while(0)
@@ -28,5 +28,7 @@
 
 void dumpRay1(struct ray_trace1*);
 void dumpRay1toFile(struct ray_trace1*);
+
+void pause();
 
 #endif

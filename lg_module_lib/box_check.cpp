@@ -149,6 +149,12 @@ bool box_hitcheck_w_bottom (struct ray_trace1 *ray1, double xmin, double xmax, d
 			ray1->xr = x; ray1->yr = y; ray1->zr = z;
 		}
 	}
+	
+	static unsigned int count = 77777777;
+	ray1->no = count++;
+	ray1->xr = 12345678;
+	ray1->yr = 12345678;
+	ray1->zr = 12345678;
 	return true;
 }
 

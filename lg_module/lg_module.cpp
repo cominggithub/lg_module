@@ -78,9 +78,8 @@ int single_proc_main()
     char fpname[256];                   // for reading parameters
     opt_record_head *opr_head;
     data_file_header opr_data_file_header;
-    char child_prefix[1024];
-    int xden_rng_int;
-    int yden_rng_int;
+    char *child_prefix;
+
 
     set_start_time("Total");
     srand((unsigned)time(NULL));    // initiate rand seed
@@ -100,13 +99,7 @@ int single_proc_main()
     allocmem_dot_position(n_dots, hex_bl, hex_lng, &dpos);
 
 
-    
-    pInt(BLOCK_X_SIZE);
-    pInt(BLOCK_Y_SIZE);
-    dot_blk = new dot_block[BLOCK_X_SIZE*BLOCK_Y_SIZE];
     // program body
-
-
     set_start_time("gen_source_ray");
     // generate light source rays & initialize microstructure
     gen_source_ray(&ops, &rays);
@@ -125,7 +118,7 @@ int single_proc_main()
         {
             if(!load_dot_position_txt_file(dot_pos_file, &dpos))
             {
-                system("pause");
+                pause();
                 return 1;
             }
         }
@@ -133,7 +126,7 @@ int single_proc_main()
         {
             if(!load_dot_position_dat_file(dot_pos_file, &dpos))
             {
-                system("pause");
+                pause();
                 return 1;
             }
             // part_dots(&dpos);
@@ -154,19 +147,24 @@ int single_proc_main()
         set_end_time("part_dots");
     }
 
-    load_dot_block_from_dot_position(dot_blk, &dpos);
+    pInt(BLOCK_X_SIZE);
+    pInt(BLOCK_Y_SIZE);
+    dot_blk = alloc_dot_block_array(BLOCK_X_SIZE*BLOCK_Y_SIZE);
 
+    load_dot_block_from_dot_position(dot_blk, &dpos);
     set_start_time("ray tracing");
 
     opr_head = new_opt_record_head();
 
-    open_ray_csv("ray_log.csv");
+    if (enable_ray_csv)
+    {
+        open_ray_csv("ray_log.csv");
+    }
 
     printf("ray tracing\n");
     for(i=0; i<n_ray; i++)
-    // for(i=0; i<1; i++)
     {
-        printf("\r%d/%ld", i, n_ray);
+        ray1.no     = i;
         ray1.ngaus  = 0;
         ray1.n1     = 1.0;
         ray1.n2     = 1.58;
@@ -188,12 +186,13 @@ int single_proc_main()
         ray1.inty   = 10;
         ray1.nx = 0.0;  ray1.ny = 0.0;  ray1.nz = 0.0;
         // dumpRay1(&ray1);
-        //dumpRay1toFile(&ray1);
+        // dumpRay1toFile(&ray1);
         // ray1.ngaus = 1; ray1.inty = 1.0; ray1.n1 = 1.0; ray1.n2 = 1.0;
         // ray1.xr = 0.0; ray1.yr = 0.0; ray1.zr = 0;
         // ray1.thar = 100; ray1.phir =0.0;
-        get_child_prefix("", child_prefix, i);
+        child_prefix = get_child_prefix("", i);
         trace_one_ray(child_prefix, &ray1, &dpos, &opr, &lstr);
+        free(child_prefix);
 
 
     }
@@ -228,7 +227,7 @@ int single_proc_main()
     // module 5...
 
     // dump_counter();
-    dump_counter();
+    dump_ray_counter();
     //deallocate memory
     deallocmem_opm(&opm);
     deallocmem_ops(&ops);
@@ -241,7 +240,7 @@ int single_proc_main()
 
     print_all_execution_time();
 
-    system("pause");
+    pause();
     return 0;
 
 }

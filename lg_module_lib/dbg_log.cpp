@@ -56,3 +56,10 @@ void dumpRay1toFile(struct ray_trace1* ray)
 	fflush(fo);
 	fclose(fo);
 }
+
+void pause()
+{
+#ifdef OS_WINDOWS
+	system("pause");
+#endif
+}

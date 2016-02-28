@@ -67,6 +67,7 @@ extern char dot_pos_file[];
 // debug variable
 extern bool enable_gnu_plot;
 extern bool enable_ray_index_log;
+extern bool enable_ray_csv;
 extern unsigned long gaussScatteredRaycount;
 
 // output file name

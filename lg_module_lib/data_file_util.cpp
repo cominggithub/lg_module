@@ -441,6 +441,7 @@ void open_ray_csv(const char* fname)
 		{
 			fprintf(rayCsvFp, 
 				"num,"
+				"no,"
 				"ngaus, inty, n1, n2, "
 				"xr, yr, zr, "
 				"thar, phir, "
@@ -467,15 +468,19 @@ void close_ray_csv()
 void append_ray_to_csv(const char *prefix, ray_trace1 *ray)
 {
 
+	char msg[2048];
 	if (rayCsvFp == NULL)
 		return;
 
 	fprintf(rayCsvFp, 
-		"[%s], %ld, %f, %f, %f, "
+		"[%s], "
+		"%d, "
+		"%ld, %f, %f, %f, "
 		"%f, %f, %f, "
 		"%f, %f, "
 		"%f, %f, %f\n",
 		prefix,
+		ray->no,
 		ray->ngaus, ray->inty, ray->n1, ray->n2,
 		ray->xr, ray->yr, ray->zr,
 		ray->thar, ray->phir,
@@ -494,13 +499,16 @@ void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_r
 	if (opr != NULL)
 	{
 		fprintf(rayCsvFp, 
-			"[%s], %ld, %f, %f, %f, "
+			"[%s], "
+			"%d, "
+			"%ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
 			"%f, %f, %f, "
 			"%d, %f"
 			"\n",
 			prefix,
+			ray->no,
 			ray->ngaus, ray->inty, ray->n1, ray->n2,
 			ray->xr, ray->yr, ray->zr,
 			ray->thar, ray->phir,

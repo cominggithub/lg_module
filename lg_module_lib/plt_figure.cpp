@@ -62,7 +62,7 @@ void gnuplot_3d(plot_3d *plt3d)
 	script = fopen(script_name,"w");
 	// fprintf(script,"splot \"data3d.txt\" with points pointtype 7 pointsize 0.2 \n");
 	fprintf(script,"splot \"%s\" with points pointtype 7 pointsize 0.2 \n", output_name);
-	
+
 	fprintf(script,"pause -1 \"press RETURN to continue\"\n");
 	fclose(script);
 	// plot
@@ -75,7 +75,7 @@ void gnuplot_3d_matrix(plot_3d_matrix *plt3dm)
 	char cmd[256];
 	char output_name[256];
 	char script_name[256];
-	
+
 	if (!enable_gnu_plot)
 		return;
 	FILE *script, *data;
@@ -86,7 +86,7 @@ void gnuplot_3d_matrix(plot_3d_matrix *plt3dm)
 
 	// save data
 	// data = fopen("data3dm.txt","w");
-	
+
 	data = fopen(output_name,"w");
 	nx = plt3dm->nx;
 	ny = plt3dm->ny;

@@ -40,17 +40,10 @@ int main(int argc, const char** argv)
 	char tmp_output[256];
 
 	// define variables
-	opt_source ops;					// for optic source
-	ray_traces rays;				// for samplings of ray tracing
-	char fpname[256];					// for reading parameters
 	char paramFName[256];
-	time_t t;
-	struct tm *now;
 	opt_record opr_tmp;
 	opt_record opr_merged;
 
-	t 		= time(0);
-	now 	= localtime(&t);
 	count 	= 1;
 
 	if (argc != 3)
@@ -67,7 +60,7 @@ int main(int argc, const char** argv)
 	sprintf(paramFName, "%s/parameters.txt", prefix);
 	if (!read_setup(paramFName, prefix))
 		return 1;
-	
+
 	setTmpOutputFolder(tmp_output);
 
 	allocmem_record(nx_rcd, ny_rcd, ntha_rcd, nphi_rcd, xrcd_or, yrcd_or, zrcd_or, xrcd_rng, yrcd_rng, &opr_tmp);

@@ -35,7 +35,7 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 
 	
 	// init r temporaily
-    r = (z-z0)/mz;
+    r = 0.1;
 	if(ray1->xr<0.0)
 	{
 		    x = xmin;	r = (x-x0)/mx;
@@ -153,6 +153,10 @@ bool find_str_hit_global(ray_trace1 *ray1, dot_position *dpos, opt_record *opr, 
 			        zmin = -zdim_out;		zmax = -zdim_in;
 
 					bcheck = box_hitcheck_w_bottom(ray1, xmin, xmax, ymin, ymax, zmin, zmax);
+					// pUInt(ray1->no);
+					// pDouble(ray1->xr);
+					// pDouble(ray1->yr);
+					// pDouble(ray1->zr);
 					if (bcheck == true){lstr->x0 = xc; lstr->y0 = yc; *type = 3;return true;}
 				}
 			}

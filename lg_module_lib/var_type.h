@@ -30,6 +30,7 @@ struct ray_traces							// for the initial ray-samplings
 };
 struct ray_trace1									// for individual tracing ray
 {
+	unsigned int no;
 	long int ngaus;
 	double inty;
 	double n1, n2;									// refractive index for incident and emergent region.
@@ -70,21 +71,6 @@ struct dot_position
 	long int partnx, partny;									// partition all dots into grids=npartnx*npartny
 	long int *partaccni, *partindx;								// partaccni is for accumlate dots for each grid, and partindx is the responsible array index of xd/yd;
 	double *xd, *yd;											// positions of dots
-};
-
-struct dot_node
-{
-	struct dot_node *next;
-	double xd;
-	double yd;
-	long int index;
-};
-
-struct dot_block
-{
-	int count;
-	struct dot_node *head;
-	struct dot_node *tail;
 };
 
 // for gnuplot

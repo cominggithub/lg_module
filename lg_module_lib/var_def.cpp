@@ -66,8 +66,9 @@ bool enable_dot_pos_file = false;
 char dot_pos_file[256] = "0001.dot_pos.dat";
 
 // debug config
-bool enable_gnu_plot = true;
+bool enable_gnu_plot = false;
 bool enable_ray_index_log = false;
+bool enable_ray_csv = false;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name

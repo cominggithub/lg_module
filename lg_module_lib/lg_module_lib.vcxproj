@@ -86,6 +86,7 @@
     <ClInclude Include="dbg_log.h" />
     <ClInclude Include="debug_fun.h" />
     <ClInclude Include="den_to_pos.h" />
+    <ClInclude Include="dot_block.h" />
     <ClInclude Include="dot_pos.h" />
     <ClInclude Include="gen_source_ray.h" />
     <ClInclude Include="glist.h" />
@@ -113,6 +114,7 @@
     <ClCompile Include="dbg_main.cpp" />
     <ClCompile Include="debug_fun.cpp" />
     <ClCompile Include="den_to_pos.cpp" />
+    <ClCompile Include="dot_block.cpp" />
     <ClCompile Include="dot_pos.cpp" />
     <ClCompile Include="gen_source_ray.cpp" />
     <ClCompile Include="glist.cpp" />

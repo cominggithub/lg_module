@@ -91,6 +91,7 @@ bool read_setup(const char *fpname, const char *out_dir)
 
 	enable_gnu_plot = conf_getVarInt("enable_gnu_plot")>0;
 	enable_ray_index_log = conf_getVarInt("enable_ray_index_log")>0;
+	enable_ray_csv = conf_getVarInt("enable_ray_csv")>0;
 
 	// read output file name
 

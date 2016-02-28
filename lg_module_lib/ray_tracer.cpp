@@ -17,13 +17,16 @@
 
 static unsigned long hit_local_error_count = 0;
 static unsigned long iteration_count = 0;
-static char name[256];
+static char name[2048];
 
 static unsigned long ray_count=0;
 
 
-void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
+char* get_child_prefix(const char* prefix, int child_num)
 {
+	char *child_prefix;
+
+	child_prefix = (char*)malloc(strlen(prefix)+10);
 	set_start_time("get_child_prefix");
 	if (prefix == NULL || strlen(prefix) == 0)
 	{
@@ -41,6 +44,7 @@ void get_child_prefix(const char* prefix, char* child_prefix, int child_num)
 
 	set_end_time_and_add_elpased_time("get_child_prefix");
 
+	return child_prefix;
 }
 
 // need to check with simon
@@ -49,7 +53,7 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 	int i, j;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
 	struct ray_trace1 src_ray[2];
-	char child_prefix[1024];
+	char* child_prefix;
 
 	if (!find_str_hit_local(ray, lstr))
 	{
@@ -67,18 +71,19 @@ void trace_ray_type3(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 
 	for(i=0; i<2; i++)
 	{
-		get_child_prefix(prefix, child_prefix, i);
+		child_prefix = get_child_prefix(prefix, i);
 
 		if(strlen(child_prefix)>=1000)
 		{
 			src_ray[i].inty=0.0;
 		}
-		
+
 		if (src_ray[i].inty > IntensityThreshold)
 		{
-			
+
             trace_one_ray(child_prefix, &src_ray[i], dpos, opr, lstr);
 		}
+		free(child_prefix);
 	}
 }
 
@@ -87,7 +92,7 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 	int i, j;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
 	struct ray_trace1 src_ray[2];
-	char child_prefix[1024];
+	char* child_prefix;
 
 	set_start_time("CalcMainReflectiveRay");
 	CalcMainReflectiveRay(ray, &src_ray[0]);
@@ -99,7 +104,7 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 
 	for(i=0; i<2; i++)
 	{
-		get_child_prefix(prefix, child_prefix, i);
+		child_prefix = get_child_prefix(prefix, i);
 
 		if(strlen(child_prefix)>=1000)
 		{
@@ -108,9 +113,10 @@ void trace_ray_type4(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 		//append_ray_and_opt_record_to_csv(child_prefix, &src_ray[i], NULL);
 		if (src_ray[i].inty > IntensityThreshold)
 		{
-			
+
             trace_one_ray(child_prefix, &src_ray[i], dpos, opr, lstr);
 		}
+		free(child_prefix);
 	}
 }
 
@@ -125,20 +131,26 @@ void trace_ray_type5(const char * prefix, ray_trace1 *ray, dot_position *dpos, o
 
 void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt_record *opr, local_str *lstr)
 {
-	int i, j;
 	int type;
 	bool result;
 	struct ray_trace1 output_ray[2][MAX_OUTPUT_RAY];
 	struct ray_trace1 src_ray[2];
-	
+
 	iteration_count++;
-	
+
+	ray->no = trace_one_ray_count++;
 	// append_ray_and_opt_record_to_csv_type(prefix, ray, opr, type);
 	set_start_time("find_str_hit_global");
 	result = find_str_hit_global(ray, dpos, opr, lstr, &type);
 	set_end_time("find_str_hit_global");
-	
-	trace_one_ray_count++;
+
+	// dumpRay1toFile(ray);
+	if (enable_ray_csv)
+	{
+		append_ray_to_csv(prefix, ray);
+	}
+
+
 	if (result)
 	{
 		switch(type)
@@ -843,15 +855,16 @@ void moduleiv_simple(ray_trace1 *rayT, ray_trace1 *rayR)
 }
 
 
-void dump_counter()
+void dump_ray_counter()
 {
-	setlocale(LC_NUMERIC, "");
 
-	printf("trace one ray count: %'10u\n", trace_one_ray_count);
-	printf("    ray_type1_count: %'10u\n", ray_type1_count);
-	printf("    ray_type2_count: %'10u\n", ray_type2_count);
-	printf("    ray_type3_count: %'10u\n", ray_type3_count);
-	printf("    ray_type4_count: %'10u\n", ray_type4_count);
-	printf("    ray_type5_count: %'10u\n", ray_type5_count);
+	// setlocale(LC_NUMERIC, "en-US");
+
+	printf("trace one ray count: %10u\n", trace_one_ray_count);
+	printf("    ray_type1_count: %10u\n", ray_type1_count);
+	printf("    ray_type2_count: %10u\n", ray_type2_count);
+	printf("    ray_type3_count: %10u\n", ray_type3_count);
+	printf("    ray_type4_count: %10u\n", ray_type4_count);
+	printf("    ray_type5_count: %10u\n", ray_type5_count);
 
 }
