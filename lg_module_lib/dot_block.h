@@ -18,6 +18,7 @@ struct dot_node
 struct dot_block
 {
 	int count;
+	int index;
 	struct dot_node *head;
 	struct dot_node *tail;
 };
@@ -37,12 +38,18 @@ int get_block_count(int radius);
 void free_dot_block_index(dot_block_index **blk_idx);
 dot_block_index* alloc_dot_block_index(int size);
 void dump_dot_block_index(dot_block_index *blk_idx);
+void dump_dot_blk(dot_block *dot_blk);
+void dump_dot_blk_single(dot_block *dot_blk);
 
 dot_block* alloc_dot_block_array(int size);
 void free_dot_block_array(int size);
 
-bool find_nearest_dot_r(ray_trace1 *ray, int radius, int radius_width, int *hit_index, double *hit_xd, double *hit_yd);
+bool find_nearest_dot(dot_block *dot_blk, ray_trace1 *ray, int *hit_index, double *hit_xd, double *hit_yd);
+bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int radius_width, int *hit_index, double *hit_xd, double *hit_yd);
 dot_block_index* get_block_neighbor_w(int xc, int yc, int radius, int radius_width);
 dot_block_index* get_block_neighbor(int xc, int yc, int radius);
+
+bool find_min_distance_in_blk(dot_block *dot_blk, dot_block_index* dot_blk_idx, double x, double y, double *distance, int *index, double *xd, double *yd);
+
 
 #endif

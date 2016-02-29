@@ -57,7 +57,7 @@ void dumpRay1toFile(struct ray_trace1* ray)
 	fclose(fo);
 }
 
-void pause()
+void pausew()
 {
 #ifdef OS_WINDOWS
 	system("pause");

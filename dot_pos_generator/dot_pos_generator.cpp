@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 	if (argc < 4)
 	{
 		print_usage();
-		pause();
+		pausew();
 		return 0;
 	}
 
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
 	set_end_time("Total");
 
 	print_all_execution_time();
-	pause();
+	pausew();
 
 	return 0;
 }

@@ -22,6 +22,14 @@ static char name[2048];
 static unsigned long ray_count=0;
 
 
+void find_ray_hit_block()
+{
+	int index;
+	double xd;
+	double yd;
+	// find_nearest_dot(ray, 0, &index, &xd, &yd);
+}
+
 char* get_child_prefix(const char* prefix, int child_num)
 {
 	char *child_prefix;
@@ -149,7 +157,6 @@ void trace_one_ray(const char * prefix, ray_trace1 *ray, dot_position *dpos, opt
 	{
 		append_ray_to_csv(prefix, ray);
 	}
-
 
 	if (result)
 	{
