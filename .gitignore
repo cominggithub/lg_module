@@ -266,3 +266,4 @@ dot_pos_generator/dpos.after.txt
 dot_pos_generator/dpos.before.txt
 dot_pos_generator/part_dos.sorted.after.txt
 dot_pos_generator/part_dos.sorted.before.txt
+block_hit_log.csv

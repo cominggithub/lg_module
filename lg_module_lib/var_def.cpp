@@ -49,7 +49,7 @@ int block_scale = 4;
 // global dot spatial pattern
 long int n_dots=5000;											// total dots
 long int partn_x, partn_y;
-char hex_bl;													// define whether fit to hexagon 
+char hex_bl;													// define whether fit to hexagon
 double hex_lng = 0.02;											// define the lattice constant of hexagon
 
 double theta_st = 0.1;             // The angale between main ray and scattered ray
@@ -69,6 +69,7 @@ char dot_pos_file[256] = "0001.dot_pos.dat";
 bool enable_gnu_plot = false;
 bool enable_ray_index_log = false;
 bool enable_ray_csv = false;
+bool enable_block_hit_log = false;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name
@@ -108,7 +109,7 @@ void getFileFullPath(char *fullPath, const char* fname)
 
 void getTmpFileFullPath(char *fullPath, const char* fname)
 {
-	
+
 	if (strlen(tmp_output_dir) > 0)
 	{
 		sprintf(fullPath, "%s/%s", tmp_output_dir, fname);

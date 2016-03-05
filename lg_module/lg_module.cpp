@@ -368,11 +368,17 @@ int verify_dot_block_main()
 
 
     printf("ray tracing\n");
-    for(i=0; i<99999999; i++)
+    if(enable_block_hit_log)
+    {
+        open_block_hit_log_csv("block_hit_log.csv");
+    }
+
+    for(i=9999; i<10000; i++)
     {
         int hit_idx;
         double hit_xd;
         double hit_yd;
+        pInt(i);
         ray1.no     = i;
         ray1.ngaus  = 0;
         ray1.n1     = 1.0;
@@ -388,19 +394,23 @@ int verify_dot_block_main()
         ray1.thar   = rays.thar[i/n_ray];
         ray1.phir   = rays.phir[i/n_ray];
         ray1.inty   = 10;
-        ray1.nx     = 0.0;  
-        ray1.ny     = 0.0;  
+        ray1.nx     = 0.0;
+        ray1.ny     = 0.0;
         ray1.nz     = 0.0;
-        
-        
-        find_nearest_dot(dot_blk, &ray1, &hit_idx, &hit_xd, &hit_yd);
 
+
+        find_nearest_dot(dot_blk, &ray1, &hit_idx, &hit_xd, &hit_yd);
+    }
+
+    if(enable_block_hit_log)
+    {
+        close_block_hit_log_csv();
     }
     pInt(i);
     printf("\n");
 
-    
-    
+
+
     //deallocate memory
     deallocmem_opm(&opm);
     deallocmem_ops(&ops);
@@ -421,9 +431,9 @@ int verify_dot_block_main()
 int main(int argc, char** argv)
 {
 
-    
+
     // return single_proc_main();
     return verify_dot_block_main();
-    
+
 }
 

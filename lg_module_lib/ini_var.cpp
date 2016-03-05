@@ -87,11 +87,12 @@ bool read_setup(const char *fpname, const char *out_dir)
 	// for dot position
 	enable_dot_pos_file = conf_getVarInt("enable_dot_pos_file")>0;
 	strcpy(dot_pos_file, conf_getVarStr("dot_pos_file"));
-	
+
 
 	enable_gnu_plot = conf_getVarInt("enable_gnu_plot")>0;
 	enable_ray_index_log = conf_getVarInt("enable_ray_index_log")>0;
 	enable_ray_csv = conf_getVarInt("enable_ray_csv")>0;
+	enable_block_hit_log = conf_getVarInt("enable_block_hit_log")>0;
 
 	// read output file name
 
@@ -105,7 +106,7 @@ bool read_setup(const char *fpname, const char *out_dir)
 	// strcpy(input_script, conf_getVarStr("input_script"));
 	// strcpy(input_dot_density_txt, conf_getVarStr("input_dot_density_txt"));
 	// strcpy(input_microstr_txt, conf_getVarStr("input_microstr_txt"));
-	
+
 	if (out_dir != NULL && strlen(out_dir) > 0)
 	{
 		strcpy(output_dir, out_dir);

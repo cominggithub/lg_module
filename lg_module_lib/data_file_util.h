@@ -29,49 +29,49 @@ typedef struct _opt_record_data
 
 
 bool save_ray_source_file(
-	const char* fname, 
-	data_file_header *dfh, 
+	const char* fname,
+	data_file_header *dfh,
 	struct ray_traces* rays
 );
 
 bool load_ray_source_file_header(
-	const char* fname, 
+	const char* fname,
 	data_file_header *dfh
 );
 
 bool load_ray_source_file(
-	const char* fname, 
+	const char* fname,
 	struct ray_traces* rays
 );
 
 bool save_opt_record_file(
-	const char* fname, 
-	data_file_header *dh, 
+	const char* fname,
+	data_file_header *dh,
 	opt_record_head *h
 );
 
 bool load_opt_record_file(
-	const char* fname, 
-	data_file_header *dfh, 
+	const char* fname,
+	data_file_header *dfh,
 	opt_record_head *head
 );
 
 bool merge_opt_record_files(
 	const char *prefix,
-	const char* dest_file, 
-	int file_cnt, 
+	const char* dest_file,
+	int file_cnt,
 	const char** src_files
 );
 
 void copy_opr_to_opr_data(
-	opt_record_data *data, 
-	opt_record* opr, 
+	opt_record_data *data,
+	opt_record* opr,
 	int array_size
 );
 
 void copy_opr_data_to_opr(
-	opt_record *opr, 
-	opt_record_data* data, 
+	opt_record *opr,
+	opt_record_data* data,
 	int array_size
 );
 
@@ -107,5 +107,9 @@ bool load_matrix(const char *filename, int nx, int ny, double *data);
 
 void save_dot_position_file(dot_position *dpos);
 
+
+void open_block_hit_log_csv(const char* fname);
+void append_block_hit_log(int rayNo, double xr, double yr, double dotX, double dotY, double distance, int radius, int radius_width);
+void close_block_hit_log_csv();
 
 #endif

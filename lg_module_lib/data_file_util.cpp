@@ -9,10 +9,12 @@
 #include "var_def.h"
 
 static FILE* rayCsvFp = NULL;
+static FILE* blockHitLogCsvFp = NULL;
+
 
 bool save_ray_source_file(
-	const char* fname, 
-	data_file_header *dfh, 
+	const char* fname,
+	data_file_header *dfh,
 	struct ray_traces* rays
 )
 {
@@ -31,7 +33,7 @@ bool save_ray_source_file(
 	fp = fopen(fname, "wb");
 	if (!fp)
 		return false;
-	
+
 	if (!fwrite(dfh, sizeof(data_file_header), 1, fp))
 	{
 		return false;
@@ -58,7 +60,7 @@ bool save_ray_source_file(
 }
 
 bool load_ray_source_file_header(
-	const char* fname, 
+	const char* fname,
 	data_file_header *dfh
 )
 {
@@ -69,7 +71,7 @@ bool load_ray_source_file_header(
 	{
 		return false;
 	}
-	
+
 	if (feof(fp))
 	{
 		return false;
@@ -79,13 +81,13 @@ bool load_ray_source_file_header(
 	{
 		return false;
 	}
-	
+
 	fclose(fp);
 	return true;
 }
 
 bool load_ray_source_file(
-	const char* fname, 
+	const char* fname,
 	struct ray_traces* rays
 )
 {
@@ -96,7 +98,7 @@ bool load_ray_source_file(
 	fp = fopen(fname, "rb");
 	if (!fp)
 		return false;
-	
+
 	if(!fread(&dfh, sizeof(data_file_header), 1, fp))
 		return false;
 
@@ -107,7 +109,7 @@ bool load_ray_source_file(
 		{
 			return false;
 		}
-		
+
 		rays->xr[i] 	= data.xr;
 		rays->yr[i] 	= data.yr;
 		rays->zr[i] 	= data.zr;
@@ -129,12 +131,12 @@ void test_ray_source_file()
 	struct ray_traces rays;
 	data_file_header header;
 	char fileName[256] = "ray_source.dat.txt";
-	
+
 	count 			= 100;
 	header.count 	= count;
 	header.offset 	= 555;
 	strcpy(header.prefix, "p_1-1");
-	
+
 	rays.nray 		= count;
 	rays.xr 		= new double[rays.nray];
 	rays.yr 		= new double[rays.nray];
@@ -199,11 +201,11 @@ void dump_ray_traces(struct ray_traces *rays)
 }
 
 
-// 
+//
 
 bool save_opt_record_file(
-	const char* fname, 
-	data_file_header *dfh, 
+	const char* fname,
+	data_file_header *dfh,
 	opt_record_head *head
 )
 {
@@ -219,14 +221,14 @@ bool save_opt_record_file(
 
 	RETURNV_ON_NULL(dfh, false);
 	RETURNV_ON_NULL(head, false);
-    
+
 
 	size_t dataSize;
-	
+
 	fp = fopen(fname, "wb");
 	if (!fp)
 		return false;
-	
+
 	if (!fwrite(dfh, sizeof(data_file_header), 1, fp))
 	{
 		return false;
@@ -271,8 +273,8 @@ bool save_opt_record_file(
 
 
 bool load_opt_record_file(
-	const char* fname, 
-	data_file_header *dfh, 
+	const char* fname,
+	data_file_header *dfh,
 	opt_record_head *head
 )
 {
@@ -287,13 +289,13 @@ bool load_opt_record_file(
 	size_t read_count;
 	double *dd;
 
-	
+
 	fp = fopen(fname, "rb");
 	if (!fp)
 	{
 		return false;
 	}
-	
+
 	if(!fread(dfh, sizeof(data_file_header), 1, fp))
 	{
 		return false;
@@ -307,7 +309,7 @@ bool load_opt_record_file(
 	for(i=0; i<dfh->count; i++)
 	{
 		opr = new_opt_record();
-		
+
 		if (!fread(data, entry_size, 1, fp))
 		{
 			return false;
@@ -328,7 +330,7 @@ bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_c
 {
 	int i;
 	int count;
-	
+
 	opt_record_head *dst_head;
 	opt_record_head *src_head;
 	data_file_header dfh;
@@ -351,22 +353,22 @@ bool merge_opt_record_files(const char *prefix, const char* dst_file, int file_c
 		count += dfh.count;
 	}
 
-	
+
 	strcpy(dfh.prefix, prefix);
 	dfh.offset 		= 0;
 	dfh.entry_size 	= sizeof(opt_record);
 	dfh.count 		= count;
 	save_opt_record_file(dst_file, &dfh, dst_head);
-	
+
 	free_opt_record_head(&dst_head);
-	
+
 	return true;
 
 }
 
 
 
-		
+
 // 		struct opt_record
 // {
 // 	long int nx, ny, ntha, nphi;
@@ -391,7 +393,7 @@ void copy_opr_to_opr_data(opt_record_data *data, opt_record* opr, int array_size
 }
 
 void copy_opr_data_to_opr(opt_record *opr, opt_record_data* data, int array_size)
-{	
+{
 	memcpy(opr, data, sizeof(opt_record_data));
 	// memcpy(opr->inty, data->inty, array_size);
 }
@@ -405,7 +407,7 @@ void dump_opt_record_data(opt_record_data *opr)
 
 	inty_count = opr->nx*opr->ny*opr->ntha*opr->nphi;
 	printf("nx: %ld: ny, %ld: ntha, %ld: nphi: %ld, x0: %.2f, y0: %.2f, z0: %.2f, xrng: %.2f, yrng: %.2f, index:%d, inty:%.2f\n",
-			opr->nx, 
+			opr->nx,
 			opr->ny,
 			opr->ntha,
 			opr->nphi,
@@ -418,7 +420,7 @@ void dump_opt_record_data(opt_record_data *opr)
 			opr->inty
 
 	);
-	
+
 	// for(i=0; i<3 && i < inty_count; i++)
 	// {
 	// 	printf("%.5f, ", opr->inty[i]);
@@ -439,7 +441,7 @@ void open_ray_csv(const char* fname)
 		rayCsvFp = fopen(fname, "w");
 		if (rayCsvFp != NULL)
 		{
-			fprintf(rayCsvFp, 
+			fprintf(rayCsvFp,
 				"num,"
 				"no,"
 				"ngaus, inty, n1, n2, "
@@ -472,7 +474,7 @@ void append_ray_to_csv(const char *prefix, ray_trace1 *ray)
 	if (rayCsvFp == NULL)
 		return;
 
-	fprintf(rayCsvFp, 
+	fprintf(rayCsvFp,
 		"[%s], "
 		"%d, "
 		"%ld, %f, %f, %f, "
@@ -492,13 +494,13 @@ void append_ray_to_csv(const char *prefix, ray_trace1 *ray)
 
 void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_record *opr)
 {
-	
+
 	if (rayCsvFp == NULL)
 		return;
 
 	if (opr != NULL)
 	{
-		fprintf(rayCsvFp, 
+		fprintf(rayCsvFp,
 			"[%s], "
 			"%d, "
 			"%ld, %f, %f, %f, "
@@ -518,7 +520,7 @@ void append_ray_and_opt_record_to_csv(const char *prefix, ray_trace1 *ray, opt_r
 	}
 	else
 	{
-		fprintf(rayCsvFp, 
+		fprintf(rayCsvFp,
 			"[%s], %ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
@@ -541,7 +543,7 @@ void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, 
 
 	if (opr != NULL)
 	{
-		fprintf(rayCsvFp, 
+		fprintf(rayCsvFp,
 			"[%s], %ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
@@ -558,7 +560,7 @@ void append_ray_and_opt_record_to_csv_type(const char *prefix, ray_trace1 *ray, 
 	}
 	else
 	{
-		fprintf(rayCsvFp, 
+		fprintf(rayCsvFp,
 			"[%s], %ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
@@ -581,7 +583,7 @@ void append_ray_and_opt_record_to_csv_lstr(const char *prefix, ray_trace1 *ray, 
 	if (opr != NULL)
 	{
 	*/
-		fprintf(rayCsvFp, 
+		fprintf(rayCsvFp,
 			"[%s], %ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
@@ -594,13 +596,13 @@ void append_ray_and_opt_record_to_csv_lstr(const char *prefix, ray_trace1 *ray, 
 			ray->thar, ray->phir,
 			ray->nx, ray->ny, ray->nz,
 			lstr->x0, lstr->y0
-    
+
 		);
 	/*
     }
 	else
 	{
-		fprintf(rayCsvFp, 
+		fprintf(rayCsvFp,
 			"[%s], %ld, %f, %f, %f, "
 			"%f, %f, %f, "
 			"%f, %f, "
@@ -615,6 +617,54 @@ void append_ray_and_opt_record_to_csv_lstr(const char *prefix, ray_trace1 *ray, 
 	*/
 	fflush(rayCsvFp);
 }
+
+void open_block_hit_log_csv(const char* fname)
+{
+	if (blockHitLogCsvFp == NULL)
+	{
+		blockHitLogCsvFp = fopen(fname, "w");
+		if (blockHitLogCsvFp != NULL)
+		{
+			fprintf(blockHitLogCsvFp,
+				"rayNo, "
+				"xr, yr"
+				"dotX, dotY, distance, "
+				"radius, width\n"
+			);
+		}
+	}
+}
+
+void append_block_hit_log(int rayNo, double xr, double yr, double dotX, double dotY, double distance, int radius, int radius_width)
+{
+	RETURN_ON_NULL(blockHitLogCsvFp);
+
+	fprintf(blockHitLogCsvFp,
+		"%u, "
+		"%.5f, %.5f, "
+		"%.5f, %.5f, %.5f"
+		"%d, %d"
+		"\n",
+		rayNo,
+		xr, yr,
+		dotX, dotY, distance,
+		radius, radius_width
+	);
+	fflush(blockHitLogCsvFp);
+
+}
+
+void close_block_hit_log_csv()
+{
+	if (blockHitLogCsvFp == NULL)
+	{
+		fflush(blockHitLogCsvFp);
+		fclose(blockHitLogCsvFp);
+	}
+
+	blockHitLogCsvFp = NULL;
+}
+
 bool load_matrix(const char *filename, int nx, int ny, double *data)
 {
 	int i;
@@ -624,27 +674,27 @@ bool load_matrix(const char *filename, int nx, int ny, double *data)
 	/*Use double , you have floating numbers not int*/
 
 	FILE *file;
-	
-	
+
+
 	file=fopen(filename, "r");
   	if (!file)
   	{
   		fprintf(stderr, "cannot open %s\n", filename);
   		return false;
   	}
-  	
+
  	for(i = 0; i < ny; i++)
   	{
-		for(j = 0; j < nx; j++) 
+		for(j = 0; j < nx; j++)
 		{
-			if (!fscanf(file, "%lf ", &data[i*ny+j])) 
+			if (!fscanf(file, "%lf ", &data[i*ny+j]))
   			{
   				fprintf(stderr, "read matrix: %s, fail\n", filename);
 				break;
   			}
-      	
+
        		// printf("%f ", data[i*ny+j]);
-       		
+
       	}
       	// printf("\n");
 
@@ -715,11 +765,11 @@ void save_opt_record_txt_file(
 				fprintf(fp, "\n");
 			}
 		}
-		
+
 	}
 	fflush(fp);
 	fclose(fp);
-	
+
 }
 
 
@@ -732,19 +782,19 @@ bool save_opt_record_dat_file(
 	size_t inty_size = 0;
 
 	// fp = fopen(fname, "wb");
-	
+
 
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(opr, false);
 
 	fp = fopen(fname, "wb");
-	
+
 	if (fp == NULL)
 	{
 		return false;
 	}
 
-	
+
 	inty_size = sizeof(double)*opr->nx*opr->ny*opr->ntha*opr->nphi;
 
 	if (!fwrite(opr, sizeof(opt_record) - sizeof(double*), 1, fp))
@@ -807,9 +857,9 @@ void save_opt_record_txt_file_pos(
 			}
 			fprintf(fp, "%f ", intensity);
 		}
-		
+
 	}
-	
+
 }
 
 bool load_opt_record_dat_file(
@@ -822,13 +872,13 @@ bool load_opt_record_dat_file(
 
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(opr, false);
-	
-	
+
+
 	fp = fopen(fname, "rb");
 	if (fp == NULL)
 	{
 		fclose(fp);
-		return false;	
+		return false;
 	}
 
 
@@ -840,8 +890,8 @@ bool load_opt_record_dat_file(
 
 	inty_size = sizeof(double)*opr->nx*opr->ny*opr->ntha*opr->nphi;
 	opr->inty = new double[opr->nx*opr->ny*opr->ntha*opr->nphi];
-	if( opr->inty == nullptr ) 
-	{ 
+	if( opr->inty == nullptr )
+	{
 		printf("allocmem_record: light recording error\n");
 		fclose(fp);
 		return false;
@@ -899,7 +949,7 @@ void save_opt_record_txt_file_ang(
 			}
 			fprintf(fp, "%f ", intensity);
 		}
-		
+
 	}
 }
 
@@ -913,7 +963,7 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 	RETURNV_ON_NULL(dpos, false);
 
 	fp = fopen(fname, "w");
-	
+
 	if (fp == NULL)
 	{
 		return false;
@@ -936,7 +986,7 @@ bool save_dot_position_txt_file(const char *fname, dot_position *dpos)
 		fprintf(fp, "%lf, %lf, %ld\n", dpos->xd[i], dpos->yd[i], dpos->partindx[i]);
 		// fprintf(fp, "%lf\n", dpos->xd[i]);
 	}
-	
+
 	fclose(fp);
 	return true;
 }
@@ -948,13 +998,13 @@ bool save_dot_position_dat_file(const char *fname, dot_position *dpos)
 	size_t inty_size = 0;
 
 	// fp = fopen(fname, "wb");
-	
+
 
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(dpos, false);
 
 	fp = fopen(fname, "wb");
-	
+
 	if (fp == NULL)
 	{
 		return false;
@@ -1008,18 +1058,18 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 {
 	FILE *fp;
 	size_t inty_size = 0;
-	
+
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(dpos, false);
-	
+
 	long int ndot;
-	
+
 	fp = fopen(fname, "rb");
 	if (fp == NULL)
 	{
 		fprintf(stderr, "cannot load dot pos file: %s\n", fname);
 		//fclose(fp);
-		return false;	
+		return false;
 	}
 
 	if(!fread(&ndot, sizeof(long int), 1, fp))
@@ -1029,7 +1079,7 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 	}
 
 	deallocmem_dot_position(dpos);
-	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);	
+	allocmem_dot_position(ndot, hex_bl, hex_lng, dpos);
 	if (!fread(&dpos->partnx, sizeof(long int), 1, fp))
 	{
 		pl();
@@ -1065,7 +1115,7 @@ bool load_dot_position_dat_file(const char *fname, dot_position *dpos)
 
 FAIL:
 	fclose(fp);
-	return false;	
+	return false;
 }
 
 bool load_dot_position_txt_file(const char *fname, dot_position *dpos)
@@ -1074,16 +1124,16 @@ bool load_dot_position_txt_file(const char *fname, dot_position *dpos)
 	long int ndot;
 	long int i;
 	char ch;
-	
+
 	RETURNV_ON_NULL(fname, false);
 	RETURNV_ON_NULL(dpos, false);
-	
-	
+
+
 	fp = fopen(fname, "r");
 	if (fp == NULL)
 	{
 		fprintf(stderr, "cannot load dot pos file: %s\n", fname);
-		return false;	
+		return false;
 	}
 	pl();
 
@@ -1096,7 +1146,7 @@ bool load_dot_position_txt_file(const char *fname, dot_position *dpos)
     		ndot++;
   		}
   	}
-	
+
 	pl();
 	rewind(fp);
 	deallocmem_dot_position(dpos);
