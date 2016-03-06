@@ -26,6 +26,7 @@ dot_block* alloc_dot_block_array(int size)
     for(i=0; i<size; i++)
     {
         dar[i].index = i;
+        dar[i].count = 0;
     }
     return dar;
 }
@@ -118,10 +119,32 @@ bool find_nearest_dot(dot_block *dot_blk, ray_trace1 *ray, int *hit_index, doubl
     }
 
     radius = get_start_radius(ray->xr, ray->yr);
-    pInt(radius);
-
     return find_nearest_dot_r(dot_blk, ray, radius, radius+500, radius_width, hit_index, hit_xd, hit_yd);
 
+}
+
+dot_block *get_dot_block_by_index(dot_block* dot_blk, int xidx, int yidx)
+{
+    int block_offset;
+    block_offset = xidx * BLOCK_Y_SIZE + yidx;
+    return dot_blk + block_offset;
+}
+
+int get_node_count_in_blocks(dot_block *dot_blk, dot_block_index *dot_blk_idx, int blk_count)
+{
+    int i;
+    int node_count;
+    node_count = 0;
+    dot_block *cur_dot_blk;
+
+    for(i=0; i<blk_count; i++)
+    {
+        cur_dot_blk = get_dot_block_by_index(dot_blk, dot_blk_idx->indices_x[i], dot_blk_idx->indices_y[i]);
+        // printf("%d block.count = %d\n", i, cur_dot_blk->count);
+        node_count += cur_dot_blk->count;
+    }
+
+    return node_count;
 }
 
 bool out_of_block_range(double x, double y, int radius)
@@ -131,6 +154,7 @@ bool out_of_block_range(double x, double y, int radius)
             BLOCK_IDX(x)-radius < 0            &&
             BLOCK_IDX(x)-radius < 0;
 }
+
 
 
 bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int radius_max, int radius_width, int *hit_index, double *hit_xd, double *hit_yd)
@@ -167,16 +191,19 @@ bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int rad
             radius_width
         );
 
-        append_block_hit_log(
-            ray->no,
-            ray->xr,
-            ray->yr,
-            tmp_hit_xd,
-            tmp_hit_yd,
-            88888,
-            radius,
-            radius_width
-        );
+        if(enable_block_hit_log)
+        {
+            append_block_hit_log(
+                ray->no,
+                ray->xr,
+                ray->yr,
+                tmp_hit_xd,
+                tmp_hit_yd,
+                88888,
+                radius,
+                radius_width
+            );
+        }
 
         return false;
     }
@@ -189,29 +216,34 @@ bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int rad
             ray->yr,
             radius,
             radius_width
+
         );
 
-        append_block_hit_log(
-            ray->no,
-            ray->xr,
-            ray->yr,
-            tmp_hit_xd,
-            tmp_hit_yd,
-            99999,
-            radius,
-            radius_width
-        );
+        if(enable_block_hit_log)
+        {
+            append_block_hit_log(
+                ray->no,
+                ray->xr,
+                ray->yr,
+                tmp_hit_xd,
+                tmp_hit_yd,
+                99999,
+                radius,
+                radius_width
+            );
+        }
 
         return false;
     }
 
 
     dot_blk_idx     = get_block_neighbor_w(BLOCK_IDX(ray->xr), BLOCK_IDX(ray->yr), radius, radius_width);
-    pInt(radius);
-    pInt(dot_blk_idx->count);
 
-    if (dot_blk_idx->count == 0)
+    // pInt(get_node_count_in_blocks(dot_blk_idx, dot_blk_idx->count));
+    // if (dot_blk_idx->count == 0)
+    if (get_node_count_in_blocks(dot_blk, dot_blk_idx, dot_blk_idx->count) == 0)
     {
+        free_dot_block_index(&dot_blk_idx);
         return find_nearest_dot_r(dot_blk, ray, radius+radius_width, radius_max, radius_width, hit_index, hit_xd, hit_yd);
     }
 
@@ -252,15 +284,15 @@ bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int rad
         );
     }
 
-    printf("ray (%.5f, %.5f), radius %d, radius width: %d, hit (%.5f, %.5f), distance: %.5f\n",
-        ray->xr,
-        ray->yr,
-        radius,
-        radius_width,
-        *hit_xd,
-        *hit_yd,
-        tmp_distance
-    );
+    // printf("ray (%.5f, %.5f), radius %d, radius width: %d, hit (%.5f, %.5f), distance: %.5f\n",
+    //     ray->xr,
+    //     ray->yr,
+    //     radius,
+    //     radius_width,
+    //     *hit_xd,
+    //     *hit_yd,
+    //     tmp_distance
+    // );
 
 
     return true;
@@ -283,8 +315,6 @@ bool find_min_distance_in_blk(dot_block *dot_blk, dot_block_index* dot_blk_idx, 
     dot_node *cur_dot_node;
 
     min_distance = double_max;
-    pl();
-    pInt(dot_blk_idx->count);
     for(i=0; i<dot_blk_idx->count; i++)
     {
 
@@ -297,12 +327,10 @@ bool find_min_distance_in_blk(dot_block *dot_blk, dot_block_index* dot_blk_idx, 
 
         while(cur_dot_node != NULL)
         {
-            pl();
             tmp_distance = get_distance(x, y, cur_dot_node->xd, cur_dot_node->yd);
             // printf("  (%.5f, %.5f) -> (%.5f, %.5f): %.5f\n", x, y, cur_dot_node->xd, cur_dot_node->yd, tmp_distance);
             if (min_distance > tmp_distance)
             {
-                pl();
                 min_distance    = tmp_distance;
                 tmp_hit_idx     = cur_dot_node->index;
                 tmp_hit_xd      = cur_dot_node->xd;
@@ -312,7 +340,6 @@ bool find_min_distance_in_blk(dot_block *dot_blk, dot_block_index* dot_blk_idx, 
         }
     }
 
-    pDouble(min_distance);
     if (min_distance != double_max)
     {
         *distance   = min_distance;
@@ -434,6 +461,7 @@ dot_block_index* get_block_neighbor_w(int xc, int yc, int radius, int radius_wid
 
     for(i=0;i<radius_width; i++)
     {
+        // dump_dot_block_index(blk_idx[i]);
         for(j=0; j<blk_idx[i]->count; j++)
         {
             merged_idx->indices_x[merged_idx->count] = blk_idx[i]->indices_x[j];

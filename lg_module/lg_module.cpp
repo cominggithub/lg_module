@@ -373,18 +373,19 @@ int verify_dot_block_main()
         open_block_hit_log_csv("block_hit_log.csv");
     }
 
-    for(i=9999; i<10000; i++)
+    // for(i=0; i<1000000; i++)
+    for(i=0; i<n_ray; i++)
     {
         int hit_idx;
         double hit_xd;
         double hit_yd;
-        pInt(i);
+        // pInt(i);
         ray1.no     = i;
         ray1.ngaus  = 0;
         ray1.n1     = 1.0;
         ray1.n2     = 1.58;
-        ray1.xr     = ((i*1.0)/BLOCK_X_SIZE);
-        // ray1.xr     = rays.xr[i];
+        // ray1.xr     = ((i*1.0)/BLOCK_X_SIZE);
+        ray1.xr     = rays.xr[i];
         ray1.yr     = rays.yr[i/n_ray];
 
         // ray1.xr     = 50;
