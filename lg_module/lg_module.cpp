@@ -247,7 +247,7 @@ int single_proc_main()
 
 int verify_dot_block_main()
 {
-    int i;
+    int i, j;
     // define variables
     opt_mat opm;                    // for optic materials
     opt_source ops;                 // for optic source
@@ -334,8 +334,14 @@ int verify_dot_block_main()
     pInt(BLOCK_Y_SIZE);
     dot_blk = alloc_dot_block_array(BLOCK_X_SIZE*BLOCK_Y_SIZE);
 
-    load_dot_block_from_dot_position(dot_blk, &dpos);
 
+    // load_dot_block_from_dot_position(dot_blk, &dpos);
+    load_dot_block_test(dot_blk);
+
+    if(enable_dump_dot_block)
+    {
+        dump_dot_blk(dot_blk);
+    }
 
     // dump_dot_blk(dot_blk);
     // return 0;
@@ -346,26 +352,6 @@ int verify_dot_block_main()
     // return 0;
     set_start_time("ray tracing");
 
-    // dot_block_index* dot_blk_idx;
-
-    // dot_blk_idx = get_block_neighbor(1, 1, 2);
-    // dump_dot_block_index(dot_blk_idx);
-
-    // dot_blk_idx = get_block_neighbor(2, 2, 2);
-    // dump_dot_block_index(dot_blk_idx);
-
-    // dot_blk_idx = get_block_neighbor(0, 0, 2);
-    // dump_dot_block_index(dot_blk_idx);
-
-    // dot_blk_idx = get_block_neighbor(651, 489, 2);
-    // dump_dot_block_index(dot_blk_idx);
-
-    // dot_blk_idx = get_block_neighbor(0, 489, 2);
-    // dump_dot_block_index(dot_blk_idx);
-
-    // dot_blk_idx = get_block_neighbor(651, 0, 2);
-    // dump_dot_block_index(dot_blk_idx);
-
 
     printf("ray tracing\n");
     if(enable_block_hit_log)
@@ -374,19 +360,21 @@ int verify_dot_block_main()
     }
 
     // for(i=0; i<1000000; i++)
-    for(i=0; i<n_ray; i++)
+    // for(i=0; i<n_ray; i++)
+    // for(i=0; i<BLOCK_X_SIZE*BLOCK_Y_SIZE; i++)
+    for(i=100; i<101; i++)
     {
         int hit_idx;
         double hit_xd;
         double hit_yd;
-        // pInt(i);
+        pInt(i);
         ray1.no     = i;
         ray1.ngaus  = 0;
         ray1.n1     = 1.0;
         ray1.n2     = 1.58;
-        // ray1.xr     = ((i*1.0)/BLOCK_X_SIZE);
-        ray1.xr     = rays.xr[i];
-        ray1.yr     = rays.yr[i/n_ray];
+        ray1.xr     = ((i/4.0)/BLOCK_X_SIZE);
+        ray1.yr     = ((i/4.0)/BLOCK_Y_SIZE);
+        // ray1.yr     = ((i*1.0)/BLOCK_X_SIZE);;
 
         // ray1.xr     = 50;
         // ray1.yr     = 50;
@@ -403,11 +391,45 @@ int verify_dot_block_main()
         find_nearest_dot(dot_blk, &ray1, &hit_idx, &hit_xd, &hit_yd);
     }
 
+    double x;
+    double y;
+    for(i=0; i<BLOCK_X_SIZE; i++)
+    {
+        x = (i%BLOCK_X_SIZE)/4.0+0.001;
+        for(j=0;j<BLOCK_Y_SIZE; j++)
+        {
+            int hit_idx;
+            double hit_xd;
+            double hit_yd;
+            
+            y = (j%BLOCK_Y_SIZE)/4.0+0.001;
+
+            ray1.no     = i*BLOCK_Y_SIZE+j;
+            ray1.ngaus  = 0;
+            ray1.n1     = 1.0;
+            ray1.n2     = 1.58;
+            ray1.xr     = x;
+            ray1.yr     = y;
+        
+
+            ray1.zr     = rays.zr[i/n_ray];
+            ray1.thar   = rays.thar[i/n_ray];
+            ray1.phir   = rays.phir[i/n_ray];
+            ray1.inty   = 10;
+            ray1.nx     = 0.0;
+            ray1.ny     = 0.0;
+            ray1.nz     = 0.0;
+
+
+            find_nearest_dot(dot_blk, &ray1, &hit_idx, &hit_xd, &hit_yd);
+        }
+    }
+
+
     if(enable_block_hit_log)
     {
         close_block_hit_log_csv();
     }
-    pInt(i);
     printf("\n");
 
 

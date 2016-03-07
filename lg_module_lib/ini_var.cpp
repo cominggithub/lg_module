@@ -93,6 +93,9 @@ bool read_setup(const char *fpname, const char *out_dir)
 	enable_ray_index_log = conf_getVarInt("enable_ray_index_log")>0;
 	enable_ray_csv = conf_getVarInt("enable_ray_csv")>0;
 	enable_block_hit_log = conf_getVarInt("enable_block_hit_log")>0;
+	enable_dump_dot_block = conf_getVarInt("enable_dump_dot_block")>0;
+
+	
 
 	// read output file name
 

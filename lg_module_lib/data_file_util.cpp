@@ -7,6 +7,7 @@
 #include <string.h>
 #include "mem_func.h"
 #include "var_def.h"
+#include "dot_block.h"
 
 static FILE* rayCsvFp = NULL;
 static FILE* blockHitLogCsvFp = NULL;
@@ -640,14 +641,34 @@ void append_block_hit_log(unsigned int rayNo, double xr, double yr, double dotX,
 {
     RETURN_ON_NULL(blockHitLogCsvFp);
 
-    fprintf(blockHitLogCsvFp,
+    fprintf(stdout,
         "%u, "
+        "[%d, %d], "
         "%.5f, %.5f, "
+        "[%d, %d], "
         "%.5f, %.5f, %.5f, "
         "%d, %d"
         "\n",
         rayNo,
+        BLOCK_IDX(xr), BLOCK_IDX(yr),
         xr, yr,
+        BLOCK_IDX(dotX), BLOCK_IDX(dotY),
+        dotX, dotY, distance,
+        radius, radius_width
+    );
+
+    fprintf(blockHitLogCsvFp,
+        "%u, "
+        "[%d, %d], "
+        "%.5f, %.5f, "
+        "[%d, %d], "
+        "%.5f, %.5f, %.5f, "
+        "%d, %d"
+        "\n",
+        rayNo,
+        BLOCK_IDX(xr), BLOCK_IDX(yr),
+        xr, yr,
+        BLOCK_IDX(dotX), BLOCK_IDX(dotY),
         dotX, dotY, distance,
         radius, radius_width
     );

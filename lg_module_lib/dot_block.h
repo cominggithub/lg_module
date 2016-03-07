@@ -32,6 +32,7 @@ struct dot_block_index
 };
 
 void load_dot_block_from_dot_position(dot_block *dot_blk, dot_position *dpos);
+void load_dot_block_test(dot_block *dot_blk);
 
 dot_block_index* get_block_neighbor(dot_block *dot_blk, int radius);
 int get_block_count(int radius);

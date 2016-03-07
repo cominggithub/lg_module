@@ -328,14 +328,22 @@ bool find_min_distance_in_blk(dot_block *dot_blk, dot_block_index* dot_blk_idx, 
         while(cur_dot_node != NULL)
         {
             tmp_distance = get_distance(x, y, cur_dot_node->xd, cur_dot_node->yd);
-            // printf("  (%.5f, %.5f) -> (%.5f, %.5f): %.5f\n", x, y, cur_dot_node->xd, cur_dot_node->yd, tmp_distance);
+            printf("  [%d, %d](%.5f, %.5f) -> [%d, %d](%.5f, %.5f): %.5f", 
+                BLOCK_IDX(x), BLOCK_IDX(y), 
+                x, y, 
+                BLOCK_IDX(cur_dot_node->xd), BLOCK_IDX(cur_dot_node->yd), 
+                cur_dot_node->xd, cur_dot_node->yd, 
+                tmp_distance
+            );
             if (min_distance > tmp_distance)
             {
+                printf("**");
                 min_distance    = tmp_distance;
                 tmp_hit_idx     = cur_dot_node->index;
                 tmp_hit_xd      = cur_dot_node->xd;
                 tmp_hit_yd      = cur_dot_node->yd;
             }
+            printf("\n");
             cur_dot_node = cur_dot_node->next;
         }
     }
@@ -410,6 +418,25 @@ void load_dot_block_from_dot_position(dot_block *dot_blk, dot_position *dpos)
     for(i=0; i<dpos->ndot; i++)
     {
         add_dot_node(dot_blk, i, dpos->xd[i], dpos->yd[i]);
+    }
+    // dump_dot_blk(dot_blk);
+    // dump_dot_blK_3dfile("block3d.txt", dot_blk);
+}
+
+void load_dot_block_test(dot_block *dot_blk)
+{
+    long int i, j;
+    double x;
+    double y;
+    for(i=0; i<BLOCK_X_SIZE; i++)
+    {
+        x = (i%BLOCK_X_SIZE)/4.0;
+        for(j=0;j<BLOCK_Y_SIZE; j++)
+        {
+            y = (j%BLOCK_Y_SIZE)/4.0;
+            printf("add [%d, %d] = (%.5f, %.5f)\n", BLOCK_IDX(x), BLOCK_IDX(y), x, y);
+            add_dot_node(dot_blk, i, x, y);
+        }
     }
     // dump_dot_blk(dot_blk);
     // dump_dot_blK_3dfile("block3d.txt", dot_blk);

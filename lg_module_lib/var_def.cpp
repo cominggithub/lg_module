@@ -70,6 +70,7 @@ bool enable_gnu_plot = false;
 bool enable_ray_index_log = false;
 bool enable_ray_csv = false;
 bool enable_block_hit_log = false;
+bool enable_dump_dot_block = false;
 unsigned long gaussScatteredRaycount = 0;
 
 // output file name

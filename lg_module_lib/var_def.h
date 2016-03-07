@@ -69,6 +69,7 @@ extern bool enable_gnu_plot;
 extern bool enable_ray_index_log;
 extern bool enable_ray_csv;
 extern bool enable_block_hit_log;
+extern bool enable_dump_dot_block;
 extern unsigned long gaussScatteredRaycount;
 
 // output file name

@@ -74,7 +74,8 @@ dot_pos_file=../../data/01.dot_pos.dat
 enable_gnu_plot=0
 enable_ray_index_log=0
 enable_ray_csv=1
-enable_block_hit_log=0
+enable_block_hit_log=1
+enable_dump_dot_block=1
 
 // output_file_name
 output_opt_record_dat=output.opt_record.dat
