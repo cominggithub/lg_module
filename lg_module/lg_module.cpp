@@ -340,7 +340,7 @@ int verify_dot_block_main()
 
     if(enable_dump_dot_block)
     {
-        dump_dot_blk(dot_blk);
+        // dump_dot_blk(dot_blk);
     }
 
     // dump_dot_blk(dot_blk);
@@ -362,41 +362,43 @@ int verify_dot_block_main()
     // for(i=0; i<1000000; i++)
     // for(i=0; i<n_ray; i++)
     // for(i=0; i<BLOCK_X_SIZE*BLOCK_Y_SIZE; i++)
-    for(i=100; i<101; i++)
-    {
-        int hit_idx;
-        double hit_xd;
-        double hit_yd;
-        pInt(i);
-        ray1.no     = i;
-        ray1.ngaus  = 0;
-        ray1.n1     = 1.0;
-        ray1.n2     = 1.58;
-        ray1.xr     = ((i/4.0)/BLOCK_X_SIZE);
-        ray1.yr     = ((i/4.0)/BLOCK_Y_SIZE);
-        // ray1.yr     = ((i*1.0)/BLOCK_X_SIZE);;
+    // for(i=100; i<101; i++)
+    // {
+    //     int hit_idx;
+    //     double hit_xd;
+    //     double hit_yd;
+    //     pInt(i);
+    //     ray1.no     = i;
+    //     ray1.ngaus  = 0;
+    //     ray1.n1     = 1.0;
+    //     ray1.n2     = 1.58;
+    //     ray1.xr     = ((i/4.0)/BLOCK_X_SIZE);
+    //     ray1.yr     = ((i/4.0)/BLOCK_Y_SIZE);
+    //     // ray1.yr     = ((i*1.0)/BLOCK_X_SIZE);;
 
-        // ray1.xr     = 50;
-        // ray1.yr     = 50;
+    //     // ray1.xr     = 50;
+    //     // ray1.yr     = 50;
 
-        ray1.zr     = rays.zr[i/n_ray];
-        ray1.thar   = rays.thar[i/n_ray];
-        ray1.phir   = rays.phir[i/n_ray];
-        ray1.inty   = 10;
-        ray1.nx     = 0.0;
-        ray1.ny     = 0.0;
-        ray1.nz     = 0.0;
+    //     ray1.zr     = rays.zr[i/n_ray];
+    //     ray1.thar   = rays.thar[i/n_ray];
+    //     ray1.phir   = rays.phir[i/n_ray];
+    //     ray1.inty   = 10;
+    //     ray1.nx     = 0.0;
+    //     ray1.ny     = 0.0;
+    //     ray1.nz     = 0.0;
 
 
-        find_nearest_dot(dot_blk, &ray1, &hit_idx, &hit_xd, &hit_yd);
-    }
+    //     find_nearest_dot(dot_blk, &ray1, &hit_idx, &hit_xd, &hit_yd);
+    // }
 
     double x;
     double y;
+    // for(i=0; i<200; i++)
     for(i=0; i<BLOCK_X_SIZE; i++)
     {
         x = (i%BLOCK_X_SIZE)/4.0+0.001;
-        for(j=0;j<BLOCK_Y_SIZE; j++)
+        // for(j=0;j<201; j++)
+        for(j=0; j<BLOCK_Y_SIZE; j++)
         {
             int hit_idx;
             double hit_xd;

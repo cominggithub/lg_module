@@ -109,7 +109,7 @@ void save_dot_position_file(dot_position *dpos);
 
 
 void open_block_hit_log_csv(const char* fname);
-void append_block_hit_log(unsigned int rayNo, double xr, double yr, double dotX, double dotY, double distance, int radius, int radius_width);
+void append_block_hit_log(unsigned int rayNo, double xr, double yr, double dotX, double dotY, double distance, int radius, int radius_start, int radius_width);
 void close_block_hit_log_csv();
 
 #endif

@@ -27,7 +27,7 @@ yl_rng=118.332
 zl_rng=0.0
 
 // for ray tracing
-n_ray=1000000
+n_ray=100
 n_gauss=1
 ray_threshold=0.001
 
@@ -75,7 +75,7 @@ enable_gnu_plot=0
 enable_ray_index_log=0
 enable_ray_csv=1
 enable_block_hit_log=1
-enable_dump_dot_block=1
+enable_dump_dot_block=0
 
 // output_file_name
 output_opt_record_dat=output.opt_record.dat

@@ -628,16 +628,19 @@ void open_block_hit_log_csv(const char* fname)
         {
             fprintf(blockHitLogCsvFp,
                 "rayNo, "
+                "bX, bY, "
                 "xr, yr, "
-                "dotX, dotY, distance, "
-                "radius, width"
+                "hbX, hbX, "
+                "dx, dy, "
+                "distance, "
+                "start_radius, radius, width"
                 "\n"
             );
         }
     }
 }
 
-void append_block_hit_log(unsigned int rayNo, double xr, double yr, double dotX, double dotY, double distance, int radius, int radius_width)
+void append_block_hit_log(unsigned int rayNo, double xr, double yr, double dx, double dy, double distance, int radius, int radius_start, int radius_width)
 {
     RETURN_ON_NULL(blockHitLogCsvFp);
 
@@ -646,32 +649,37 @@ void append_block_hit_log(unsigned int rayNo, double xr, double yr, double dotX,
         "[%d, %d], "
         "%.5f, %.5f, "
         "[%d, %d], "
-        "%.5f, %.5f, %.5f, "
+        "%.5f, %.5f, "
+        "%.5f, "
+        "%.5f, %.5f, "
         "%d, %d"
         "\n",
         rayNo,
         BLOCK_IDX(xr), BLOCK_IDX(yr),
         xr, yr,
-        BLOCK_IDX(dotX), BLOCK_IDX(dotY),
-        dotX, dotY, distance,
+        BLOCK_IDX(dx), BLOCK_IDX(dy),
+        dx, dy, distance,
         radius, radius_width
     );
 
     fprintf(blockHitLogCsvFp,
         "%u, "
-        "[%d, %d], "
+        "%d, %d, "
         "%.5f, %.5f, "
-        "[%d, %d], "
-        "%.5f, %.5f, %.5f, "
-        "%d, %d"
+        "%d, %d, "
+        "%.5f, %.5f, "
+        "%.5f, "
+        "%d, %d, %d"
         "\n",
         rayNo,
         BLOCK_IDX(xr), BLOCK_IDX(yr),
         xr, yr,
-        BLOCK_IDX(dotX), BLOCK_IDX(dotY),
-        dotX, dotY, distance,
-        radius, radius_width
+        BLOCK_IDX(dx), BLOCK_IDX(dy),
+        dx, dy, 
+        distance,
+        radius_start, radius, radius_width
     );
+
     fflush(blockHitLogCsvFp);
 
 }

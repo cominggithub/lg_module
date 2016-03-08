@@ -46,7 +46,7 @@ dot_block* alloc_dot_block_array(int size);
 void free_dot_block_array(int size);
 
 bool find_nearest_dot(dot_block *dot_blk, ray_trace1 *ray, int *hit_index, double *hit_xd, double *hit_yd);
-bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int radius_max, int radius_width, int *hit_index, double *hit_xd, double *hit_yd);
+bool find_nearest_dot_r(dot_block *dot_blk, ray_trace1 *ray, int radius, int radius_start, int radius_max, int radius_width, int *hit_index, double *hit_xd, double *hit_yd);
 dot_block_index* get_block_neighbor_w(int xc, int yc, int radius, int radius_width);
 dot_block_index* get_block_neighbor(int xc, int yc, int radius);
 
