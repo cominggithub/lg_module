@@ -106,11 +106,20 @@ int get_start_radius(double x, double y)
     radius_y = 0;
     radius = 0;
 
-    if (BLOCK_IDX(x) < BLOCK_IDX(xden_or) || BLOCK_IDX(y) < BLOCK_IDX(yden_or))
+
+    if (BLOCK_IDX(x) < BLOCK_IDX(xden_or) && BLOCK_IDX(y) < BLOCK_IDX(yden_or))
     {   
         radius_x = abs(BLOCK_IDX(xden_or) - BLOCK_IDX(x));
         radius_y = abs(BLOCK_IDX(yden_or) - BLOCK_IDX(y));
-        radius = std::min(radius_x, radius_y);
+        radius = std::max(radius_x, radius_y);
+    }
+    else if (BLOCK_IDX(x) < BLOCK_IDX(xden_or))
+    {
+        radius = BLOCK_IDX(xden_or) - BLOCK_IDX(x);
+    }
+    else if (BLOCK_IDX(y) < BLOCK_IDX(yden_or))
+    {
+        radius = BLOCK_IDX(yden_or) - BLOCK_IDX(y);
     }
     else
     {

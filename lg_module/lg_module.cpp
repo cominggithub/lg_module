@@ -393,6 +393,7 @@ int verify_dot_block_main()
 
     double x;
     double y;
+
     // for(i=0; i<200; i++)
     for(i=0; i<BLOCK_X_SIZE; i++)
     {
@@ -432,6 +433,7 @@ int verify_dot_block_main()
     {
         close_block_hit_log_csv();
     }
+    printf("Start block [%d, %d]\n", BLOCK_IDX(xden_or), BLOCK_IDX(yden_or));
     printf("\n");
 
 
