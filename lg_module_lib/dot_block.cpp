@@ -106,13 +106,37 @@ int get_start_radius(double x, double y)
     radius_y = 0;
     radius = 0;
 
-
+    // 0,0
     if (BLOCK_IDX(x) < BLOCK_IDX(xden_or) && BLOCK_IDX(y) < BLOCK_IDX(yden_or))
     {   
         radius_x = abs(BLOCK_IDX(xden_or) - BLOCK_IDX(x));
         radius_y = abs(BLOCK_IDX(yden_or) - BLOCK_IDX(y));
         radius = std::max(radius_x, radius_y);
     }
+    // 0,1
+    else if (BLOCK_IDX(x) < BLOCK_IDX(xden_or) && BLOCK_IDX(y) > BLOCK_IDX(yden_or+yden_rng))
+    {
+        radius_x = abs(BLOCK_IDX(xden_or) - BLOCK_IDX(x));
+        radius_y = abs(BLOCK_IDX(y) - BLOCK_IDX(yden_or+yden_rng));
+        radius = std::max(radius_x, radius_y);
+    }
+    // 1,0
+    else if (BLOCK_IDX(x) > BLOCK_IDX(xden_or+xden_rng) && BLOCK_IDX(y) < BLOCK_IDX(yden_or))
+    {
+        radius_x = abs(BLOCK_IDX(x) - BLOCK_IDX(xden_or+xden_rng));
+        radius_y = abs(BLOCK_IDX(yden_or) - BLOCK_IDX(y));
+        radius = std::max(radius_x, radius_y);   
+    }
+    // 1,1
+    else if (BLOCK_IDX(x) > BLOCK_IDX(xden_or+xden_rng) && BLOCK_IDX(y) > BLOCK_IDX(yden_or+yden_rng))
+    {
+        radius_x = abs(BLOCK_IDX(x) - BLOCK_IDX(xden_or+xden_rng));
+        radius_y = abs(BLOCK_IDX(y) - BLOCK_IDX(yden_or+yden_rng));
+        radius = std::max(radius_x, radius_y);   
+    }
+
+
+
     else if (BLOCK_IDX(x) < BLOCK_IDX(xden_or))
     {
         radius = BLOCK_IDX(xden_or) - BLOCK_IDX(x);
@@ -120,6 +144,14 @@ int get_start_radius(double x, double y)
     else if (BLOCK_IDX(y) < BLOCK_IDX(yden_or))
     {
         radius = BLOCK_IDX(yden_or) - BLOCK_IDX(y);
+    }
+    else if (BLOCK_IDX(x) > BLOCK_IDX(xden_or+xden_rng))
+    {
+        radius = BLOCK_IDX(x) - BLOCK_IDX(xden_or+xden_rng);
+    }
+    else if (BLOCK_IDX(y) > BLOCK_IDX(yden_or+yden_rng))
+    {
+        radius = BLOCK_IDX(y) - BLOCK_IDX(yden_or+yden_rng);
     }
     else
     {

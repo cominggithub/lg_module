@@ -433,7 +433,11 @@ int verify_dot_block_main()
     {
         close_block_hit_log_csv();
     }
-    printf("Start block [%d, %d]\n", BLOCK_IDX(xden_or), BLOCK_IDX(yden_or));
+    printf("size [%d, %d]\n", BLOCK_X_SIZE,            BLOCK_Y_SIZE);
+    printf("Start block 0,0 [%d, %d]\n", BLOCK_IDX(xden_or),            BLOCK_IDX(yden_or));
+    printf("Start block 0,1 [%d, %d]\n", BLOCK_IDX(xden_or),            BLOCK_IDX(yden_or+yden_rng));
+    printf("Start block 1,0 [%d, %d]\n", BLOCK_IDX(xden_or+xden_rng),   BLOCK_IDX(yden_or));
+    printf("Start block 1,0 [%d, %d]\n", BLOCK_IDX(xden_or+xden_rng),   BLOCK_IDX(yden_or+yden_rng));
     printf("\n");
 
 
